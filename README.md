@@ -1,15 +1,15 @@
 Please go under edit and edit this file as needed for your project
 
-# Project Name - 
-# Batch - 
-### Group Leader - IT20212232 - Mr. Asiri Gamage (asiriRepos)
-### Member 2 - 
-### Member 3 - 
-### Member 4 - 
-### Member 5 - 
-### Member 6 - 
-### Member 7 - 
-### Member 8 - 
+# Project Name - Hospital Management System
+# Batch - Y2.S2.WD.IT.01.01
+### Group Leader - IT20610920 (SayumiMunasinghe)
+### Member 2 - IT20633790 (susithrupasinghe)
+### Member 3 - IT20631192 (EMSDEkanayake)
+### Member 4 - IT20601874 (SanukaJay)
+### Member 5 - IT20609658 (Ravindu-Anjana)
+### Member 6 - IT20602628 (nimtaraMunasinghe)
+### Member 7 - IT20610302 (christancf)
+### Member 8 - IT20633554 (Osandajayasinghe)
 
 #### Brief Description of Project - 
 #### Technologies used - 
