@@ -1,4 +1,3 @@
-Please go under edit and edit this file as needed for your project
 
 # Project Name - Hospital Management System
 # Batch - Y2.S2.WD.IT.01.01
