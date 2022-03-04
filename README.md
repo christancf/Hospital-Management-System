@@ -12,7 +12,12 @@ Please go under edit and edit this file as needed for your project
 ### Member 8 - IT20633554 (Osandajayasinghe)
 
 #### Brief Description of Project - 
+Day to day operations of a hospital depends upon efficient management of a vast amount of data and  coordination  of  separate departments.  Storing  this  data  (employee  data, patient data, inventory,etc.)  and  managing  separate processes(employee  management, ward  management,etc.)   manually   leads   to   a   waste   of   time,   manpower,and   financial   resources.   Inefficient communication can also lead to lower quality of service and a higher number of mistakes. Storing data  in  a  digital  format  will  protect  them  from  datacorruption  and  loss  due  to  natural  disasters and other physical dangers. Therefore, this system can maintain separate backups for recovery in case of an emergency.
+
+Digitizing these processes will help the hospital to cut down on their financial cost and provide a faster, more efficient service.
+
 #### Technologies used - 
-
-Note - The student's github account should be given in brackets e.g. (asiriRepos), this ideally should be your student id 
-
+1. React
+2. Express.js
+3. MongoDB
+4. Node.js
