@@ -3,16 +3,18 @@ import { Route, Switch, Redirect, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import AppLayout from "layouts/app-layout";
 import AuthLayout from 'layouts/auth-layout';
+import WardLayout from "layouts/ward-layout";
 import ChannellingLayout from "layouts/channelling-layout";
 import InventoryLayout from "layouts/inventory-layout";
 import BillingLayout from "layouts/billing-layout";
 import PatientLayout from "layouts/patient-layout";
 import MortuaryLayout from "layouts/mortuary-layout";
+import StaffLayout from "layouts/staff-layout";
 import AppLocale from "lang";
 import BloodBankLayout  from "layouts/bloodbank-layout";
 import { IntlProvider } from "react-intl";
 import { ConfigProvider } from 'antd';
-import { APP_PREFIX_PATH, AUTH_PREFIX_PATH, MORTUARY_PREFIX_PATH, BLOODBANK_PREFIX_PATH, PATIENT_PREFIX_PATH, BILLING_PREFIX_PATH, INVENTORY_PREFIX_PATH, CHANNELLING_PREFIX_PATH } from 'configs/AppConfig'
+import { APP_PREFIX_PATH, AUTH_PREFIX_PATH, MORTUARY_PREFIX_PATH, BLOODBANK_PREFIX_PATH, PATIENT_PREFIX_PATH, BILLING_PREFIX_PATH, INVENTORY_PREFIX_PATH, CHANNELLING_PREFIX_PATH, WARD_PREFIX_PATH, STAFF_PREFIX_PATH } from 'configs/AppConfig'
 import useBodyClass from 'hooks/useBodyClass';
 
 export const Views = (props) => {
@@ -51,6 +53,12 @@ export const Views = (props) => {
           </Route>
           <Route path={MORTUARY_PREFIX_PATH}>
             <MortuaryLayout direction={direction} location={location}/>
+          </Route>
+          <Route path={STAFF_PREFIX_PATH}>
+            <StaffLayout direction={direction} location={location}/>
+          </Route>
+          <Route path={WARD_PREFIX_PATH}>
+            <WardLayout direction={direction} location={location}/>
           </Route>
         </Switch>
       </ConfigProvider>
