@@ -8,7 +8,7 @@ var logger = require('morgan');
 
 var wardRouter = require('./routes/ward');
 var channellingRouter = require('./routes/channelling');
-var bloodbankRouter = require('./routes/bloodbank');
+var bloodbagRouter = require('./routes/bloodbag');
 
 
 dotenv.config();
@@ -26,7 +26,7 @@ app.use(cookieParser());
 
 app.use('/ward', wardRouter);
 app.use('/channelling', channellingRouter);
-app.uee('bloodbank',bloodbankRouter);
+app.use('/bloodbag',bloodbagRouter);
 
 
 // catch 404 and forward to error handler

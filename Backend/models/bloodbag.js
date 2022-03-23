@@ -31,4 +31,4 @@ const dataSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('bloodbank', dataSchema)
+module.exports = mongoose.model('bloodbag', dataSchema)
