@@ -3,7 +3,7 @@ import React from 'react'
 const Home = () => {
 	return (
 		<div>
-			this is my billing : home component
+			this is my billing : bill list
 		</div>
 	)
 }

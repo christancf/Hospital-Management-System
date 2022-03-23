@@ -17,18 +17,18 @@ const dashBoardNavTree = [{
   title: 'transaction Details',
   breadcrumb: false,
   submenu: [{
-    key: 'Add Transaction',
-    path: `${BILLING_PREFIX_PATH}/add-details`,
-    title: 'Add Transaction',
-    icon: FileAddOutlined,
+    key: 'Bill List',
+    path: `${BILLING_PREFIX_PATH}/list details`,
+    title: 'Bill List',
+    icon: CopyOutlined,
     breadcrumb: false,
     submenu: []
   },
   {
-    key: 'Billing List',
-    path: `${BILLING_PREFIX_PATH}/list details`,
-    title: 'Billing List',
-    icon: CopyOutlined,
+    key: 'Add Transaction',
+    path: `${BILLING_PREFIX_PATH}/add-details`,
+    title: 'Add Transaction',
+    icon: FileAddOutlined,
     breadcrumb: false,
     submenu: []
   },
