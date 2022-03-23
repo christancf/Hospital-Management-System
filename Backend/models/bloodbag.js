@@ -15,8 +15,20 @@ const dataSchema = new mongoose.Schema({
     },
     donateDate: {
         required: true,
-        type: int
+        type: Number
+    },
+    place:{
+        required: true,
+        type: String
+    },
+    bloodGroup:{
+        required:true,
+        type: String
+    },
+    status:{
+        required:true,
+        type:String
     }
 })
 
-module.exports = mongoose.model('', dataSchema)
+module.exports = mongoose.model('bloodbank', dataSchema)

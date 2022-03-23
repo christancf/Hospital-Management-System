@@ -1,5 +1,5 @@
 var express = require('express');
-const userModel = require('../models/user');
+const userModel = require('../models/bloodbag');
 var router = express.Router();
 const auth = require("../middleware/auth");
 
@@ -11,11 +11,14 @@ router.post('/add-details', function (req, res, next) {
     donorNIC: req.body.donorNIC,
     donationNumber: req.body.donationNumber,
     donateDate: req.body.donateDate,
+    bloodGroup: req.body.bloodGroup,
+    valume:1,
+    status: req.body.status
   });
 
   try {
 
-    const dataToSave = bloodbank.save();
+    const dataToSave = bloodbag.save();
     res.status(200).json(dataToSave);
 
   }
