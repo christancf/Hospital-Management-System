@@ -10,7 +10,14 @@ router.post('/add-details', (req, res, next) => {
       patientId: req.body.patientId,
       type: req.body.type,
       itemId: req.body.itemId,
-      qty: req.body.qty
+      qty: req.body.qty,
+      billId:req.body.billId,
+      patientName:req.body.patientName,
+      roomCharges:req.body.roomCharges,
+      itemCharges:req.body.itemCharges,
+      doctorCharges:req.body.doctorCharges,
+      tax:req.body.tax,
+      total:req.body.total
     })
 
     try {
@@ -33,6 +40,8 @@ router.post('/add-details', (req, res, next) => {
     }
   
   });
+
+  
   
   
   module.exports = router;
