@@ -2,11 +2,11 @@ import {
   DashboardOutlined,
   CopyOutlined
 } from '@ant-design/icons';
-import { CHANNELLING_PREFIX_PATH } from 'configs/AppConfig'
+import { FRONTLINE_CHANNELLING_PREFIX_PATH } from 'configs/AppConfig'
 
 const dashBoardNavTree = [{
   key: 'home',
-  path: `${CHANNELLING_PREFIX_PATH}/home`,
+  path: `${FRONTLINE_CHANNELLING_PREFIX_PATH}/home`,
   title: 'home',
   icon: DashboardOutlined,
   breadcrumb: false,
@@ -14,15 +14,15 @@ const dashBoardNavTree = [{
 },
 {
   key: 'reports',
-  path: `${CHANNELLING_PREFIX_PATH}/home`,
-  title: 'reports',
+  path: `${FRONTLINE_CHANNELLING_PREFIX_PATH}/home`,
+  title: 'Susith',
   icon: CopyOutlined,
   breadcrumb: false,
   submenu: []
 }]
 
-const channellingNavigationConfig = [
+const frontlineChannellingNavigationConfig = [
   ...dashBoardNavTree
 ]
 
-export default channellingNavigationConfig;
+export default frontlineChannellingNavigationConfig;
