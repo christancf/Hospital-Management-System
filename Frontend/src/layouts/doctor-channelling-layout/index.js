@@ -1,19 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import SideNav from 'components/layout-components/channelling-layout/SideNav';
-import TopNav from 'components/layout-components/channelling-layout/TopNav';
+import SideNav from 'components/layout-components/doctor-channelling-layout/SideNav';
+import TopNav from 'components/layout-components/doctor-channelling-layout/TopNav';
 import Loading from 'components/shared-components/Loading';
-import MobileNav from 'components/layout-components/channelling-layout/MobileNav'
-import HeaderNav from 'components/layout-components/channelling-layout/HeaderNav';
-import PageHeader from 'components/layout-components/channelling-layout/PageHeader';
-import Footer from 'components/layout-components/channelling-layout/Footer';
-import ChannellingViews from 'views/channelling-views';
+import MobileNav from 'components/layout-components/doctor-channelling-layout/MobileNav'
+import HeaderNav from 'components/layout-components/doctor-channelling-layout/HeaderNav';
+import PageHeader from 'components/layout-components/doctor-channelling-layout/PageHeader';
+import Footer from 'components/layout-components/doctor-channelling-layout/Footer';
+import { DoctorChannellingViews } from 'views/doctor-channelling-views';
 import {
   Layout,
   Grid,
 } from "antd";
 
-import channellingNavigationConfig from 'configs/ChannellingNavigationConfig';
+import doctorChannellingNavigationConfig from 'configs/DoctorChannellingConfig';
 import { 
   SIDE_NAV_WIDTH, 
   SIDE_NAV_COLLAPSED_WIDTH,
@@ -28,8 +28,8 @@ import { useThemeSwitcher } from "react-css-theme-switcher";
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
 
-export const ChannellingLayout = ({ navCollapsed, navType, location, direction }) => {
-  const currentRouteInfo = utils.getRouteInfo(channellingNavigationConfig, location.pathname)
+export const DoctorChannellingLayout = ({ navCollapsed, navType, location, direction }) => {
+  const currentRouteInfo = utils.getRouteInfo(doctorChannellingNavigationConfig, location.pathname)
   const screens = utils.getBreakPoint(useBreakpoint());
   const isMobile = !screens.includes('lg')
   const isNavSide = navType === NAV_TYPE_SIDE
@@ -67,7 +67,7 @@ export const ChannellingLayout = ({ navCollapsed, navType, location, direction }
           <div className={`app-content ${isNavTop ? 'layout-top-nav' : ''}`}>
             <PageHeader display={currentRouteInfo?.breadcrumb} title={currentRouteInfo?.title} />
             <Content>
-              <ChannellingViews />
+              <DoctorChannellingViews />
             </Content>
           </div>
           <Footer />
@@ -83,4 +83,4 @@ const mapStateToProps = ({ theme }) => {
   return { navCollapsed, navType, locale }
 };
 
-export default connect(mapStateToProps)(React.memo(ChannellingLayout));
+export default connect(mapStateToProps)(React.memo(DoctorChannellingLayout));
