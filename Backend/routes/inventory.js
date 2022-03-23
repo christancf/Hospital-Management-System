@@ -12,6 +12,7 @@ router.post('/item', function (req, res, next) {
     item_name: req.body.item_name,
     description: req.body.description,
     manufacturer:req.body.manufacturer,
+    category:req.body.category,
     unit_price: req.body.unit_price,
     total_quantity: req.body.total_quantity
 
