@@ -1,5 +1,6 @@
 import React from 'react'
 import { Form, Input, Button, Cascader, DatePicker } from 'antd';
+import staffService from 'services/StaffService';
 
 const Home = () => {
 	return (
@@ -19,6 +20,20 @@ const tailLayout = {
 
 const Demo = () => {
   const onFinish = values => {
+    let staffID = values.staffID
+    let name = values.name
+    let nic = values.nic
+    let email = values.email
+    let designation = values.designation
+    let qualification = values.qualification
+    let dateOfBirth = values.dateOfBirth
+    let gender = values.gender
+    let address = values.address
+    let basicSalary = values.basicSalary
+    let mobile = values.mobile 
+    let home = values.home
+
+    staffService.addStaffMember(staffID, name, nic, email, designation, qualification, dateOfBirth, gender, address, basicSalary, mobile, home);
     console.log('Success:', values);
   };
 
@@ -52,7 +67,7 @@ const Demo = () => {
 
 	  <Form.Item
         label="NIC"
-        name="NIC"
+        name="nic"
         rules={[{ required: true, message: 'Please input the NIC!' }]}
       >
         <Input />
@@ -62,14 +77,6 @@ const Demo = () => {
         label="E-mail"
         name="email"
         rules={[{ pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$", message: 'Please enter a valid email!' }]}
-      >
-        <Input />
-      </Form.Item>
-
-	  <Form.Item
-        label="NIC"
-        name="NIC"
-        rules={[{ required: true, message: 'Please input the NIC!' }]}
       >
         <Input />
       </Form.Item>
@@ -92,7 +99,8 @@ const Demo = () => {
 
       <Form.Item 
         label="Date Of Birth"
-       // rules={[ required: true, message: 'Please input the date of birth!']}
+        name="dateOfBirth"
+        rules={[{ required: true, message: 'Please input the date of birth!'}]}
       >
           <DatePicker />
       </Form.Item>
@@ -106,12 +114,37 @@ const Demo = () => {
       </Form.Item>
 
       <Form.Item
+        label="Address"
+        name="address"
+        rules={[{ required: true, message: 'Please input the address!' }]}
+      >
+		  <Input />
+      </Form.Item>
+
+      <Form.Item
         label="Base Salary"
         name="base-salary"
         rules={[{ required: true, message: 'Please input the base salary!' }]}
       >
 		  <Input />
       </Form.Item>
+
+      <Form.Item
+        label="Mobile"
+        name="mobile"
+        rules={[{ required: true, message: 'Please input the mobile number!' }]}
+      >
+		  <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="Home"
+        name="home"
+        rules={[{ required: true, message: 'Please input the home number!' }]}
+      >
+		  <Input />
+      </Form.Item>
+
 
 
 

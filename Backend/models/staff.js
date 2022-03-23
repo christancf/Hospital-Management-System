@@ -27,7 +27,7 @@ const dataSchema = new mongoose.Schema({
     },
     dateOfBirth: {
         required: true,
-        type: Date
+        type: Number
     },
     gender: {
         required: true,
@@ -51,4 +51,4 @@ const dataSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('staff', dataSchema)
+module.exports = mongoose.model('staffs', dataSchema)
