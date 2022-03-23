@@ -17,6 +17,10 @@ const dataSchema = new mongoose.Schema({
         required: true,
         type: String
     },
+    category: {
+        required: true,
+        type: String
+    },
     unit_price: {
         required: true,
         type: Number
