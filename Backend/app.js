@@ -8,7 +8,7 @@ var logger = require('morgan');
 
 var wardRouter = require('./routes/ward');
 var channellingRouter = require('./routes/channelling');
-
+var mortuaryRouter = require('./routes/mortuary');
 
 dotenv.config();
 db.connect();
@@ -25,7 +25,7 @@ app.use(cookieParser());
 
 app.use('/ward', wardRouter);
 app.use('/channelling', channellingRouter);
-
+app.use('/mortuary', mortuaryRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
