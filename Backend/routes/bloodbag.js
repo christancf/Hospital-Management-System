@@ -22,13 +22,18 @@ router.post('/add-details', function (req, res, next) {
     bloodbag.save();
     res.status(200).json(
       {
-        
+        succuss: true,
+        message: 'Insertion succussfull'
       }
     );
 
   }
   catch (error) {
-    res.status(400).json({ message: 'Cannot add data right now!' });
+    res.status(400).json(
+      { 
+        message: 'Cannot add data right now!' 
+      }
+    );
   }
 
 });

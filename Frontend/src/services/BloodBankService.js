@@ -3,10 +3,10 @@ import fetch from 'auth/FetchInterceptor'
 const bloodBankService = {}
 
 
-bloodBankService.addAppointment = function (jsonbody){
+bloodBankService.addBloodBag = function (jsonbody){
 
   return fetch({
-    url: '/apppointment/add',
+    url: '/add-details',
     method: 'post',
     data: jsonbody
 

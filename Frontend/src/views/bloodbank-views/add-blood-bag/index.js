@@ -1,5 +1,7 @@
 import React from 'react';
+import bloodBankService from '../../../services/BloodBankService'
 import { Form, Input, Button, Select,DatePicker } from 'antd';
+
 
 const { Option } = Select;
 
@@ -21,20 +23,23 @@ class AddBloodBag extends React.Component {
   };
 
   onFinish = values => {
-    // var gen = values.gender;
-    console.log(values);
+    const gen = values.gender;
+    
+
+    const results = bloodBankService.addBloodBag(values);
+    console.log('added');
   };
 
   onReset = () => {
     this.formRef.current.resetFields();
   };
 
-  onFill = () => {
-    this.formRef.current.setFieldsValue({
-      note: 'Hello world!',
-      gender: 'male',
-    });
-  };
+  // onFill = () => {
+  //   this.formRef.current.setFieldsValue({
+  //     note: 'Hello world!',
+  //     gender: 'male',
+  //   });
+  // };
 
   render() {
     return (
