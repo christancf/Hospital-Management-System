@@ -4,7 +4,7 @@ var router = express.Router();
 const auth = require("../middleware/auth");
 
 //add ward details
-router.post('/add-details', (req, res, next) => {
+router.post('/details/add', (req, res, next) => {
   
   const ward = new wardModel({
     id: req.body.id,
@@ -29,7 +29,14 @@ router.post('/add-details', (req, res, next) => {
 router.get('/', (req, res, next) => {
   res.send("IT works")
 })
-
+//read ward details
+router.post('/details/read', (req, res, next) => {
+  
+})
+//update ward details
+router.post('/details/update', (req, res, next) => {
+  
+})
 /*router.get('/', auth, function (req, res, next) {
   
   res.send('Hello World!');
