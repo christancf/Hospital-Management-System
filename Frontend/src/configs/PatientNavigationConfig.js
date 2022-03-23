@@ -1,25 +1,46 @@
 import { 
+  UnorderedListOutlined,
   DashboardOutlined,
-  StepBackwardOutlined
+  StepBackwardOutlined,
+  PlusOutlined,
+  EditOutlined,
+  LineChartOutlined
 } from '@ant-design/icons';
 import { PATIENT_PREFIX_PATH } from 'configs/AppConfig'
 
 const dashBoardNavTree = [{
-  key: 'home',
-  path: `${PATIENT_PREFIX_PATH}/home`,
-  title: 'home',
-  icon: DashboardOutlined,
+  key: 'patientlist',
+  path: `${PATIENT_PREFIX_PATH}/patientlist`,
+  title: 'Patient List',
+  icon: UnorderedListOutlined,
   breadcrumb: false,
   submenu: []
 },
 {
-  key: 'test',
-  path: `${PATIENT_PREFIX_PATH}/home`,
-  title: 'test',
-  icon: StepBackwardOutlined,
+  key: 'admittance',
+  path: `${PATIENT_PREFIX_PATH}/admittance`,
+  title: 'Admittance',
+  icon: PlusOutlined,
   breadcrumb: false,
   submenu: []
-}]
+},
+{
+  key: 'update',
+  path: `${PATIENT_PREFIX_PATH}/update`,
+  title: 'Update Patient List',
+  icon: EditOutlined,
+  breadcrumb: false,
+  submenu: []
+},
+{
+  key: 'stats',
+  path: `${PATIENT_PREFIX_PATH}/stats`,
+  title: 'Patient Statistics',
+  icon: LineChartOutlined,
+  breadcrumb: false,
+  submenu: []
+}
+]
 
 const patientNavigationConfig = [
   ...dashBoardNavTree

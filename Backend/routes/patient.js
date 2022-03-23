@@ -19,10 +19,13 @@ router.post('/patient/admittance' , function(req,res,next){
 
     try{
         const dataToSave = patient.save();
-        res.status(200).json(dataToSave);
+        res.status(200).json({
+            success:true,
+            message:'inserted sucessful'
+        });
     }
     catch(error){
-        res.status(400).json({message:error.message})
+        res.status(400).json({success:true,message:error.message})
     }
 });  
 
