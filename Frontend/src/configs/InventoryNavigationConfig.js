@@ -5,14 +5,7 @@ import {
 } from '@ant-design/icons';
 import { INVENTORY_PREFIX_PATH } from 'configs/AppConfig'
 
-const dashBoardNavTree = [{
-  key: 'home',
-  path: `${INVENTORY_PREFIX_PATH}/home`,
-  title: 'home',
-  icon: DashboardOutlined,
-  breadcrumb: false,
-  submenu: []
-},
+const dashBoardNavTree = [
 
 {
   key: 'inventory',
@@ -28,7 +21,7 @@ const dashBoardNavTree = [{
     breadcrumb: false,
     submenu: [{
       key: 'medicines',
-      path: `${INVENTORY_PREFIX_PATH}/medicines`,
+      path: `${INVENTORY_PREFIX_PATH}/itemlist/medicines`,
       title: 'Medicines',
       icon:ContainerOutlined ,
       breadcrumb: false,
@@ -36,7 +29,7 @@ const dashBoardNavTree = [{
     },
     {
       key: 'surgicalitems',
-      path: `${INVENTORY_PREFIX_PATH}/surgicalitems`,
+      path: `${INVENTORY_PREFIX_PATH}/itemlist/surgicalitems`,
       title: 'Surgical Items',
       icon:ContainerOutlined ,
       breadcrumb: false,
@@ -44,7 +37,7 @@ const dashBoardNavTree = [{
     },
     {
       key: 'tools',
-      path: `${INVENTORY_PREFIX_PATH}/tools`,
+      path: `${INVENTORY_PREFIX_PATH}/itemlist/tools`,
       title: 'Tools',
       icon:ContainerOutlined ,
       breadcrumb: false,

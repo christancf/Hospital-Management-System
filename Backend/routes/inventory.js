@@ -8,19 +8,22 @@ const auth = require("../middleware/auth");
 router.post('/item', function (req, res, next) {
 
   const item = new itemModel({
-    Id: req.body.Id,
-    item_name: req.body.Item_Name,
-    description: req.body.Description,
-    manufacturer:req.body.Manufacturer,
-    unit_price: req.body.Unit_Price,
-    total_quantity: req.body.Total_Quantity
+    id: req.body.id,
+    item_name: req.body.item_name,
+    description: req.body.description,
+    manufacturer:req.body.manufacturer,
+    unit_price: req.body.unit_price,
+    total_quantity: req.body.total_quantity
 
   });
 
   try {
 
     const dataToSave = item.save();
-    res.status(200).json(dataToSave);
+    res.status(200).json({
+        success:true,
+        Message: 'insertion successful'
+    });
 
   }
   catch (error) {
