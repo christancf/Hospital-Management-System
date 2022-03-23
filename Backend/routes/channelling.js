@@ -4,19 +4,8 @@ var router = express.Router();
 const auth = require("../middleware/auth");
 
 
-router.get('/', auth, function (req, res, next) {
-  
-  res.send('Hello World!');
 
-});
-
-router.get('/users', auth, function (req, res, next) {
-
-  res.send({ user: ['Susith', 'Sayumi', 'Shavi', 'Nimtara', 'Christan'] });
-
-});
-
-router.post('/users', auth, function (req, res, next) {
+router.post('/users', function (req, res, next) {
 
   const user = new userModel({
     name: req.body.name,
