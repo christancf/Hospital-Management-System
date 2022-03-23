@@ -5,6 +5,8 @@ var db = require("./configs/database");
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+
+var wardRouter = require('./routes/ward');
 var channellingRouter = require('./routes/channelling');
 
 
@@ -20,6 +22,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+
+app.use('/ward', wardRouter);
 app.use('/channelling', channellingRouter);
 
 

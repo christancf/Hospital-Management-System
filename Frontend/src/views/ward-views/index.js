@@ -10,6 +10,7 @@ export const AppViews = () => {
         <Route path={`${WARD_PREFIX_PATH}/home`} component={lazy(() => import(`./home`))} />
         <Route path={`${WARD_PREFIX_PATH}/add-details`} component={lazy(() => import(`./add-ward-details`))} />
         <Route path={`${WARD_PREFIX_PATH}/update-details`} component={lazy(() => import(`./update-ward-details`))} />
+
         <Redirect from={`${WARD_PREFIX_PATH}`} to={`${WARD_PREFIX_PATH}/home`} />
       </Switch>
     </Suspense>
