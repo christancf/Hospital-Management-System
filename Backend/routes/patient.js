@@ -10,7 +10,7 @@ router.post('/admittance' , function(req,res,next){
     const patient =new patientModel({
         fullName:req.body.patient.fullName,
         nic:req.body.patient.nic,
-        dateOfBirth:req.body.patient.dateofBirth, 
+        dateOfBirth:req.body.patient.dateOfBirth, 
         sex:req.body.patient.sex,
         mobile:req.body.patient.mobile,
         address:req.body.patient.address,
