@@ -1,8 +1,7 @@
 import React from 'react'
 import { Form, Input, Button, Checkbox, Card, Cascader} from 'antd';
 import wardService from 'services/WardService';
-
-const Home = () => {
+const UpdateDetails = () => {
 	return (
 		<div>
 			<Demo />
@@ -29,8 +28,8 @@ const Demo = () => {
     let category = values.category
     let capacity = values.capacity
     let status = values.status
-    wardService.addWardDetails(id, category, capacity, status)
-    console.log('Successfully added!')
+    let result = wardService.updateWardDetails(id, status)
+    console.log('Successfully updated!', result)
   };
 
   const onFinishFailed = errorInfo => {
@@ -57,7 +56,7 @@ const Demo = () => {
         name="category"
         rules={[{ required: true, message: 'Please select ward category' }]}
       >
-		  <Input disabled={true}/>
+			<Input disabled={true}/>
       </Form.Item>
       <Form.Item
         label="Ward Capacity"
@@ -98,4 +97,4 @@ const wardStatus = [{
 
 
 
-export default Home
+export default UpdateDetails

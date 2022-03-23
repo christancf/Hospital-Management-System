@@ -14,12 +14,13 @@ router.post('/details/add', (req, res, next) => {
   })
 
   try {
-    const addWard = ward.save()
-    if(addWard){
-      res.status(200).json(addWard)
-    }else{
-      res.status(400).json({message: 'Cannot add data right now!'})
-    }
+    //const addWard = ward.save()
+    ward.save();
+   // if(addWard){
+      res.status(200).json({message: 'Successfull'})
+   // }else{
+      //res.status(400).json({message: 'Cannot add data right now!'})
+    //}
   } catch (error) {
     res.status(400).json({message: error.message})
   }
