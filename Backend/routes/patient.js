@@ -6,11 +6,11 @@ const patientModel = require('../models/patient');
 
 
 //patient admittance function
-router.post('/patient/admittance' , function(req,res,next){
+router.post('/admittance' , function(req,res,next){
     const patient =new patientModel({
-        fullname:req.body.patient.fullname,
+        fullName:req.body.patient.fullName,
         nic:req.body.patient.nic,
-        dateOfBirth:req.body.patient.dateOfBirth, 
+        dateOfBirth:req.body.patient.dateofBirth, 
         sex:req.body.patient.sex,
         mobile:req.body.patient.mobile,
         address:req.body.patient.address,

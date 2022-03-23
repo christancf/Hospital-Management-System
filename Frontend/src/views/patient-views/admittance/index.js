@@ -7,6 +7,9 @@ import {
   DatePicker,
 } from 'antd';
 const { Option } = Select;
+const tailLayout = {
+  wrapperCol: { offset: 8, span: 16 },
+};
 
 
   
@@ -57,8 +60,15 @@ const AdmittanceForm = () => {
             rules={[{ required: true, message: 'Province is required' }]}
           >
             <Select placeholder="Select province">
-              <Option value="Zhejiang">Zhejiang</Option>
-              <Option value="Jiangsu">Jiangsu</Option>
+              <Option value="Western">Western</Option>
+              <Option value="Southern">Southern</Option>
+              <Option value="Eastern">Eastern</Option>
+              <Option value="Northen">Northen</Option>
+              <Option value="Central">Central</Option>
+              <Option value="North-Central">North Central</Option>
+              <Option value="North-Western">North Western</Option>
+              <Option value="Sabaragamuwa	">Sabaragamuwa</Option>
+              <Option value="Uva">Uva</Option>
             </Select>
           </Form.Item>
           <Form.Item
@@ -91,12 +101,6 @@ const AdmittanceForm = () => {
           Submit
         </Button>
       </Form.Item>
-	  
-
-
-
-
-
       </Form>
     </div>
   );
