@@ -28,6 +28,10 @@ const patientSchema = new mongoose.Schema({
     bloodGroup:{
         required:false,
         type:String
+    },
+    status:{
+        required:true,
+        type:Boolean
     }
 })
 

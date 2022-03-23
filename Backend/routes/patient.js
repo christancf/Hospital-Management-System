@@ -14,7 +14,8 @@ router.post('/admittance' , function(req,res,next){
         sex:req.body.patient.sex,
         mobile:req.body.patient.mobile,
         address:req.body.patient.address,
-        bloodGroup:req.body.patient.bloodGroup
+        bloodGroup:req.body.patient.bloodGroup,
+        status:true
     });
 
     try{
