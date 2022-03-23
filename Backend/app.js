@@ -8,12 +8,9 @@ var logger = require('morgan');
 
 var wardRouter = require('./routes/ward');
 var channellingRouter = require('./routes/channelling');
-<<<<<<< HEAD
 var bloodbagRouter = require('./routes/bloodbag');
 
-=======
 var patientRouter = require('./routes/patient');
->>>>>>> 5c6bc5c94262f3ffc86810b2d669c3d855057c96
 
 dotenv.config();
 db.connect();
@@ -30,11 +27,8 @@ app.use(cookieParser());
 
 app.use('/ward', wardRouter);
 app.use('/channelling', channellingRouter);
-<<<<<<< HEAD
 app.use('/bloodbag',bloodbagRouter);
-=======
 app.use('/patient', patientRouter);
->>>>>>> 5c6bc5c94262f3ffc86810b2d669c3d855057c96
 
 
 // catch 404 and forward to error handler

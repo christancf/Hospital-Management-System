@@ -60,16 +60,15 @@ class AddBloodBag extends React.Component {
             placeholder="Select the blood group"
             // onChange={this.onGenderChange}
             allowClear
-            
           >
-            <Option value="A+">A positive(A+)</Option>
-            <Option value="A-">A negative(A-)</Option>
-            <Option value="B+">B positive(B+)</Option>
-            <Option value="A+">B negative(B-)</Option>
-            <Option value="A-">O positive(O+)</Option>
-            <Option value="B+">O negative(O-)</Option>
-            <Option value="A-">AB positive(AB+)</Option>
-            <Option value="B+">AB negative(AB-)</Option>
+            <Select.Option value="A+">A positive(A+)</Select.Option>
+            <Select.Option value="A-">A negative(A-)</Select.Option>
+            <Select.Option value="B+">B positive(B+)</Select.Option>
+            <Select.Option value="A+">B negative(B-)</Select.Option>
+            <Select.Option value="A-">O positive(O+)</Select.Option>
+            <Select.Option value="B+">O negative(O-)</Select.Option>
+            <Select.Option value="A-">AB positive(AB+)</Select.Option>
+            <Select.Option value="B+">AB negative(AB-)</Select.Option>
           </Select>
         </Form.Item>
         <Form.Item
