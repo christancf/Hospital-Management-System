@@ -2,10 +2,12 @@ import { SIDE_NAV_LIGHT, NAV_TYPE_SIDE, DIR_LTR } from 'constants/ThemeConstant'
 import { env } from './EnvironmentConfig'
 
 export const APP_NAME = 'Emilus';
-export const API_BASE_URL = env.API_ENDPOINT_URL
+export const API_BASE_URL = env.API_ENDPOINT_URL || 'http://localhost:3000'
 export const APP_PREFIX_PATH = '/app';
 export const WARD_PREFIX_PATH = '/ward';
-export const CHANNELLING_PREFIX_PATH = '/channelling';
+export const FRONTLINE_CHANNELLING_PREFIX_PATH = '/frontchannelling';
+export const CHANNELLING_PREFIX_PATH = '/frontchannelling';
+export const DOCTOR_CHANNELLING_PREFIX_PATH = '/doctorchannelling';
 export const INVENTORY_PREFIX_PATH = '/inventory';
 export const BILLING_PREFIX_PATH = '/billing';
 export const PATIENT_PREFIX_PATH = '/patient';
