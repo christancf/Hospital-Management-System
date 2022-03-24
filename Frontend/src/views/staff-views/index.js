@@ -9,6 +9,7 @@ export const StaffViews = () => {
       <Switch>
         <Route path={`${STAFF_PREFIX_PATH}/home`} component={lazy(() => import(`./home`))} />
         <Route path={`${STAFF_PREFIX_PATH}/add-staff-member`} component={lazy(() => import(`./add-staff-member`))} />
+        <Route path={`${STAFF_PREFIX_PATH}/update-staff-details`} component={lazy(() => import(`./update-staff-details`))} />
         <Redirect from={`${STAFF_PREFIX_PATH}`} to={`${STAFF_PREFIX_PATH}/home`} />
       </Switch>
     </Suspense>

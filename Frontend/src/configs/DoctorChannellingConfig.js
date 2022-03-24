@@ -1,22 +1,22 @@
 import { 
-  DashboardOutlined,
-  CopyOutlined
+  BookOutlined,
+  AreaChartOutlined
 } from '@ant-design/icons';
 import { DOCTOR_CHANNELLING_PREFIX_PATH } from 'configs/AppConfig'
 
 const dashBoardNavTree = [{
-  key: 'home',
-  path: `${DOCTOR_CHANNELLING_PREFIX_PATH}/home`,
-  title: 'home',
-  icon: DashboardOutlined,
+  key: 'appointments',
+  path: `${DOCTOR_CHANNELLING_PREFIX_PATH}/appointments`,
+  title: 'Appointments',
+  icon: BookOutlined,
   breadcrumb: false,
   submenu: []
 },
 {
   key: 'reports',
-  path: `${DOCTOR_CHANNELLING_PREFIX_PATH}/home`,
+  path: `${DOCTOR_CHANNELLING_PREFIX_PATH}/reports`,
   title: 'Reports',
-  icon: CopyOutlined,
+  icon: AreaChartOutlined,
   breadcrumb: false,
   submenu: []
 }]

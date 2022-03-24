@@ -1,6 +1,7 @@
 import React from 'react'
 import { Form, Input, Button, Checkbox, Card, Cascader} from 'antd';
 import wardService from 'services/WardService';
+const { Search } = Input
 const UpdateDetails = () => {
 	return (
 		<div>
@@ -22,20 +23,21 @@ const tailLayout = {
 };
 
 const Demo = () => {
-
+  let wardDetails = ""
   const onFinish = values => {
     let id = values.id
-    let category = values.category
     let capacity = values.capacity
     let status = values.status
-    let result = wardService.updateWardDetails(id, status)
+    let result = wardService.updateWardDetails(id, capacity, status)
     console.log('Successfully updated!', result)
   };
 
   const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo);
   };
-  
+  const searchById = (id) => {
+    wardDetails = wardService.readWardDetails(id)
+  }
   return (
     <Form
       {...layout}
@@ -49,28 +51,28 @@ const Demo = () => {
         name="id"
         rules={[{ required: true, message: 'Please input ward ID!' }]}
       >
-        <Input placeholder='Ward ID' />
+        <Search placeholder="Ward ID" onSearch={id => searchById(id)} enterButton />
       </Form.Item>
 	  <Form.Item
         label="Category"
         name="category"
         rules={[{ required: true, message: 'Please select ward category' }]}
       >
-			<Input disabled={true}/>
+			<Input disabled={true} value={wardDetails.category}/>
       </Form.Item>
       <Form.Item
         label="Ward Capacity"
         name="capacity"
         rules={[{ required: true, message: 'Please input the ward capacity' }]}
       >
-		  <Input placeholder='Capacity' />
+		  <Input placeholder='Capacity' value={wardDetails.capacity} />
       </Form.Item>
 	  <Form.Item
         label="Status"
         name="status"
         rules={[{ required: true, message: 'Please select status' }]}
       >
-		  <Cascader options={wardStatus} />
+		  <Cascader options={wardStatus} value={wardDetails.status} />
       </Form.Item>
 
       <Form.Item {...tailLayout}>

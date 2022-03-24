@@ -18,6 +18,14 @@ const dashBoardNavTree = [{
   icon: DashboardOutlined,
   breadcrumb: false,
   submenu: []
+},
+{
+  key: 'update-staff-details',
+  path: `${STAFF_PREFIX_PATH}/update-staff-details`,
+  title: 'Update Staff Details',
+  icon: DashboardOutlined,
+  breadcrumb: false,
+  submenu: []
 }]
 
 const staffNavigationConfig = [
