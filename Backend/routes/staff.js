@@ -43,7 +43,7 @@ router.get('/', (req, res, next) => {
 //read staff member details
 router.get('/read-details?:id', async (req, res, next) => {
   try {
-    let staffDetails = await staffModel.find({id: req.query})
+    let staffDetails = await staffModel.find({staffID: req.query.id})
     res.status(200).json({details: staffDetails})
   } catch (error) {
     res.status(400).json({message: error.message})

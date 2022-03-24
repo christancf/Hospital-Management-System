@@ -47,7 +47,7 @@ const Demo = () => {
 
   const searchById = (id) => {
     staffDetails = staffService.readStaffDetails(id);
-  }
+  };
 
   return (
     <Form
