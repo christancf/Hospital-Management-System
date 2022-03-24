@@ -1,5 +1,6 @@
-import React, {useState} from 'react'
+import React from 'react'
 import { Form, Input, Button, Checkbox, Card, Cascader} from 'antd';
+import wardService from 'services/WardService';
 
 const Home = () => {
 	return (
@@ -22,58 +23,25 @@ const tailLayout = {
 };
 
 const Demo = () => {
-  /*const [details, setDetails] = useState({
-    id: String,
-    category: String,
-    capacity: Number,
-    status: Boolean
-  })
-  let id, category, capacity, status*/
-  const onFinish = values => {
-    console.log('Successfully read the values');
-    /*id = values.id
-    category = values.category
-    capacity = values.capacity
-    status = values.status*/
 
+  const onFinish = values => {
+    let id = values.id
+    let category = values.category
+    let capacity = values.capacity
+    let status = values.status
+    wardService.addWardDetails(id, category, capacity, status)
+    console.log('Successfully added!')
   };
 
   const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo);
   };
-
-  const url = 'localhost:3000/ward/add-details'
-
-  /*const handleSubmit = e => {
-
-    console.log("Handle submit")
-    /*fetch('/ward/add', {
-      method: 'POST',
-      body : JSON.stringify({
-        id: id,
-        category: category,
-        capacity: capacity,
-        status: status
-      }),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(res => console.log(res))
-    .then()
-    .catch(function(error) {
-      console.log("error---", error)
-    });
-  }*/
   
   return (
     <Form
       {...layout}
       name="basic"
       initialValues={{ remember: true }}
-      method="post"
-      action="/add"
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
     >
@@ -89,7 +57,7 @@ const Demo = () => {
         name="category"
         rules={[{ required: true, message: 'Please select ward category' }]}
       >
-		  <Cascader options={wardCategory} />
+		   <Cascader options={wardCategory} />
       </Form.Item>
       <Form.Item
         label="Ward Capacity"
@@ -108,15 +76,14 @@ const Demo = () => {
 
       <Form.Item {...tailLayout}>
         <Button type="primary" htmlType="submit">
-          Submit
+          Save
         </Button>
       </Form.Item>
     </Form>
   );
 };
 
-
-
+//Ward Category Options
 const wardCategory = [{
 	value: 'general',
 	label: 'General'
@@ -130,6 +97,7 @@ const wardCategory = [{
 	label: 'ICU'
 }]
 
+//Ward Status Option
 const wardStatus = [{
 	value: 'true',
 	label: 'Available'

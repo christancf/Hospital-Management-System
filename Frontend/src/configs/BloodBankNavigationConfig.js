@@ -11,13 +11,35 @@ const dashBoardNavTree = [{
   icon: DashboardOutlined,
   breadcrumb: false,
   submenu: []
-},{
-  key: 'report',
-  path: `${BLOODBANK_PREFIX_PATH}/home`,
-  title: 'report',
-  icon: FormOutlined,
+},
+{
+  key: 'bloodBank',
+  title: 'Blood Bank',
   breadcrumb: false,
-  submenu: []
+  submenu: [{
+    key: 'bloodInformation',
+    path: `${BLOODBANK_PREFIX_PATH}/blood-information`,
+    title: 'Blood Information',
+    icon: DashboardOutlined,
+    breadcrumb: false,
+    submenu: []
+  },
+  {
+    key: 'addBloodBag',
+    path: `${BLOODBANK_PREFIX_PATH}/add-details`,
+    title: 'Add Blood Bag',
+    icon: FormOutlined,
+    breadcrumb: false,
+    submenu: []
+  },
+  {
+    key: 'disposalBloodBag',
+    path: `${BLOODBANK_PREFIX_PATH}/disposal-bag`,
+    title: 'Disposal Of Blood Bag',
+    icon: FormOutlined,
+    breadcrumb: false,
+    submenu: []
+  }]
 }]
 
 const bloodBankNavigationConfig = [
