@@ -16,7 +16,7 @@ router.post('/details/add', async (req, res, next) => {
     category: req.body.category,
     capacity: req.body.capacity,
     status: req.body.status
-  })1
+  })
 
   try {
 
