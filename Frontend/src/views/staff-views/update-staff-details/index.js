@@ -20,6 +20,9 @@ const tailLayout = {
 };
 
 const Demo = () => {
+  
+  let staffDetails = '';
+
   const onFinish = values => {
     let staffID = values.staffID
     let name = values.name
@@ -42,6 +45,10 @@ const Demo = () => {
     console.log('Failed:', errorInfo);
   };
 
+  const searchById = (id) => {
+    staffDetails = staffService.readStaffDetails(id);
+  }
+
   return (
     <Form
       {...layout}
@@ -55,7 +62,7 @@ const Demo = () => {
         name="staffID"
         rules={[{ required: true, message: 'Please input the staff ID!' }]}
       >
-         <Search placeholder="Enter Staff ID" onSearch={value => console.log(value)} enterButton />
+         <Search placeholder="Enter Staff ID" onSearch={id => searchById(id)} enterButton />
       </Form.Item>
 
       <Form.Item
@@ -63,7 +70,7 @@ const Demo = () => {
         name="name"
         rules={[{ required: true, message: 'Please input the name!' }]}
       >
-        <Input />
+        <Input value = {staffDetails.name} />
       </Form.Item>
 
 	  <Form.Item
@@ -71,7 +78,7 @@ const Demo = () => {
         name="nic"
         rules={[{ required: true, message: 'Please input the NIC!' }]}
       >
-        <Input />
+        <Input value = {staffDetails.NIC} />
       </Form.Item>
 
 	  <Form.Item
@@ -79,7 +86,7 @@ const Demo = () => {
         name="email"
         rules={[{ pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$", message: 'Please enter a valid email!' }]}
       >
-        <Input />
+        <Input value = {staffDetails.email} />
       </Form.Item>
 
 	  <Form.Item
@@ -87,7 +94,7 @@ const Demo = () => {
         name="designation"
         rules={[{ required: true, message: 'Please select the designation!' }]}
       >
-		  <Cascader options={designation} />
+		  <Cascader options={designation} value = {staffDetails.designation} />
       </Form.Item>
 
       <Form.Item
@@ -95,7 +102,7 @@ const Demo = () => {
         name="qualification"
         rules={[{ required: true, message: 'Please input the qualification!' }]}
       >
-		  <Input />
+		  <Input value = {staffDetails.qualification} />
       </Form.Item>
 
       <Form.Item 
@@ -103,7 +110,7 @@ const Demo = () => {
         name="dateOfBirth"
         rules={[{ required: true, message: 'Please input the date of birth!'}]}
       >
-          <DatePicker />
+          <DatePicker value = {staffDetails.dateOfBirth} />
       </Form.Item>
 
       <Form.Item
@@ -111,7 +118,7 @@ const Demo = () => {
         name="gender"
         rules={[{ required: true, message: 'Please select the gender!' }]}
       >
-		  <Cascader options={gender} />
+		  <Cascader options={gender} value= {staffDetails.gender} />
       </Form.Item>
 
       <Form.Item
@@ -119,15 +126,15 @@ const Demo = () => {
         name="address"
         rules={[{ required: true, message: 'Please input the address!' }]}
       >
-		  <Input />
+		  <Input value = {staffDetails.address} />
       </Form.Item>
 
       <Form.Item
-        label="Base Salary"
-        name="base-salary"
-        rules={[{ required: true, message: 'Please input the base salary!' }]}
+        label="Basic Salary"
+        name="basicSalary"
+        rules={[{ required: true, message: 'Please input the basic salary!' }]}
       >
-		  <Input />
+		  <Input value = {staffDetails.basicSalary} />
       </Form.Item>
 
       <Form.Item
@@ -135,7 +142,7 @@ const Demo = () => {
         name="mobile"
         rules={[{ required: true, message: 'Please input the mobile number!' }]}
       >
-		  <Input />
+		  <Input value = {staffDetails.mobile} />
       </Form.Item>
 
       <Form.Item
@@ -143,7 +150,7 @@ const Demo = () => {
         name="home"
         rules={[{ required: true, message: 'Please input the home number!' }]}
       >
-		  <Input />
+		  <Input value = {staffDetails.home} />
       </Form.Item>
 
       <Form.Item {...tailLayout}>

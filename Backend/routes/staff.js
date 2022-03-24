@@ -4,7 +4,7 @@ var router = express.Router();
 const auth = require("../middleware/auth");
 
 
-
+//add new staff member
 router.post('/add-member', function (req, res, next) {
 
   const staff = new staffModel({
@@ -35,23 +35,22 @@ router.post('/add-member', function (req, res, next) {
 
 });
 
+
 router.get('/', (req, res, next) => {
   res.send("IT works")
 })
 
-// router.post('/read-details', function (req, res, next) {
-
-//   const staff = new staffModel({
-//     staffID: req.body.staffID
-//   });
-
-//   try {
-//     const readDetails = staff.findOne({})
-//   }
-// });
+//read staff member details
+router.get('/read-details?:id', async (req, res, next) => {
+  try {
+    let staffDetails = await staffModel.find({id: req.query})
+    res.status(200).json({details: staffDetails})
+  } catch (error) {
+    res.status(400).json({message: error.message})
+  }
+});
 
 router.post('/update-details', function (req, res, next) {
-
 
 })
 
