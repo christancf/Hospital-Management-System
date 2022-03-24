@@ -12,15 +12,14 @@ wardService.addWardDetails = (data) => {
 
 wardService.readWardDetails = function (data) {
   return fetch({
-    url: '/details/read',
-    method: 'get',
-    data: data
+    url: '/details/read?id='+data,
+    method: 'get'
   })
 }
 wardService.updateWardDetails = function (data) {
   return fetch({
     url: '/details/update',
-    method: 'post',
+    method: 'put',
     data: data
   })
 }

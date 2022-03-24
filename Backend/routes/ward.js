@@ -3,39 +3,43 @@ const wardModel = require('../models/ward');
 var router = express.Router();
 const auth = require("../middleware/auth");
 
+//testing
+router.get('/', (req, res, next) => {
+  res.send("IT works")
+})
+
 //add ward details
-router.post('/details/add', (req, res, next) => {
+router.post('/details/add', async (req, res, next) => {
   
-  const ward = new wardModel({
+  let ward = new wardModel({
     id: req.body.id,
     category: req.body.category,
     capacity: req.body.capacity,
     status: req.body.status
-  })
+  })1
 
   try {
-    //const addWard = ward.save()
-    ward.save();
-   // if(addWard){
-      res.status(200).json({message: 'Successfull'})
-   // }else{
-      //res.status(400).json({message: 'Cannot add data right now!'})
-    //}
+
+     let ward =  await ward.save();
+    res.status(200).json({message: 'Successful', id: ward_id})
+
   } catch (error) {
     res.status(400).json({message: error.message})
   }
 
 });
 
-router.get('/', (req, res, next) => {
-  res.send("IT works")
-})
 //read ward details
-router.post('/details/read', (req, res, next) => {
-  
+router.get('/details/read?:id', async (req, res, next) => {
+  try {
+    let wardDetail = await wardModel.find({id: req.query.id})
+    res.status(200).json({details: wardDetail})
+  } catch (error) {
+    res.status(400).json({message: error.message})
+  }
 })
 //update ward details
-router.post('/details/update', (req, res, next) => {
+router.put('/details/update', (req, res, next) => {
   
 })
 /*router.get('/', auth, function (req, res, next) {
