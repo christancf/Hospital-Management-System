@@ -3,7 +3,7 @@ import React from 'react'
 const Home = () => {
 	return (
 		<div>
-			Home component is inventory
+			waradda ganna epa meka SURGICAL ITEMS ekA
 		</div>
 	)
 }
