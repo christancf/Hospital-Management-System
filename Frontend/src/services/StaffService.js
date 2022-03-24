@@ -18,5 +18,12 @@ staffService.setPost = function (data) {
   })
 }
 
+staffService.readStaffDetails = function (data) {
+  return fetch({
+    url: '/read-details?id='+data,
+    method: 'get'
+  })
+}
+
 
 export default staffService
