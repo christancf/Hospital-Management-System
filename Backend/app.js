@@ -8,6 +8,7 @@ var logger = require('morgan');
 
 var wardRouter = require('./routes/ward');
 var channellingRouter = require('./routes/channelling');
+var mortuaryRouter = require('./routes/mortuary');
 var billingRouter = require('./routes/billing');
 var bloodbagRouter = require('./routes/bloodbag');
 var transfusionRouter = require('./routes/bloodtranfusion');
@@ -29,6 +30,7 @@ app.use(cookieParser());
 
 app.use('/ward', wardRouter);
 app.use('/channelling', channellingRouter);
+app.use('/mortuary', mortuaryRouter);
 app.use('/billing', billingRouter);
 app.use('/bloodbag',bloodbagRouter);
 app.use('/staff', staffRouter);
