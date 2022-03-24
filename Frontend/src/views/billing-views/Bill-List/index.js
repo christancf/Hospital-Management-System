@@ -3,7 +3,7 @@ import React from 'react'
 const Home = () => {
 	return (
 		<div>
-			Blood bank
+			this is my billing : bill list
 		</div>
 	)
 }

@@ -12,9 +12,9 @@ const dashBoardNavTree = [{
   submenu: []
 },
 {
-  key: 'reports',
-  path: `${STAFF_PREFIX_PATH}/reports`,
-  title: 'reports',
+  key: 'add-staff-member',
+  path: `${STAFF_PREFIX_PATH}/add-staff-member`,
+  title: 'Add Staff Member',
   icon: DashboardOutlined,
   breadcrumb: false,
   submenu: []

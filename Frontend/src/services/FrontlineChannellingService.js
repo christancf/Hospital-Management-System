@@ -6,7 +6,7 @@ const channellingService = {}
 channellingService.addAppointment = function (jsonbody){
 
   return fetch({
-    url: '/apppointment/add',
+    url: '/channelling/apppointment/add',
     method: 'post',
     data: jsonbody
 

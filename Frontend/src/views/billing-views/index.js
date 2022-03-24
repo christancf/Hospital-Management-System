@@ -8,6 +8,7 @@ export const BillingViews = () => {
     <Suspense fallback={<Loading cover="content"/>}>
       <Switch>
         <Route path={`${BILLING_PREFIX_PATH}/home`} component={lazy(() => import(`./home`))} />
+        <Route path={`${BILLING_PREFIX_PATH}/add-details`} component={lazy(() => import(`./addtransaction`))} />
         <Redirect from={`${BILLING_PREFIX_PATH}`} to={`${BILLING_PREFIX_PATH}/home`} />
       </Switch>
     </Suspense>
