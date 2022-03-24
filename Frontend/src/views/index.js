@@ -4,17 +4,18 @@ import { connect } from "react-redux";
 import AppLayout from "layouts/app-layout";
 import AuthLayout from 'layouts/auth-layout';
 import WardLayout from "layouts/ward-layout";
-import ChannellingLayout from "layouts/channelling-layout";
 import InventoryLayout from "layouts/inventory-layout";
 import BillingLayout from "layouts/billing-layout";
 import PatientLayout from "layouts/patient-layout";
 import MortuaryLayout from "layouts/mortuary-layout";
 import StaffLayout from "layouts/staff-layout";
+import DoctorChannellingLayout from "layouts/doctor-channelling-layout";
+import FrontlineChannellingLayout from "layouts/frontline-channelling-layout";
 import AppLocale from "lang";
 import BloodBankLayout  from "layouts/bloodbank-layout";
 import { IntlProvider } from "react-intl";
 import { ConfigProvider } from 'antd';
-import { APP_PREFIX_PATH, AUTH_PREFIX_PATH, MORTUARY_PREFIX_PATH, BLOODBANK_PREFIX_PATH, PATIENT_PREFIX_PATH, BILLING_PREFIX_PATH, INVENTORY_PREFIX_PATH, CHANNELLING_PREFIX_PATH, WARD_PREFIX_PATH, STAFF_PREFIX_PATH } from 'configs/AppConfig'
+import { APP_PREFIX_PATH, AUTH_PREFIX_PATH, MORTUARY_PREFIX_PATH, BLOODBANK_PREFIX_PATH, PATIENT_PREFIX_PATH, BILLING_PREFIX_PATH, INVENTORY_PREFIX_PATH, WARD_PREFIX_PATH, STAFF_PREFIX_PATH, DOCTOR_CHANNELLING_PREFIX_PATH, FRONTLINE_CHANNELLING_PREFIX_PATH } from 'configs/AppConfig'
 import useBodyClass from 'hooks/useBodyClass';
 
 export const Views = (props) => {
@@ -36,9 +37,6 @@ export const Views = (props) => {
           <Route path={APP_PREFIX_PATH}>
             <AppLayout direction={direction} location={location}/>
           </Route>
-          <Route path={CHANNELLING_PREFIX_PATH}>
-            <ChannellingLayout direction={direction} location={location}/>
-          </Route>
           <Route path={INVENTORY_PREFIX_PATH}>
             <InventoryLayout direction={direction} location={location}/>
           </Route>
@@ -59,6 +57,12 @@ export const Views = (props) => {
           </Route>
           <Route path={WARD_PREFIX_PATH}>
             <WardLayout direction={direction} location={location}/>
+          </Route>
+          <Route path={DOCTOR_CHANNELLING_PREFIX_PATH}>
+            <DoctorChannellingLayout direction={direction} location={location}/>
+          </Route>
+          <Route path={FRONTLINE_CHANNELLING_PREFIX_PATH}>
+            <FrontlineChannellingLayout direction={direction} location={location}/>
           </Route>
         </Switch>
       </ConfigProvider>
