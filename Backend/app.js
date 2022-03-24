@@ -5,6 +5,7 @@ var db = require("./configs/database");
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors')
 
 var wardRouter = require('./routes/ward');
 var channellingRouter = require('./routes/channelling');
@@ -22,7 +23,7 @@ db.connect();
 
 var app = express();
 
-
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
