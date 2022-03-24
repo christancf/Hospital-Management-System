@@ -4,7 +4,7 @@ var router = express.Router();
 const auth = require("../middleware/auth");
 
 //add ward details
-router.post('/add-details', (req, res, next) => {
+router.post('/details/add', (req, res, next) => {
   
   const ward = new wardModel({
     id: req.body.id,
@@ -14,12 +14,13 @@ router.post('/add-details', (req, res, next) => {
   })
 
   try {
-    const addWard = ward.save()
-    if(addWard){
-      res.status(200).json(addWard)
-    }else{
-      res.status(400).json({message: 'Cannot add data right now!'})
-    }
+    //const addWard = ward.save()
+    ward.save();
+   // if(addWard){
+      res.status(200).json({message: 'Successfull'})
+   // }else{
+      //res.status(400).json({message: 'Cannot add data right now!'})
+    //}
   } catch (error) {
     res.status(400).json({message: error.message})
   }
@@ -29,7 +30,14 @@ router.post('/add-details', (req, res, next) => {
 router.get('/', (req, res, next) => {
   res.send("IT works")
 })
-
+//read ward details
+router.post('/details/read', (req, res, next) => {
+  
+})
+//update ward details
+router.post('/details/update', (req, res, next) => {
+  
+})
 /*router.get('/', auth, function (req, res, next) {
   
   res.send('Hello World!');
