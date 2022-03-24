@@ -42,7 +42,7 @@ router.post('/add-details', (req, res, next) => {
   });
 
   
-  
+
   
   module.exports = router;
   
