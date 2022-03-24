@@ -8,6 +8,8 @@ var logger = require('morgan');
 
 var wardRouter = require('./routes/ward');
 var channellingRouter = require('./routes/channelling');
+var bloodbagRouter = require('./routes/bloodbag');
+var transfusionRouter = require('./routes/bloodtranfusion');
 var staffRouter = require('./routes/staff');
 var patientRouter = require('./routes/patient');
 
@@ -26,8 +28,10 @@ app.use(cookieParser());
 
 app.use('/ward', wardRouter);
 app.use('/channelling', channellingRouter);
+app.use('/bloodbag',bloodbagRouter);
 app.use('/staff', staffRouter);
 app.use('/patient', patientRouter);
+app.use('/transfusion',transfusionRouter);
 
 
 // catch 404 and forward to error handler
