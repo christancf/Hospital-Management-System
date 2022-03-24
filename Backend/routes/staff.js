@@ -39,4 +39,20 @@ router.get('/', (req, res, next) => {
   res.send("IT works")
 })
 
+// router.post('/read-details', function (req, res, next) {
+
+//   const staff = new staffModel({
+//     staffID: req.body.staffID
+//   });
+
+//   try {
+//     const readDetails = staff.findOne({})
+//   }
+// });
+
+router.post('/update-details', function (req, res, next) {
+
+
+})
+
 module.exports = router;

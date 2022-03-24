@@ -2,7 +2,8 @@ import React from 'react'
 import { Form, Input, Button, Cascader, DatePicker } from 'antd';
 import staffService from 'services/StaffService';
 
-const AddStaffMember = () => {
+const { Search } = Input;
+const UpdateStaffDetails = () => {
 	return (
 		<div>
 			<Demo />
@@ -54,7 +55,7 @@ const Demo = () => {
         name="staffID"
         rules={[{ required: true, message: 'Please input the staff ID!' }]}
       >
-        <Input />
+         <Search placeholder="Enter Staff ID" onSearch={value => console.log(value)} enterButton />
       </Form.Item>
 
       <Form.Item
@@ -180,4 +181,4 @@ const gender = [{
 	label: 'Other'
 }]
 
-export default AddStaffMember
+export default UpdateStaffDetails
