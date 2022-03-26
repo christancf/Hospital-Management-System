@@ -2,6 +2,10 @@ import React from 'react';
 import bloodBankService from '../../../services/BloodBankService'
 import { Form, Input, Button, Select,DatePicker } from 'antd';
 
+function toTimestamp(strDate){
+	var datum = Date.parse(strDate);
+	return datum/1000;
+ }
 
 const { Option } = Select;
 
@@ -26,7 +30,7 @@ class AddBloodBag extends React.Component {
     const donorName = values.donorsName;
     const donorNIC = values.donorNIC;
     const donationNum = values.donationNum;
-    const donateDate = values.donateDate;
+    const donateDate = toTimestamp(values.donateDate);
     const place = values.place;
     const bloodGroup = values.bloodGroup;
 
