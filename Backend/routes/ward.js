@@ -9,34 +9,32 @@ router.get('/', (req, res, next) => {
 })
 
 //add ward details
-router.post('/details/add', async (req, res, next) => {
+router.post('/details/add', (req, res, next) => {
   
-  let ward = new wardModel({
+  let newWard = new wardModel({
     id: req.body.id,
-    category: req.body.category,
-    capacity: req.body.capacity,
-    status: req.body.status
+    category: String(req.body.category),
+    capacity: Number(req.body.capacity),
+    status: Boolean(req.body.status)
   })
 
-  try {
-
-     let ward =  await ward.save();
-    res.status(200).json({message: 'Successful', id: ward_id})
-
-  } catch (error) {
-    res.status(400).json({message: error.message})
-  }
+  newWard.save()
+  .then(() => {
+    res.json("Ward Added!")
+  }).catch((e) => {
+    console.log(`Error Add: ${e}`)
+  })
 
 });
 
 //read ward details
-router.get('/details/read?:id', async (req, res, next) => {
-  try {
-    let wardDetail = await wardModel.find({id: req.query.id})
-    res.status(200).json({details: wardDetail})
-  } catch (error) {
-    res.status(400).json({message: error.message})
-  }
+router.get('/details/read?:id', (req, res, next) => {
+  wardModel.find({id:String(req.query.id)})
+  .then((wardDetails) => {
+    res.json(wardDetails)
+  }).catch((e) =>{
+    console.log(`Error Read: ${e}`)
+  })
 })
 //update ward details
 router.put('/details/update', (req, res, next) => {
