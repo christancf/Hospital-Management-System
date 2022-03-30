@@ -38,7 +38,13 @@ router.get('/details/read?:id', (req, res, next) => {
 })
 //update ward details
 router.put('/details/update', (req, res, next) => {
-  
+  wardModel.updateOne({id: String(req.body.id)},
+    {$set: {"capacity": String(req.body.capacity), "status": String(req.body.status)}})
+    .then((result) => {
+      res.json(`Successfully Updated!\n`)
+    }).catch((e) => {
+      console.log(`Error Update: ${e}`)
+    })
 })
 /*router.get('/', auth, function (req, res, next) {
   
