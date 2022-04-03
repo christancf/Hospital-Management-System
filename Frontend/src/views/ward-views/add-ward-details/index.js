@@ -25,12 +25,9 @@ const tailLayout = {
 const Demo = () => {
 
   const onFinish = values => {
-    let id = values.id
-    let category = values.category
-    let capacity = values.capacity
-    let status = values.status
-    wardService.addWardDetails(id, category, capacity, status)
-    console.log('Successfully added!')
+    
+    console.log(`${values}`)
+    wardService.addWardDetails(values)
   };
 
   const onFinishFailed = errorInfo => {
