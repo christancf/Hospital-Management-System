@@ -23,7 +23,6 @@ const tailLayout = {
 };
 
 const Demo = () => {
-  let wardDetails = ""
   const onFinish = values => {
     let id = values.id
     let capacity = values.capacity
@@ -36,7 +35,23 @@ const Demo = () => {
     console.log('Failed:', errorInfo);
   };
   const searchById = (id) => {
-    wardDetails = wardService.readWardDetails(id)
+    wardService.readWardDetails(id)
+    .then((details) => {
+      let wardDetails = details[0]
+      console.log(wardDetails)
+      setValues(wardDetails)
+    }).catch((e)=>{
+      console.log(`Error @ update-ward-details: ${e}`)
+    })
+  }
+  const setValues = (wardDetails) => {
+    let mCategory = document.getElementById('category')
+    let mCapacity = document.getElementById('capacity')
+    let mStatus = document.getElementById('status')
+
+    mCategory.value = wardDetails.category[0].toUpperCase() + wardDetails.category.substring(1)
+    mCapacity.value = wardDetails.capacity
+    wardDetails.status? mStatus.value = "Available" : mStatus.value = "Unavailable"
   }
   return (
     <Form
@@ -58,21 +73,21 @@ const Demo = () => {
         name="category"
         rules={[{ required: true, message: 'Please select ward category' }]}
       >
-			<Input disabled={true} value={wardDetails.category}/>
+			<Input disabled={true} id="category" />
       </Form.Item>
       <Form.Item
         label="Ward Capacity"
         name="capacity"
         rules={[{ required: true, message: 'Please input the ward capacity' }]}
       >
-		  <Input placeholder='Capacity' value={wardDetails.capacity} />
+		  <Input placeholder='Capacity' id="capacity" />
       </Form.Item>
 	  <Form.Item
         label="Status"
         name="status"
         rules={[{ required: true, message: 'Please select status' }]}
       >
-		  <Cascader options={wardStatus} value={wardDetails.status} />
+		  <Cascader options={wardStatus} id="status" />
       </Form.Item>
 
       <Form.Item {...tailLayout}>
@@ -93,7 +108,7 @@ const wardStatus = [{
 },
 {
 	value: 'false',
-	label: 'UnAvailable'
+	label: 'Unavailable'
 }]
 
 

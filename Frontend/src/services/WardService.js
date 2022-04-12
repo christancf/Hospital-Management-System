@@ -4,7 +4,7 @@ const wardService = {}
 
 wardService.addWardDetails = (data) => {
   return fetch({
-    url: '/details/add',
+    url: 'ward/details/add',
     method: 'post',
     data
   })
@@ -12,13 +12,13 @@ wardService.addWardDetails = (data) => {
 
 wardService.readWardDetails = function (data) {
   return fetch({
-    url: '/details/read?id='+data,
+    url: 'ward/details/read?id='+data,
     method: 'get'
   })
 }
 wardService.updateWardDetails = function (data) {
   return fetch({
-    url: '/details/update',
+    url: 'ward/details/update',
     method: 'put',
     data: data
   })
