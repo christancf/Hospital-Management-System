@@ -13,4 +13,12 @@ bloodBankService.addBloodBag = function (jsonbody){
   })
 }
 
+bloodBankService.updateBloodDetails = function(data) {
+  return fetch({
+    url: '/details/update',
+    method: 'put',
+    data: data
+  })
+}
+
 export default bloodBankService

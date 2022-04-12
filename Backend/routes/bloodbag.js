@@ -39,5 +39,17 @@ router.post('/add-details', function (req, res, next) {
 });
 
 
+//read blood bank details
+router.get('/details/read?:id', async (req, res, next) => {
+  try {
+    let bloodbagDetail = await bloodbagModel.find({id: req.query.id})
+    res.status(200).json({details: bloodbagDetail})
+  } catch (error) {
+    res.status(400).json({message: error.message})
+  }
+});
+
+//update blood bank details
+
 
 module.exports = router;

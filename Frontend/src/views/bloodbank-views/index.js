@@ -9,6 +9,7 @@ export const BloodBankView = () => {
       <Switch>
         <Route path={`${BLOODBANK_PREFIX_PATH}/home`} component={lazy(() => import(`./home`))} />
         <Route path={`${BLOODBANK_PREFIX_PATH}/add-details`} component={lazy(() => import(`./add-blood-bag`))} />
+        <Route path={`${BLOODBANK_PREFIX_PATH}/update-details`} component={lazy(() => import(`./update-blood-bag`))} />
         
         <Redirect from={`${BLOODBANK_PREFIX_PATH}`} to={`${BLOODBANK_PREFIX_PATH}/home`} />
         
