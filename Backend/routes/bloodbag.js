@@ -2,6 +2,7 @@ var express = require('express');
 const bloodbagModel = require('../models/bloodbag');
 var router = express.Router();
 const auth = require("../middleware/auth");
+const bloodbag = require('../models/bloodbag');
 
 //add blood bag details
 router.post('/add-details', function (req, res, next) {
@@ -50,6 +51,24 @@ router.get('/details/read?:id', async (req, res, next) => {
 });
 
 //update blood bank details
+router.put('bag-update',async(req,res)=>{
+  const newDonorName = req.body.newDonorName
+  const newDonorNIC = req.body.newDonorNIC
+  const newplace = req.body.place
+
+  try {
+    await bloodbag.findById(id,(error,bagUpdate)=>{
+      bagUpdate.donorName = newDonorName;
+      bagUpdate.donorNIC = newDonorNIC;
+      bagUpdate.place = newplace;
+      bagUpdate.save()
+    });
+  } catch (error) {
+    console.log(error)
+  }
+
+  res.send("Updated");
+})
 
 
 module.exports = router;
