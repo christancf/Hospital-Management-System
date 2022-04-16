@@ -12,26 +12,19 @@ router.post('/add-member', function (req, res, next) {
     staffName: req.body.staffName,
     NIC: req.body.NIC,
     email: req.body.email,
-    designation: req.body.designation,
+    designation: String(req.body.designation),
     qualification: req.body.qualification,
     dateOfBirth: req.body.dateOfBirth,
-    gender: req.body.gender,
+    gender: String(req.body.gender),
     address: req.body.address,
-    basicSalary: req.body.basicSalary,
+    basicSalary:Number( req.body.basicSalary),
     mobile: req.body.mobile,
     home: req.body.home
   });
 
-  try {
-    const addStaffMember = staff.save()
-    if(addStaffMember){
-      res.status(200).json(addStaffMember)
-    }else{
-      res.status(400).json({message: 'Cannot add data right now!'})
-    }
-  } catch (error) {
-    res.status(400).json({message: error.message})
-  }
+  staff.save()
+  .then(() => res.json("Staff Member Added!"))
+  .catch((e) => console.log(`Error: ${ e }`))
 
 });
 

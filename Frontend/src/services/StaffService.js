@@ -4,7 +4,7 @@ const staffService = {}
 
 staffService.addStaffMember = function (data) {
   return fetch({
-    url: '/add-member',
+    url: 'staff/add-member',
     method: 'post',
     data: data
   })
