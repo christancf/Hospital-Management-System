@@ -49,9 +49,12 @@ router.get('/details/read?:id', async (req, res, next) => {
     res.status(400).json({message: error.message})
   }
 });
+// router.get('/details/read?:id',(req,res)=>{
+
+// })
 
 //update blood bank details
-router.put('bag-update',async(req,res)=>{
+router.put('/bag-update',async(req,res)=>{
   const newDonorName = req.body.newDonorName
   const newDonorNIC = req.body.newDonorNIC
   const newplace = req.body.place
@@ -68,6 +71,19 @@ router.put('bag-update',async(req,res)=>{
   }
 
   res.send("Updated");
+});
+
+//delete blood bag
+router.delete('/bag-delete/:id',(req,res)=>{
+  bloodbagModel.findByIdAndRemove(req.params.id).exec((err,deleteBag)=>{
+    if(err)return res.status(400).json({
+      message:"Delete unsuccesful",err
+    });
+
+    return res.json({
+      massege:"succesful"
+    })
+  })
 })
 
 

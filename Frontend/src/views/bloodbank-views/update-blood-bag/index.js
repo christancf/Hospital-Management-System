@@ -18,7 +18,7 @@ const UpdateBloodBag = () => {
     let DonatedDate = values.DonatedDate
     let Place = values.Place
     let BloodGroup = values.BloodGroup
-    let result = wardService.updateBloodBagDetails(Name,NIC,DonationNum,DonatedDate,Place,BloodGroup)
+    let result = bloodBankService.updateBloodBagDetails(Name,NIC,DonationNum,DonatedDate,Place,BloodGroup)
     console.log('Successfully updated!', result)
   };
 
@@ -49,7 +49,6 @@ const UpdateBloodBag = () => {
         <Form.Item label="Donated Date & Time">
           <DatePicker />
         </Form.Item>
-        
         <Form.Item label="Place" >
           <Input />
         </Form.Item>
