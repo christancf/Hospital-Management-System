@@ -16,7 +16,8 @@ router.post('/add', function (req, res, next) {
     date_time_of_death: req.body.date_time_of_death,
     cause_of_death: req.body.cause_of_death,
     specifics_of_death: req.body.specifics_of_death,
-    cabinet_number: req.body.cabinet_number,
+    // cabinet_number: req.body.cabinet_number,
+    cabinet_number: 'A1',
     status: false,
     receiver_name: null,
     receiver_type: null
@@ -39,5 +40,19 @@ router.post('/add', function (req, res, next) {
   }
 
 });
+
+// READ to info page
+router.get('/info', async function (req, res, next) {
+
+  try {
+    let corpseDetails = await corpseModel.find({})
+    // corpseDetails = JSON.stringify(corpseDetails)  convert to json string
+    // corpseDetails = JSON.parse(corpseDetails)  convert to json
+    res.status(200).json({details: corpseDetails})
+  } catch (error) {
+    res.status(400).json({message: error.message})
+  }
+
+})
 
 module.exports = router;

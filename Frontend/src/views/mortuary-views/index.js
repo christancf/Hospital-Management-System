@@ -8,6 +8,10 @@ export const MortuaryViews = () => {
     <Suspense fallback={<Loading cover="content"/>}>
       <Switch>
         <Route path={`${MORTUARY_PREFIX_PATH}/home`} component={lazy(() => import(`./home`))} />
+        <Route path={`${MORTUARY_PREFIX_PATH}/info`} component={lazy(() => import(`./info`))} />
+        <Route path={`${MORTUARY_PREFIX_PATH}/stats`} component={lazy(() => import(`./stats`))} />
+         {/* for testing  */}
+        <Route path={`${MORTUARY_PREFIX_PATH}/add`} component={lazy(() => import(`./add-corpse`))} />
         <Redirect from={`${MORTUARY_PREFIX_PATH}`} to={`${MORTUARY_PREFIX_PATH}/home`} />
       </Switch>
     </Suspense>
