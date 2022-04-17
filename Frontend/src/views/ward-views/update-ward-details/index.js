@@ -5,7 +5,7 @@ const { Search } = Input
 const UpdateDetails = () => {
 	return (
 		<div>
-			<Demo />
+			<Demo/>
 		</div>
 	)
 }
@@ -22,78 +22,77 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-const Demo = () => {
-  const onFinish = values => {
-    let id = values.id
-    let capacity = values.capacity
-    let status = values.status
-    let result = wardService.updateWardDetails(id, capacity, status)
-    console.log('Successfully updated!', result)
-  };
+/*const setEventListeners = () => {
+  document.getElementById("capacity").addEventListener("focusout", console.log("focus out"))
+  document.getElementById("capacity").addEventListener("focus", console.log("focus"))
+}*/
 
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo);
-  };
+const Demo = () => {
+  let wardDetails;
+
+  const onFinish = values => {
+    if(values.capacity === undefined) values.capacity = wardDetails.capacity
+    if(values.status === undefined) values.status = wardDetails.status
+
+    wardService.updateWardDetails(values)
+      .then((result)=>{
+        console.log(`Successfully Updated! ${result}`)
+      }).catch((e)=>{
+        console.log(`Error @ update-ward-details updateWardDetails: ${e}`)
+    })
+  }
+
+
   const searchById = (id) => {
     wardService.readWardDetails(id)
     .then((details) => {
-      let wardDetails = details[0]
-      console.log(wardDetails)
-      setValues(wardDetails)
+      wardDetails = details[0]
+      console.log(wardDetails) 
+      document.getElementById("category").value = wardDetails.category[0].toUpperCase() + wardDetails.category.substring(1)
+      document.getElementById("capacity").value = wardDetails.capacity
+      wardDetails.status? document.getElementById("status").value = "Available" : document.getElementById("status").value = "Unavailable"         
     }).catch((e)=>{
       console.log(`Error @ update-ward-details: ${e}`)
-    })
-  }
-  const setValues = (wardDetails) => {
-    let mCategory = document.getElementById('category')
-    let mCapacity = document.getElementById('capacity')
-    let mStatus = document.getElementById('status')
-
-    mCategory.value = wardDetails.category[0].toUpperCase() + wardDetails.category.substring(1)
-    mCapacity.value = wardDetails.capacity
-    wardDetails.status? mStatus.value = "Available" : mStatus.value = "Unavailable"
-  }
+    })    
+  }  
+  
   return (
     <Form
       {...layout}
       name="basic"
-      initialValues={{ remember: true }}
       onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
+      initialValues={{ remember: true }}
     >
       <Form.Item
         label="ID"
         name="id"
         rules={[{ required: true, message: 'Please input ward ID!' }]}
       >
-        <Search placeholder="Ward ID" onSearch={id => searchById(id)} enterButton />
+        <Search placeholder="Ward ID" id="id" onSearch={id => searchById(id)} enterButton />
       </Form.Item>
-	  <Form.Item
+      <Form.Item
         label="Category"
         name="category"
-        rules={[{ required: true, message: 'Please select ward category' }]}
-      >
-			<Input disabled={true} id="category" />
+        >
+        <Input disabled={true} id="category" />
       </Form.Item>
       <Form.Item
         label="Ward Capacity"
-        name="capacity"
-        rules={[{ required: true, message: 'Please input the ward capacity' }]}
+        name="capacity"        
       >
-		  <Input placeholder='Capacity' id="capacity" />
+        <Input placeholder='Capacity' id="capacity" onFocus={console.log("Focus")} onFocusOut={console.log("Focus out")}/>
       </Form.Item>
-	  <Form.Item
+      <Form.Item
         label="Status"
         name="status"
-        rules={[{ required: true, message: 'Please select status' }]}
       >
-		  <Cascader options={wardStatus} id="status" />
+        <Cascader options={wardStatus} id="status" />
       </Form.Item>
 
       <Form.Item {...tailLayout}>
-        <Button type="primary" htmlType="submit">
-          Save
-        </Button>
+          <Button type="primary" htmlType="submit">
+            Save
+          </Button>
       </Form.Item>
     </Form>
   );

@@ -1,11 +1,14 @@
 import React from 'react'
-import { Form, Input, Button, Cascader, DatePicker } from 'antd';
+import { Form, Input, Button, Cascader, DatePicker, Typography } from 'antd';
 import staffService from 'services/StaffService';
 
+const { Title } = Typography
 const { Search } = Input;
+
 const UpdateStaffDetails = () => {
 	return (
 		<div>
+      <Title>Edit Staff Details</Title>
 			<Demo />
 		</div>
 	)
@@ -21,7 +24,6 @@ const tailLayout = {
 
 const Demo = () => {
   
-  let staffDetails = '';
 
   const onFinish = values => {
     let staffID = values.staffID
@@ -43,10 +45,14 @@ const Demo = () => {
 
   const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo);
-  };
+  }; 
 
   const searchById = (id) => {
-    staffDetails = staffService.readStaffDetails(id);
+    staffService.readStaffDetails(id)
+    .then((details) => {
+      document.getElementById('designation').value = details[0].designation
+    })
+    .catch((e) => console.log(`Error: ${ e }`))
   };
 
   return (
@@ -67,18 +73,18 @@ const Demo = () => {
 
       <Form.Item
         label="Name"
-        name="name"
+        name="staffName"
         rules={[{ required: true, message: 'Please input the name!' }]}
       >
-        <Input value = {staffDetails.name} />
+        <Input />
       </Form.Item>
 
 	  <Form.Item
         label="NIC"
-        name="nic"
+        name="NIC"
         rules={[{ required: true, message: 'Please input the NIC!' }]}
       >
-        <Input value = {staffDetails.NIC} />
+        <Input />
       </Form.Item>
 
 	  <Form.Item
@@ -86,7 +92,7 @@ const Demo = () => {
         name="email"
         rules={[{ pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$", message: 'Please enter a valid email!' }]}
       >
-        <Input value = {staffDetails.email} />
+        <Input/>
       </Form.Item>
 
 	  <Form.Item
@@ -94,7 +100,7 @@ const Demo = () => {
         name="designation"
         rules={[{ required: true, message: 'Please select the designation!' }]}
       >
-		  <Cascader options={designation} value = {staffDetails.designation} />
+		  <Cascader options={designationOptions} />
       </Form.Item>
 
       <Form.Item
@@ -102,7 +108,7 @@ const Demo = () => {
         name="qualification"
         rules={[{ required: true, message: 'Please input the qualification!' }]}
       >
-		  <Input value = {staffDetails.qualification} />
+		  <Input />
       </Form.Item>
 
       <Form.Item 
@@ -110,7 +116,7 @@ const Demo = () => {
         name="dateOfBirth"
         rules={[{ required: true, message: 'Please input the date of birth!'}]}
       >
-          <DatePicker value = {staffDetails.dateOfBirth} />
+          <DatePicker />
       </Form.Item>
 
       <Form.Item
@@ -118,7 +124,7 @@ const Demo = () => {
         name="gender"
         rules={[{ required: true, message: 'Please select the gender!' }]}
       >
-		  <Cascader options={gender} value= {staffDetails.gender} />
+		  <Cascader options={genderOptions}/>
       </Form.Item>
 
       <Form.Item
@@ -126,7 +132,7 @@ const Demo = () => {
         name="address"
         rules={[{ required: true, message: 'Please input the address!' }]}
       >
-		  <Input value = {staffDetails.address} />
+		  <Input/>
       </Form.Item>
 
       <Form.Item
@@ -134,7 +140,7 @@ const Demo = () => {
         name="basicSalary"
         rules={[{ required: true, message: 'Please input the basic salary!' }]}
       >
-		  <Input value = {staffDetails.basicSalary} />
+		  <Input  />
       </Form.Item>
 
       <Form.Item
@@ -142,7 +148,7 @@ const Demo = () => {
         name="mobile"
         rules={[{ required: true, message: 'Please input the mobile number!' }]}
       >
-		  <Input value = {staffDetails.mobile} />
+		  <Input  />
       </Form.Item>
 
       <Form.Item
@@ -150,7 +156,7 @@ const Demo = () => {
         name="home"
         rules={[{ required: true, message: 'Please input the home number!' }]}
       >
-		  <Input value = {staffDetails.home} />
+		  <Input />
       </Form.Item>
 
       <Form.Item {...tailLayout}>
@@ -162,7 +168,7 @@ const Demo = () => {
   );
 };
 
-const designation = [{
+const designationOptions = [{
 	value: 'doctor',
 	label: 'Doctor'
 },
@@ -175,7 +181,7 @@ const designation = [{
 	label: 'Allied Health Professionals'
 }]
 
-const gender = [{
+const genderOptions = [{
 	value: 'male',
 	label: 'Male'
 },
