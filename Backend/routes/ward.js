@@ -38,38 +38,14 @@ router.get('/details/read?:id', (req, res, next) => {
 })
 //update ward details
 router.put('/details/update', (req, res, next) => {
-  
+  wardModel.updateOne({id: String(req.body.id)},
+    {$set: {"capacity": String(req.body.capacity), "status": String(req.body.status)}})
+    .then((result) => {
+      res.json(`Successfully Updated!`)
+    }).catch((e) => {
+      console.log(`Error Update: ${e}`)
+    })
 })
-/*router.get('/', auth, function (req, res, next) {
-  
-  res.send('Hello World!');
-
-});
-
-router.get('/users', auth, function (req, res, next) {
-
-  res.send({ user: ['Susith', 'Sayumi', 'Shavi', 'Nimtara', 'Christan'] });
-
-});
-
-router.post('/users', auth, function (req, res, next) {
-
-  const user = new userModel({
-    name: req.body.name,
-    age: req.body.age
-  });
-
-  try {
-
-    const dataToSave = user.save();
-    res.status(200).json(dataToSave);
-
-  }
-  catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-
-});*/
 
 
 
