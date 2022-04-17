@@ -15,8 +15,24 @@ bloodBankService.addBloodBag = function (jsonbody){
 
 bloodBankService.updateBloodDetails = function(data) {
   return fetch({
-    url: '/details/update',
+    url: '/bloodbag/bag-update/:id',
     method: 'put',
+    data: data
+  })
+}
+
+bloodBankService.readBloodDetails = function(data) {
+  return fetch({
+    url: '/bloodbag/details/read?:id',
+    method: 'get',
+    data: data
+  })
+}
+
+bloodBankService.deleteBloodDetails = function(data) {
+  return fetch({
+    url: '/bloodbag/bag-delete/:id',
+    method: 'delete',
     data: data
   })
 }

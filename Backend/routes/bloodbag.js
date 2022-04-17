@@ -54,7 +54,7 @@ router.get('/details/read?:id', async (req, res, next) => {
 // })
 
 //update blood bank details
-router.put('/bag-update',async(req,res)=>{
+router.put('/bag-update/:id',async(req,res)=>{
   const newDonorName = req.body.newDonorName
   const newDonorNIC = req.body.newDonorNIC
   const newplace = req.body.place
