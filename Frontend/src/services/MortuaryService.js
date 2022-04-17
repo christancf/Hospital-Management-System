@@ -25,4 +25,11 @@ mortuaryService.addCorpse = function (params) {
     data: params
   })
 }
+
+mortuaryService.getData = function () {
+    return fetch({
+      url: '/mortuary/info',
+      method: 'get'
+    })
+  }
 export default mortuaryService

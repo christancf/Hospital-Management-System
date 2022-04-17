@@ -1,88 +1,59 @@
 import React from 'react'
 import { Table, Divider, Tag } from 'antd';
+import mortuaryService from 'services/MortuaryService';
 const Home = () => {
 	return (
 		<div>
-			<Table columns={columns} dataSource={data} />
+			<Table columns={columns} 
+      dataSource={data}
+       />
+       <Rome />
+       
 		</div>
 	)
 }
-
-
-
-
-
+const Rome = () => {
+  console.log(data)
+}
 const columns = [
+  {
+    title: 'ID',
+    dataIndex: 'id',
+  },
+  {
+    title: 'NIC',
+    dataIndex: 'nic',
+  },
   {
     title: 'Name',
     dataIndex: 'name',
-    key: 'name',
-    render: text => <a>{text}</a>,
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
+    title: 'Cause of Death',
+    dataIndex: 'causeOfDeath',
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
+    title: 'Date of Death',
+    dataIndex: 'dateOfDeath',
   },
   {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: tags => (
-      <span>
-        {tags.map(tag => {
-          let color = tag.length > 5 ? 'geekblue' : 'green';
-          if (tag === 'loser') {
-            color = 'volcano';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </span>
-    ),
+    title: 'Date of Release',
+    dataIndex: 'dateOfRelease'
   },
   {
-    title: 'Action',
-    key: 'action',
-    render: (text, record) => (
-      <span>
-        <a>Invite {record.name}</a>
-        <Divider type="vertical" />
-        <a>Delete</a>
-      </span>
-    ),
+    title: 'Cabinet Number',
+    dataIndex: 'cabinetNo',
+  },
+  {
+    title: 'Status',
+    dataIndex: 'status',
   },
 ];
+const data = mortuaryService.getData().then(value=>{
+  const corpseData = value.details
+  // console.log(corpseData)
+});
 
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-];
+// const dataJson = data;
+// console.log(dataJson)
 export default Home

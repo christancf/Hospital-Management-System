@@ -48,6 +48,10 @@ const dataSchema = new mongoose.Schema({
     receiver_type: {
         required: false,
         type: String
+    },
+    date_of_release: {
+        required: false,
+        type: Number
     }
 })
 

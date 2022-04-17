@@ -45,26 +45,26 @@ function disabledDateTime() {
 
 const Demo = () => {
 
-	const onFinish = values => {
-		const myData = {
+	 const onFinish = values => {
+		const corpseData = {
 			NIC: values.nic,
-		 }
-		let NIC = values.nic
-		let name = values.name
-		let sex = values.sex
-		let address = values.address
-		let date_of_birth = moment(values.dob).valueOf()
-		let date_time_of_death = moment(values.dod).valueOf()
-		let cause_of_death = values.cod
-		let specifics_of_death = values.sod
-		const res = mortuaryService.addCorpse(NIC, name, sex, address, date_of_birth, date_time_of_death, cause_of_death, specifics_of_death)
-		
-		if(res.success == true) {
-			console.log('Successfully added:', values);
-			window.location = '/home'
-		} else {
-
+			name: values.name,
+			sex: values.sex,
+			address: values.address,
+			date_of_birth: moment(values.dob).valueOf(),
+			date_time_of_death: moment(values.dod).valueOf(),
+			cause_of_death: values.cod[0],
+			specifics_of_death: values.sod
 		}
+		const result = mortuaryService.addCorpse(corpseData)
+		result.then(value => {
+			if(value.success == true) {
+				console.log('Successfully added:', values);
+				window.location = '.../home'
+			} else {
+				alert('Try inserting again')
+			}
+		  })
 	};
 
 	const onFinishFailed = errorInfo => {
@@ -143,7 +143,7 @@ const Demo = () => {
 			<Form.Item
 				label="Cause of Death"
 				name="cod"
-				rules={[{ required: true, message: 'Please input the Cause of Death!' }]}
+				rules={[{ required: false }]}
 			>
 				<Cascader options={causeOfDeath} placeholder="Select Cause of Death"/>
 			</Form.Item>
@@ -151,7 +151,7 @@ const Demo = () => {
 			<Form.Item
 				label="Specifics about Death"
 				name="sod"
-				rules={[{ required: true, message: 'Please input the Specifics about Death!' }]}
+				rules={[{ required: false}]}
 			>
 				<Input.TextArea />
 			</Form.Item>
@@ -165,19 +165,19 @@ const Demo = () => {
 	  );
 }
 const causeOfDeath = [{
-	value: 'natural',
+	value: 'Natural',
 	label: 'Natural'
 },
 {
-	value: 'accident',
+	value: 'Accident',
 	label: 'Accident'
 },
 {
-	value: 'homicide',
+	value: 'Homicide',
 	label: 'Homicide'
 },
 {
-	value: 'suicide',
+	value: 'Suicide',
 	label: 'Suicide'
 }]
 export default Home
