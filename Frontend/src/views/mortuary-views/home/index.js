@@ -1,106 +1,98 @@
-// // import Button from "antd/es/button";
-// // import { size } from "lodash";
+
+import { Card, Popover } from 'antd';
 
 
-// const Home = () => {
-//   return (
-//     <>
-//       <center><h1>Mortuary Space Allocation</h1></center>
-//       <br></br>
-//       <Card />
-//     </>
-//   )
-// }
+const text = <span>Title</span>;
+const content = (props) => {
 
-// // const DisplayBox = (props) => {
+  if (props.isOccupied == true) {
 
-// //   const styledBtn = 
-// //   { backgroundColor: "green",
-// //     color: "white",
-// //     fontSize: "25px",
-// //     padding: "20px",
-// //     width: "75px",
-// //     height: "75px",
-// //     margin: "10px",
-// //     tetxAlign: "center"
-// //   }
+    return (
+      <div>
+        <p>OCCUPIED</p>
+        <p>{props.letter}{props.number}</p>
+        <button>More Info</button>
+      </div>
+    )
 
-// //   return (
-// //     <>
-// //       <div style={styledBtn}></div>
-// //       <div style={styledBtn}></div>
-// //       <div style={styledBtn}></div>
-// //       <div style={styledBtn}></div>
-// //       <div style={styledBtn}></div>
-// //       <div style={styledBtn}></div>
-// //     </>
-// //   )
-// // }
+  }
+  else {
 
-// export default Home;
+    return (
+      <div>
+        <p>{props.letter}{props.number}</p>
+        <button>Add Corpse</button>
+      </div>
+    )
+
+  }
 
 
-import { Card, Avatar } from 'antd';
-import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
-
-const { Meta } = Card;
+};
 
 const Home = () => {
+
+  const letters = ['A', 'B','C','D','E','F'];
+  const numbers = [1,2,3,4,5,6,7,8,9];
+  const response = [
+    {
+      number: 'A1',
+      NIC : '200013400692',
+      Name : 'Susith Rupasinghe'
+    },
+    {
+      number: 'A2',
+      NIC : '8873783838738V',
+      Name : 'Gotabaya Rajapakshe'
+    }
+  ]
+  
+  const cabinetArray = []
+  for(var i=0; i<letters.length; i++){
+
+    for(var j=0; j<numbers.length; j++){
+
+      const spaceNumber = letters[i] + numbers[j];
+
+      const isFound = response.find( (sayumi) => {  return sayumi.number == spaceNumber  } );
+
+      if( isFound == undefined){
+
+        cabinetArray.push(
+          <Cabinet letter={letters[i]} number={numbers[j]} isOccupied={false}></Cabinet>
+        );
+      }
+      else{
+
+        cabinetArray.push(
+          <Cabinet letter={letters[i]} number={numbers[j]} isOccupied={true}></Cabinet>
+        );
+
+      }
+
+    }
+  }
+
   return (
     <>
       <center><h1>Mortuary Space Allocation</h1></center>
-      <br></br>
-      <Positions />
+      {cabinetArray}
     </>
   )
 }
 
-const DataCard = () => {
-  return (
-    <Card
-    style={{ width: 75, height: 75 }}
-    title="A1"
-    // actions={[
-    //   <SettingOutlined key="setting" />,
-    //   <EditOutlined key="edit" />,
-    //   <EllipsisOutlined key="ellipsis" />,
-    // ]}
-  >
-  </Card>
-  // mountNode 
-  )
-}
-const DataSet = () => {
-  return (
-      <tr>
-        <td><DataCard/></td>
-        <td><DataCard/></td>
-        <td><DataCard/></td>
-        <td><DataCard/></td>
-        <td><DataCard/></td>
-        <td><DataCard/></td>
-        <td><DataCard/></td>
-        <td><DataCard/></td>
-        <td><DataCard/></td>
-      </tr>
-  )
-}
-const Positions = () => {
-  return (
-    <table style={{borderSpacing: "30px"}}>
-      <DataSet />
-      <DataSet />
-      <DataSet />
-      <DataSet />
-      <DataSet />
-      <DataSet />
-      <DataSet />
-      <DataSet />
-      <DataSet />
-      <DataSet />
-    </table>
-   
 
+const Cabinet = (props) => {
+
+  return (
+    <>
+      <Popover placement="bottomRight" title={text} content={content({ letter: props.letter, number: props.number , isOccupied: props.isOccupied})} arrowPointAtCenter>
+        <Card style={{ width: 100, borderColor: '#ff6b72', borderWidth: '3px' }} hoverable>
+          <h1 className='text-center'>{props.letter}{props.number}</h1>
+        </Card>
+      </Popover>
+    </>
   )
+
 }
 export default Home;
