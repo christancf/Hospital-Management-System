@@ -1,10 +1,13 @@
 import React from 'react'
-import { Form, Input, Button, Cascader, DatePicker } from 'antd';
+import { Form, Input, Button, Cascader, DatePicker, Typography } from 'antd';
 import staffService from 'services/StaffService';
+
+const { Title } = Typography
 
 const AddStaffMember = () => {
 	return (
 		<div>
+      <Title>Add New Staff Member</Title>
 			<Demo />
 		</div>
 	)
