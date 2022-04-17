@@ -34,13 +34,10 @@ router.get('/', (req, res, next) => {
 })
 
 //read staff member details
-router.get('/read-details?:id', async (req, res, next) => {
-  try {
-    let staffDetails = await staffModel.find({staffID: req.query.id})
-    res.status(200).json({details: staffDetails})
-  } catch (error) {
-    res.status(400).json({message: error.message})
-  }
+router.get('/read-details?:id', (req, res, next) => {
+  staffModel.find({staffID: req.query.id})
+  .then((staffDetails) => res.json(staffDetails))
+  .catch((e) => console.log(`Error: ${ e }`))
 });
 
 router.post('/update-details', function (req, res, next) {
