@@ -41,9 +41,9 @@ router.post('/add-details', function (req, res, next) {
 
 
 //read blood bank details
-router.get('/details/read?:id', async (req, res, next) => {
+router.get('/details/read', async (req, res, next) => {
   try {
-    let bloodbagDetail = await bloodbagModel.find({id: req.query.id})
+    let bloodbagDetail = await bloodbagModel.find({})
     res.status(200).json({details: bloodbagDetail})
   } catch (error) {
     res.status(400).json({message: error.message})
@@ -60,7 +60,7 @@ router.put('/bag-update/:id',async(req,res)=>{
   const newplace = req.body.place
 
   try {
-    await bloodbag.findById(id,(error,bagUpdate)=>{
+    await bloodbag.findById(id,(_error,bagUpdate)=>{
       bagUpdate.donorName = newDonorName;
       bagUpdate.donorNIC = newDonorNIC;
       bagUpdate.place = newplace;
@@ -75,7 +75,8 @@ router.put('/bag-update/:id',async(req,res)=>{
 
 //delete blood bag
 router.delete('/bag-delete/:id',(req,res)=>{
-  bloodbagModel.findByIdAndRemove(req.params.id).exec((err,deleteBag)=>{
+  try {
+    bloodbagModel.findByIdAndRemove(req.params.id).exec((err,deleteBag)=>{
     if(err)return res.status(400).json({
       message:"Delete unsuccesful",err
     });
@@ -84,6 +85,10 @@ router.delete('/bag-delete/:id',(req,res)=>{
       massege:"succesful"
     })
   })
+  } catch (error) {
+    console.log(error);
+  }
+  
 })
 
 

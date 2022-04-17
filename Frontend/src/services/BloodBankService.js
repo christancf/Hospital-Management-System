@@ -21,11 +21,10 @@ bloodBankService.updateBloodDetails = function(data) {
   })
 }
 
-bloodBankService.readBloodDetails = function(data) {
-  return fetch({
-    url: '/bloodbag/details/read?:id',
-    method: 'get',
-    data: data
+bloodBankService.readBloodDetails = async function () {
+  return await fetch({
+    url: '/bloodbag/details/read',
+    method: 'get'
   })
 }
 
