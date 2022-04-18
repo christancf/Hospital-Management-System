@@ -1,8 +1,27 @@
-import { Table, Divider, Tag } from 'antd';
+import { Table, Divider, Tag, Spin } from 'antd';
+import { useState, useEffect } from 'react';
+import channellingService from 'services/FrontlineChannellingService';
 
 
 
 const ViewAppointment = () => {
+
+    const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false);
+	const [data, setData] = useState();
+
+    useEffect(() => {
+		channellingService.getAllAppointments().then((resp) => {
+			setData(resp.payload);
+			setLoading(false);
+
+		}).catch((err) => {
+			setLoading(false);
+			setError(true);
+			setData();
+		});
+	}, []);
+
     const columns = [
         {
             title: 'NIC',
@@ -73,7 +92,7 @@ const ViewAppointment = () => {
         },
     ];
 
-    const data = [
+    const rowdata = [
         {
             NIC: '1',
             name: 'John Brown',
@@ -107,12 +126,37 @@ const ViewAppointment = () => {
     ];
 
 
-    return (
-        <>
-        <h1 className='text-left' >View Appointments</h1>
-        <Table columns={columns} dataSource={data} />
-        </>
-    );
+    if (loading) {
+		return (
+			<>
+				<center>
+					<Spin size="large" tip="Loading..." delay={500} spinning={loading} />
+				</center>
+
+			</>
+		)
+	}
+	else if (error) {
+
+		return (
+			<>
+				<center>
+					<Spin size="large" tip="Loading..." delay={500} spinning={loading} />
+				</center>
+
+			</>
+		)
+
+	}
+    else{
+        return (
+            <>
+            <h1 className='text-left' >View Appointments</h1>
+            <Table columns={columns} dataSource={rowdata} />
+            </>
+        );
+    }
+  
 
 }
 
