@@ -40,8 +40,25 @@ router.get('/read-details?:id', (req, res, next) => {
   .catch((e) => console.log(`Error: ${ e }`))
 });
 
-router.post('/update-details', function (req, res, next) {
-
+router.put('/update-details', (req, res, next) => {
+  staffModel.updateOne({staffID: req.body.staffID},
+    {$set: 
+      {
+        staffName: req.body.staffName, 
+        NIC: req.body.NIC, 
+        email: req.body.email, 
+        designation: req.body.designation, 
+        qualification: req.body.qualification, 
+        dateOfBirth: req.body.dateOfBirth,
+        gender: req.body.gender,
+        address: req.body.address,
+        basicSalary: req.body.basicSalary,
+        mobile: req.body.mobile,
+        home: req.body.home
+      }
+    })
+      .then(() => res.json("Successfully Updated!"))
+      .catch((e) => console.log(`Error: ${ e }`))
 })
 
 module.exports = router;
