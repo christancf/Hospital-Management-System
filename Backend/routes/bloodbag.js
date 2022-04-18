@@ -44,7 +44,11 @@ router.post('/add-details', function (req, res, next) {
 router.get('/details/read', async (req, res, next) => {
   try {
     let bloodbagDetail = await bloodbagModel.find({})
-    res.status(200).json({details: bloodbagDetail})
+    res.status(200).json({
+      succuss: true,
+      message: 'read succussfull',
+      details: bloodbagDetail
+    })
   } catch (error) {
     res.status(400).json({message: error.message})
   }
