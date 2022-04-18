@@ -10,18 +10,18 @@ staffService.addStaffMember = function (data) {
   })
 }
 
-staffService.setPost = function (data) {
-  return fetch({
-    url: '/posts',
-    method: 'post',
-    data: data
-  })
-}
-
 staffService.readStaffDetails = function (data) {
   return fetch({
     url: 'staff/read-details?id='+data,
     method: 'get'
+  })
+}
+
+staffService.updateStaffDetails = function (data) {
+  return fetch({
+    url: 'staff/update-details',
+    method: 'put',
+    data
   })
 }
 
