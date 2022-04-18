@@ -1,14 +1,18 @@
-import { Form, Input, InputNumber, Button, Cascader, DatePicker } from 'antd';
+import { Form, Input, InputNumber, Button, Select, DatePicker, Card, Spin, Modal } from 'antd';
+import { useState, useEffect } from 'react';
 import channellingService from 'services/FrontlineChannellingService';
+const { Option } = Select;
 
-function toTimestamp(strDate){
+
+
+function toTimestamp(strDate) {
 	var datum = Date.parse(strDate);
-	return datum/1000;
- }
+	return datum / 1000;
+}
 
 const layout = {
-	labelCol: { span: 5 },
-	wrapperCol: { span: 10 },
+	labelCol: { span: 6 },
+	wrapperCol: { span: 15 },
 };
 
 const validateMessages = {
@@ -22,67 +26,196 @@ const validateMessages = {
 	},
 };
 
-const options = [
-	{
-	  value: 100,
-	  label: 'Dr. Wijitha Dahanayake'
-	},
-	{
-	  value: 150,
-	  label: 'Dr. Chirstoper Perera'
-	},
-  ];
+
 
 const AddAppointment = () => {
+
+	const [form] = Form.useForm();
+
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false);
+	const [data, setData] = useState();
+
+	useEffect(() => {
+		channellingService.getAllDoctors().then((resp) => {
+			setData(resp.payload);
+			setLoading(false);
+
+		}).catch((err) => {
+			setLoading(false);
+			setError(true);
+			setData();
+		});
+	}, []);
+
+	function filter(inputValue, path) {
+		return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
+	}
+
+	function ShowModel(title, delay, innercontent, isSuccess) {
+
+		if (isSuccess) {
+			const modal = Modal.success({
+				title: title,
+				content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+			});
+			const timer = setInterval(() => {
+				delay -= 1;
+				modal.update({
+					content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+				});
+			}, 1000);
+			setTimeout(() => {
+				clearInterval(timer);
+				modal.destroy();
+			}, delay * 1000);
+		}
+
+		else {
+			const modal = Modal.error({
+				title: title,
+				content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+			});
+			const timer = setInterval(() => {
+				delay -= 1;
+				modal.update({
+					content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+				});
+			}, 1000);
+			setTimeout(() => {
+				clearInterval(timer);
+				modal.destroy();
+			}, delay * 1000);
+		}
+	}
+
+
+
 
 
 	const onFinish = values => {
 
-		const payload =  {
+
+		const payload = {
 			NIC: values.NIC,
-			name:values.name,
+			name: values.name,
 			birthday: toTimestamp(values.birthday),
 			contact_no: values.contact_no,
-			doctor_id: values.doctor,
+			doctor_id: values.doctor_id.value,
 			date: toTimestamp(values.date),
 			queue_no: 20
 		}
-	
-		console.log(payload)
-		const res = channellingService.addAppointment(payload)
 
-		console.log(res);
+		channellingService.addAppointment(payload).then((res) => {
+
+			ShowModel(
+				"Successfull !",
+				4,
+				"Your appointment successfully added",
+				true
+			);
+			form.resetFields();
+
+		}).catch((error)=> {
+
+			ShowModel(
+				"Unsccessfull !",
+				4,
+				"Your appointment placement faild",
+				false
+			);
+
+		})
+
+
 	};
 
-	return (
+	if (loading) {
+		return (
+			<>
+				<center>
+					<Spin size="large" tip="Loading..." delay={500} spinning={loading} />
+				</center>
 
-		<Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
-			<label>Add Apppointment</label>
-			<Form.Item name={['user', 'NIC']} label="Patient NIC" rules={[{ required: true }]} placeholder="Patient NIC">
-				<Input />
-			</Form.Item>
-			<Form.Item name={['user', 'name']} label="Patient Name" rules={[{ required: true }]} placeholder="Patient Name">
-				<Input />
-			</Form.Item>
-			<Form.Item name={['user', 'birthday']} label="Birthday" rules={[{ required: true }]} placeholder="Patient Birthday">
-				<DatePicker />
-			</Form.Item>
-			<Form.Item name={['user', 'contact_no']} label="Contact No" rules={[{ required: true }]} placeholder="Contact Number">
-				<Input />
-			</Form.Item>
-			<Form.Item name={['user', 'doctor']} label="Doctor"  >
-			<Cascader options={options}  placeholder="Please select Doctor" />,
-			</Form.Item>
-			<Form.Item name={['user', 'date']} label="Appointment Date" rules={[{ required: true }]}>
-			<DatePicker />
-			</Form.Item>
-			<Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-				<Button type="primary" htmlType="submit">
-				Add Appointment
-				</Button>
-			</Form.Item>
-		</Form>
-	);
+			</>
+		)
+	}
+	else if (error) {
+
+		return (
+			<>
+				<center>
+					<Spin size="large" tip="Loading..." delay={500} spinning={loading} />
+				</center>
+
+			</>
+		)
+
+	}
+	else {
+
+		const res_data = data;
+		const options = res_data.map((item) => {
+
+			return {
+				text: item.staffName,
+				value: item.staffID
+			}
+		});
+		console.log(options)
+		return (
+			<>
+				<Card style={{ width: 800 }}>
+					<h1 className='text-left' style={{ marginLeft: 230 }}>Add Appointment</h1>
+
+
+					<Form {...layout} name="Add Appointment" form={form} onFinish={onFinish} validateMessages={validateMessages}>
+
+						<Form.Item name="NIC" label="Patient NIC" rules={[{ required: true }]} placeholder="Patient NIC">
+							<Input />
+						</Form.Item>
+						<Form.Item name="name" label="Patient Name" rules={[{ required: true }]} placeholder="Patient Name">
+							<Input />
+						</Form.Item>
+						<Form.Item name="birthday" label="Birthday" rules={[{ required: true }]} placeholder="Patient Birthday">
+							<DatePicker />
+						</Form.Item>
+						<Form.Item name="contact_no" label="Contact No" rules={[{ required: true }]} placeholder="Contact Number">
+							<Input />
+						</Form.Item>
+						<Form.Item name="doctor_id" label="Doctor"  rules={[{ required: true }]} >
+							{/* <Cascader options={options} placeholder="Please select Doctor" showSearch={{ filter }} />, */}
+
+							<Select
+
+								labelInValue
+								placeholder="Select users"
+								filterOption={false}
+								showSearch={{ filter }}
+								style={{ width: '100%' }}
+							>
+								{options.map(d => (
+									<Option key={d.value}>{d.text}</Option>
+								))}
+							</Select>
+						</Form.Item>
+						<Form.Item name="date" label="Appointment Date" rules={[{ required: true }]}>
+							<DatePicker />
+						</Form.Item>
+						<Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+							<Button type="primary" htmlType="submit">
+								Add Appointment
+							</Button>
+						</Form.Item>
+					</Form>
+				</Card>
+
+			</>
+
+
+		);
+	}
+
 };
 
 export default AddAppointment;
