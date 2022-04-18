@@ -14,7 +14,7 @@ const dashBoardNavTree = [{
 },
 {
   key: 'currentappointments',
-  path: `${FRONTLINE_CHANNELLING_PREFIX_PATH}/`,
+  path: `${FRONTLINE_CHANNELLING_PREFIX_PATH}/list`,
   title: 'Current Appointments',
   icon: BookOutlined,
   breadcrumb: false,
