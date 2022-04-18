@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const dataSchema = new mongoose.Schema({
+    id: {
+        required: true,
+        type: Number
+    },
     NIC: {
         required: true,
         type: String,

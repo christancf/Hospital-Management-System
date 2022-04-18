@@ -8,6 +8,7 @@ const auth = require("../middleware/auth");
 router.post('/add', function (req, res, next) {
 
   const corpse = new corpseModel({
+    id: 1,
     NIC: req.body.NIC,
     name: req.body.name,
     sex: req.body.sex,
@@ -18,7 +19,7 @@ router.post('/add', function (req, res, next) {
     specifics_of_death: req.body.specifics_of_death,
     // cabinet_number: req.body.cabinet_number,
     cabinet_number: 'A1',
-    status: false,
+    status: true,
     receiver_name: null,
     receiver_type: null,
     date_of_release: null
@@ -45,13 +46,34 @@ router.post('/add', function (req, res, next) {
 router.get('/info', async function (req, res, next) {
 
   try {
-    let corpseDetails = await corpseModel.find({}, { NIC: 1, name: 1, cause_of_death: 1, date_time_of_death: 1, date_of_release: 1, cabinet_number: 1, status: 1})
+    let corpseDetails = await corpseModel.find({}, { id: 1, NIC: 1, name: 1, cause_of_death: 1, date_time_of_death: 1, date_of_release: 1, cabinet_number: 1, status: 1, _id: 0})
     // corpseDetails = JSON.stringify(corpseDetails)  //convert to json string
     // corpseDetails = JSON.parse(corpseDetails)  //convert to json
     console.log(corpseDetails)
     res.status(200).json({
       success: true,
-      details: corpseDetails
+      message: "Successful Retrieval",
+      payload: corpseDetails
+    })
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message
+    })
+  }
+
+})
+
+//read for homepage
+router.get('/home', async function (req, res, next) {
+
+  try {
+    let corpseDetails = await corpseModel.find({status: true}, {_id: 0})
+    console.log(corpseDetails)
+    res.status(200).json({
+      success: true,
+      message: "Successful Retrieval",
+      payload: corpseDetails
     })
   } catch (error) {
     res.status(400).json({
