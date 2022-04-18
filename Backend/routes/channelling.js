@@ -1,6 +1,7 @@
 var express = require('express');
 const userModel = require('../models/user');
 const appointmentModel = require('../models/appointment')
+const staffModel = require('../models/staff')
 var router = express.Router();
 const auth = require("../middleware/auth");
 
@@ -41,6 +42,42 @@ catch (error) {
 
 
 });
+
+
+
+router.get('/doctors/', async function (req, res, next) {
+
+  
+  try {
+  
+    const response = await staffModel.find({
+      designation : 'doctor'
+      },
+      {
+        _id: 1,
+        staffID: 1,
+        staffName: 1
+      });
+    res.status(200).json(
+      {
+        succuss: true,
+        message: 'Retriaval succussfull',
+        payload: response
+      }
+    );
+  
+  }
+  catch (error) {
+    res.status(400).json(
+      { succuss: false, 
+        message: error.message,
+        payload: []
+      }
+      );
+  }
+  
+  
+  });
 
 
 
