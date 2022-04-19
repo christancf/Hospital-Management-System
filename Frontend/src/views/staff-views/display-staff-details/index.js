@@ -1,68 +1,121 @@
-import React from 'react'
-import { Table, Typography } from 'antd';
+import React, { useEffect, useState } from 'react'
+import { Spin, Table, Tag, Typography, Divider  } from 'antd';
 import staffService from 'services/StaffService';
 
 const { Title } = Typography
 
-let data = []
-const readData = () => {
-  staffService.readStaffs()
-  .then((details) => {
-    console.log(details)
-    for(let i = 0; i < details.length; ++i){
-      data.push({
-        key: i+1,
-        staffID: String(details[i].staffID),
-        staffName: details[i].staffName,
-        designation: details[i].designation,
-        qualification: details[i].qualification,
-        basicSalary: details[i].basicSalary,
-        status: 'Employed',
-      })
-    }
-    console.log(data)
-  })
-  .catch((e) => console.log(`Error @ display-staff: ${e}`))
-}
 const DisplayStaffDetails = () => {
   
-  return (
-    <div >
-			<Title>Staff Details</Title>
-			<Table columns={columns} dataSource={data} onChange={onChange}/>
-		</div>
-	)
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false);
+	const [data, setData] = useState();
+
+	useEffect(() => {
+		staffService.readStaffs()
+    .then((details) => {      
+      setData(details)
+      setLoading(false)
+    })
+    .catch((e) => {
+      setLoading(false)
+      setError(true)
+      setData()
+      console.log(`Error @ display-staff: ${e}`)
+    })
+	}, []);
+
+  if (loading) {
+		return (
+			<>
+				<center>
+					<Spin size="large" tip="Loading..." delay={500} spinning={loading} />
+				</center>
+
+			</>
+		)
+	}
+	else if (error) {
+
+		return (
+			<>
+				<center>
+					<Spin size="large" tip="Loading..." delay={500} spinning={loading} />
+				</center>
+
+			</>
+		)
+
+	}
+  else {
+    return (
+      <div >
+        <Title>Staff Details</Title>
+        <Table columns={columns} dataSource={data} onChange={onChange}/>        
+      </div>
+    ) 
+  }
 }
-readData()
+
 const columns = [
   {
     title: 'Staff ID',
     dataIndex: 'staffID',
-	  sorter: {
+    key: 'staffID',
+    sorter: {
       compare: (a, b) => a.staffID - b.staffID,
-      multiple: 4,
-	  },
+      multiple: 1,
+    }
   },
   {
     title: 'Staff Name',
     dataIndex: 'staffName',
+    key: 'staffName',
   },
   {
     title: 'Designation',
     dataIndex: 'designation',
+    key: 'designation'
   },
   {
     title: 'Qualification',
     dataIndex: 'qualification',
+    key: 'qualification'
   },
   {
     title: 'Basic Salary',
-    dataIndex: 'basicSalary'
+    dataIndex: 'basicSalary',
+    key: 'basicSalary'
   },
   {
     title: 'Status',
-    dataIndex: 'status'
-  }
+    key: 'status',
+    dataIndex: 'status',
+    // render: tags => (
+    //   <span>
+    //     {tags.map (tag => {
+    //       let color = 'red'
+    //       if(tag === 'Employed') color = 'green'
+    //       return (
+          
+    //         <Tag color={color} key={tag}>
+    //           {tag.toUpperCase()}
+    //         </Tag>
+    //       );
+    //     })}
+    //   </span>
+    // ),
+  },
+  {
+    title: '',
+    key: 'action',
+    render: (text, record) => (
+      <span>
+        <a href='google.com'>View</a>
+        <Divider type="vertical" />
+        <a href='google.com'>Edit</a>
+      </span>
+    ),
+  },
 ];
 
 
