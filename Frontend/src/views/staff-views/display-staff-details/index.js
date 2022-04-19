@@ -1,82 +1,73 @@
 import React from 'react'
 import { Table, Typography } from 'antd';
+import staffService from 'services/StaffService';
 
 const { Title } = Typography
 
+let data = []
+const readData = () => {
+  staffService.readStaffs()
+  .then((details) => {
+    console.log(details)
+    for(let i = 0; i < details.length; ++i){
+      data.push({
+        key: i+1,
+        staffID: String(details[i].staffID),
+        staffName: details[i].staffName,
+        designation: details[i].designation,
+        qualification: details[i].qualification,
+        basicSalary: details[i].basicSalary,
+        status: 'Employed',
+      })
+    }
+    console.log(data)
+  })
+  .catch((e) => console.log(`Error @ display-staff: ${e}`))
+}
 const DisplayStaffDetails = () => {
-	return (
-		<div>
+  
+  return (
+    <div >
 			<Title>Staff Details</Title>
-			<Table columns={columns} dataSource={data} onChange={onChange} />
+			<Table columns={columns} dataSource={data} onChange={onChange}/>
 		</div>
 	)
 }
-
-// let { sortedInfo } = this.state;
-//     sortedInfo = sortedInfo || {};
-
+readData()
 const columns = [
   {
     title: 'Staff ID',
     dataIndex: 'staffID',
-	sorter: {
-		compare: (a, b) => a.staffID - b.staffID,
-		multiple: 4,
-	},
+	  sorter: {
+      compare: (a, b) => a.staffID - b.staffID,
+      multiple: 4,
+	  },
   },
   {
     title: 'Staff Name',
     dataIndex: 'staffName',
-	// sorter: (a, b) => a.staffName.length - b.staffName.length,
-	// sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
-	// ellipsis: true,
   },
   {
     title: 'Designation',
     dataIndex: 'designation',
-    // sorter: {
-    //   compare: (a, b) => a.designation - b.designation,
-    //   multiple: 2,
-    // },
   },
   {
     title: 'Qualification',
     dataIndex: 'qualification',
-    // sorter: {
-    //   compare: (a, b) => a.qualification - b.qualification,
-    //   multiple: 1,
-    // },
   },
   {
-	title: 'Basic Salary',
-	dataIndex: 'basicSalary'
+    title: 'Basic Salary',
+    dataIndex: 'basicSalary'
   },
   {
-	title: 'Status',
-	dataIndex: 'status'
+    title: 'Status',
+    dataIndex: 'status'
   }
 ];
 
-const data = [
-  {
-    key: '1',
-    staffID: '2341',
-    staffName: 'Tharusha Wijesinghe',
-    designation: 'Doctor',
-    qualification: 'MBBS',
-	basicSalary: 250000,
-	status: 'Employed',
-  },
-  {
-	key: '2',
-    staffID: '4536',
-    staffName: 'Preshanthi Anushika',
-    designation: 'Nurse',
-    qualification: 'BSN',
-	basicSalary: 150000,
-	status: 'Employed',
-  }
-];
+
+
+
 
 function onChange(pagination, filters, sorter, extra) {
   console.log('params', pagination, filters, sorter, extra);
