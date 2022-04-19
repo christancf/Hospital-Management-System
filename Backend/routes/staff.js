@@ -40,6 +40,14 @@ router.get('/read-details?:id', (req, res, next) => {
   .catch((e) => console.log(`Error: ${ e }`))
 });
 
+//read staffs
+router.get('/read-staffs', (req, res, next) => {
+  staffModel.find()
+  .then((details) => res.json(details))
+  .catch((e) => console.log(`Error: ${ e }`))
+})
+
+//update
 router.put('/update-details', (req, res, next) => {
   staffModel.updateOne({staffID: req.body.staffID},
     {$set: 
