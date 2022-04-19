@@ -13,8 +13,8 @@ router.post('/add-details', function (req, res, next) {
     donationNumber: req.body.donationNumber,
     donateDate: req.body.donateDate,
     bloodGroup: req.body.bloodGroup,
-    valume:1,
-    status: req.body.status
+    // valume:1,
+    // status: req.body.status
   });
 
   try {
