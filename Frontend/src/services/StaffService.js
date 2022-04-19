@@ -25,5 +25,10 @@ staffService.updateStaffDetails = function (data) {
   })
 }
 
-
+staffService.readStaffs = function () {
+  return fetch({
+    url: 'staff/read-staffs',
+    method: 'get'
+  })
+}
 export default staffService
