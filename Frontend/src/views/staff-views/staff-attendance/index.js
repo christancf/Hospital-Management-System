@@ -1,8 +1,11 @@
 import React from 'react'
-import { Form, Input, Button, Typography, Cascader } from 'antd';
+import { Form, Input, Button, Typography, Cascader, message } from 'antd';
+import staffService from 'services/StaffService';
 
 const { Title } = Typography
 const { Search } = Input;
+const checkin = 'checkin'
+const checkout = 'checkout'
 
 const StaffAttendance = () => {
 	return (
@@ -22,15 +25,50 @@ const tailLayout = {
   };
 
   const Demo = () => {
-  
+	let staffDetails
 
 	const onFinish = values => {
+
+		//console.log(String(values.attendanceType) === 'check in')
+		let staffID = values.staffID
+		if(String(values.attendanceType) === 'check in') {
+			message.loading({content: 'Please wait...', checkin})
+			//console.log(staffID)
+			let checkIn = new Date().getTime();
+			//console.log('time: ', checkInTime)
+
+			staffService.checkInAttendance({staffID, checkIn})
+			.then(() => {
+				message.success({content: 'Successfully Marked Attendance', checkin, duration: 2})
+			})
+		}
+		else {
+			message.loading({content: 'Please wait...', checkout})
+			let checkOut = new Date().getTime();
+			staffService.checkOutAttendance({staffID, checkOut})
+			.then(() => {
+				message.success({content: 'Successfully Marked Attendance', checkout, duration: 2})
+			})
+			.catch(() => 
+				message.error({content: 'Please Try Again!', checkout, duration: 2}))
+		}
 	};
   
 	const onFinishFailed = errorInfo => {
+		console.log('Failed: ', errorInfo)
 	}; 
   
 	const searchById = (id) => {
+
+		staffService.readStaffDetails(id)
+		.then((details) => {
+			staffDetails = details[0]
+			document.getElementById('staffName').value = staffDetails.staffName 
+			document.getElementById('NIC').value = staffDetails.NIC
+			document.getElementById('designation').value = staffDetails.designation 
+			document.getElementById('qualification').value = staffDetails.qualification 
+		})
+		.catch((e) => console.log(`Error: ${ e }`))
 	};
   
 	return (
