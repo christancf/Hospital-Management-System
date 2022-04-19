@@ -2,6 +2,7 @@ var express = require('express');
 const bloodbagModel = require('../models/bloodbag');
 var router = express.Router();
 const auth = require("../middleware/auth");
+const bloodbag = require('../models/bloodbag');
 
 //add blood bag details
 router.post('/add-details', function (req, res, next) {
@@ -30,14 +31,72 @@ router.post('/add-details', function (req, res, next) {
   }
   catch (error) {
     res.status(400).json(
-      { 
-        message: 'Cannot add data right now!' 
+      {
+        message: 'Cannot add data right now!'
       }
     );
   }
 
 });
 
+
+//read blood bank details
+router.get('/details/read', async (req, res, next) => {
+  try {
+    let bloodbagDetail = await bloodbagModel.find({})
+    res.status(200).json({
+      succuss: true,
+      message: 'read succussfull',
+      payload: bloodbagDetail
+    })
+  } catch (error) {
+    res.status(400).json({
+      succuss: true,
+      message: error.message
+    })
+  }
+});
+// router.get('/details/read?:id',(req,res)=>{
+
+// })
+
+//update blood bank details
+router.put('/bag-update/:id', async (req, res) => {
+  const newDonorName = req.body.newDonorName
+  const newDonorNIC = req.body.newDonorNIC
+  const newplace = req.body.place
+
+  try {
+    await bloodbag.findById(id, (_error, bagUpdate) => {
+      bagUpdate.donorName = newDonorName;
+      bagUpdate.donorNIC = newDonorNIC;
+      bagUpdate.place = newplace;
+      bagUpdate.save()
+    });
+  } catch (error) {
+    console.log(error)
+  }
+
+  res.send("Updated");
+});
+
+//delete blood bag
+router.delete('/bag-delete/:id', (req, res) => {
+  try {
+    bloodbagModel.findByIdAndRemove(req.params.id).exec((err, deleteBag) => {
+      if (err) return res.status(400).json({
+        message: "Delete unsuccesful", err
+      });
+
+      return res.json({
+        massege: "succesful"
+      })
+    })
+  } catch (error) {
+    console.log(error);
+  }
+
+})
 
 
 module.exports = router;
