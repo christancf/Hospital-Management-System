@@ -182,8 +182,8 @@ const PatientAdmittance = () => {
 
 	else{
 
-		var myDate = new Date(data.dateOfBirth);
-		myDate.toLocaleString();
+		// var myDate = new Date(data.dateOfBirth);
+		// myDate.toLocaleString();
 
 		return (
 
