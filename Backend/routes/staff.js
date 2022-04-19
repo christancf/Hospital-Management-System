@@ -1,5 +1,6 @@
 var express = require('express');
 const staffModel = require('../models/staff');
+const attendanceModel = require('../models/attendance');
 var router = express.Router();
 const auth = require("../middleware/auth");
 
@@ -79,4 +80,30 @@ router.put('/update-status', (req, res, next) => {
     .catch((e) => console.log(`Error: ${ e }`))
 })
 
-module.exports = router;
+//insert checkIn attendance
+router.post('/attendance/checkin', function (req, res, next) {
+
+  const attendance = new attendanceModel({
+    staffID: String(req.body.staffID),
+    checkIn: req.body.checkIn
+  });
+
+  attendance.save()
+  .then(() => res.json("Check In Attendance Marked!"))
+  .catch((e) => console.log(`Error: ${ e }`))
+
+});
+
+//update checkout attendance
+router.put('/attendance/checkout', function (req, res, next) {
+  attendanceModel.find({staffID: req.body.staffID}, {_id: 1, checkIn:1}).sort({_id: -1}).limit(1)
+  .then((data) => {
+    attendanceModel.updateOne({_id: data[0]._id}, {$set: {checkOut: req.body.checkOut}})
+    .then(() => res.json("Check Out Attendance Marked!")) 
+    .catch((e) => console.log(`Error ${ e }`))
+  }).catch((e) => console.log(`Error: ${e}`))
+});
+
+
+
+module.exports = router; 
