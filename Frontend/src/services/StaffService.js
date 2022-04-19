@@ -31,4 +31,12 @@ staffService.readStaffs = function () {
     method: 'get'
   })
 }
+
+staffService.updateStatus = function (data) {
+  return fetch({
+    url: 'staff/update-status',
+    method: 'put',
+    data
+  })
+}
 export default staffService
