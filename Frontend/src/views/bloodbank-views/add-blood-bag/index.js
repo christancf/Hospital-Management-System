@@ -2,6 +2,10 @@ import React from 'react';
 import bloodBankService from '../../../services/BloodBankService'
 import { Form, Input, Button, Select,DatePicker } from 'antd';
 
+function toTimestamp(strDate){
+	var datum = Date.parse(strDate);
+	return datum/1000;
+ }
 
 const { Option } = Select;
 
@@ -23,11 +27,15 @@ class AddBloodBag extends React.Component {
   };
 
   onFinish = values => {
-    const gen = values.gender;
-    
+    const donorName = values.donorsName;
+    const donorNIC = values.donorNIC;
+    const donationNum = values.donationNum;
+    const donateDate = toTimestamp(values.donateDate);
+    const place = values.place;
+    const bloodGroup = values.bloodGroup;
 
-    const results = bloodBankService.addBloodBag(values);
-    console.log('added');
+    const results = bloodBankService.addBloodBag({donorName:donorName, donorNIC:donorNIC,donationNumber:donationNum,donateDate:donateDate,place:place,bloodGroup:bloodGroup});
+    console.log(results.succussfull);
   };
 
   onReset = () => {
@@ -44,19 +52,19 @@ class AddBloodBag extends React.Component {
   render() {
     return (
       <Form {...layout} ref={this.formRef} name="control-ref" onFinish={this.onFinish}>
-        <Form.Item name="donorsName" label="Donor's Name" >
+        <Form.Item name="donorsName" label="donor's Name" >
           <Input />
         </Form.Item>
-        <Form.Item label="Donor's NIC" name="DonorNIC" rules={[{ required: true, message: 'Please input Donor\'s NIC!' }]}>
+        <Form.Item label="Donor's NIC" name="donorNIC" rules={[{ required: true, message: 'Please input Donor\'s NIC!' }]}>
         <Input />
         </Form.Item>
-        <Form.Item label="Donation Number " name="DonationNum" rules={[{ required: true, message: 'Please input Donation Number!' }]}>
+        <Form.Item label="Donation Number " name="donationNum" rules={[{ required: true, message: 'Please input Donation Number!' }]}>
         <Input />
         </Form.Item>
-        <Form.Item label="Donated Date & Time" name="dateTime">
+        <Form.Item label="Donated Date & Time" name="donateDate">
         <DatePicker />
         </Form.Item>
-        <Form.Item label="Place" name="Place">
+        <Form.Item label="Place" name="place">
         <Input />
         </Form.Item>
 
@@ -69,14 +77,14 @@ class AddBloodBag extends React.Component {
             <Select.Option value="A+">A positive(A+)</Select.Option>
             <Select.Option value="A-">A negative(A-)</Select.Option>
             <Select.Option value="B+">B positive(B+)</Select.Option>
-            <Select.Option value="A+">B negative(B-)</Select.Option>
-            <Select.Option value="A-">O positive(O+)</Select.Option>
-            <Select.Option value="B+">O negative(O-)</Select.Option>
-            <Select.Option value="A-">AB positive(AB+)</Select.Option>
-            <Select.Option value="B+">AB negative(AB-)</Select.Option>
+            <Select.Option value="B-">B negative(B-)</Select.Option>
+            <Select.Option value="O+">O positive(O+)</Select.Option>
+            <Select.Option value="O+">O negative(O-)</Select.Option>
+            <Select.Option value="AB+">AB positive(AB+)</Select.Option>
+            <Select.Option value="AB-">AB negative(AB-)</Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item
+        {/* <Form.Item
           noStyle
           shouldUpdate={(prevValues, currentValues) => prevValues.gender !== currentValues.gender}
         >
@@ -91,7 +99,7 @@ class AddBloodBag extends React.Component {
               </Form.Item>
             ) : null;
           }}
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item {...tailLayout}>
           <Button className="mr-2" type="primary" htmlType="submit">
             Submit

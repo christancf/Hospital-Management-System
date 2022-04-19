@@ -7,7 +7,11 @@ export const InventoryViews = () => {
   return (
     <Suspense fallback={<Loading cover="content"/>}>
       <Switch>
-        <Route path={`${INVENTORY_PREFIX_PATH}/home`} component={lazy(() => import(`./home`))} />
+        <Route path={`${INVENTORY_PREFIX_PATH}/itemlist/medicines/`} component={lazy(() => import(`./medicines`))} />
+        <Route path={`${INVENTORY_PREFIX_PATH}/itemlist/surgicalitems`} component={lazy(() => import(`./surgicalitems`))} />
+        <Route path={`${INVENTORY_PREFIX_PATH}/itemlist/tools`} component={lazy(() => import(`./tools`))} />
+        <Route path={`${INVENTORY_PREFIX_PATH}/inventorylist/`} component={lazy(() => import(`./inventorylist`))} />
+        <Route path={`${INVENTORY_PREFIX_PATH}/itemlist/additem/`} component={lazy(() => import(`./additem`))} />
         <Redirect from={`${INVENTORY_PREFIX_PATH}`} to={`${INVENTORY_PREFIX_PATH}/home`} />
       </Switch>
     </Suspense>

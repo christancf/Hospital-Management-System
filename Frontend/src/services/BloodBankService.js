@@ -6,7 +6,7 @@ const bloodBankService = {}
 bloodBankService.addBloodBag = function (jsonbody){
 
   return fetch({
-    url: '/add-details',
+    url: '/bloodbag/add-details',
     method: 'post',
     data: jsonbody
 

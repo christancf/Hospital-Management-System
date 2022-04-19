@@ -1,10 +1,13 @@
 import React from 'react'
-import { Form, Input, Button, Cascader, DatePicker } from 'antd';
+import { Form, Input, Button, Cascader, DatePicker, Typography } from 'antd';
 import staffService from 'services/StaffService';
 
-const Home = () => {
+const { Title } = Typography
+
+const AddStaffMember = () => {
 	return (
 		<div>
+      <Title>Add New Staff Member</Title>
 			<Demo />
 		</div>
 	)
@@ -20,20 +23,9 @@ const tailLayout = {
 
 const Demo = () => {
   const onFinish = values => {
-    let staffID = values.staffID
-    let name = values.name
-    let nic = values.nic
-    let email = values.email
-    let designation = values.designation
-    let qualification = values.qualification
-    let dateOfBirth = values.dateOfBirth
-    let gender = values.gender
-    let address = values.address
-    let basicSalary = values.basicSalary
-    let mobile = values.mobile 
-    let home = values.home
+    values.dateOfBirth = values.dateOfBirth['_d'].getTime()
 
-    staffService.addStaffMember(staffID, name, nic, email, designation, qualification, dateOfBirth, gender, address, basicSalary, mobile, home);
+    staffService.addStaffMember(values);
     console.log('Success:', values);
   };
 
@@ -59,7 +51,7 @@ const Demo = () => {
 
       <Form.Item
         label="Name"
-        name="name"
+        name="staffName"
         rules={[{ required: true, message: 'Please input the name!' }]}
       >
         <Input />
@@ -67,7 +59,7 @@ const Demo = () => {
 
 	  <Form.Item
         label="NIC"
-        name="nic"
+        name="NIC"
         rules={[{ required: true, message: 'Please input the NIC!' }]}
       >
         <Input />
@@ -86,7 +78,7 @@ const Demo = () => {
         name="designation"
         rules={[{ required: true, message: 'Please select the designation!' }]}
       >
-		  <Cascader options={designation} />
+		  <Cascader options={designationOptions} />
       </Form.Item>
 
       <Form.Item
@@ -110,7 +102,7 @@ const Demo = () => {
         name="gender"
         rules={[{ required: true, message: 'Please select the gender!' }]}
       >
-		  <Cascader options={gender} />
+		  <Cascader options={genderOptions} />
       </Form.Item>
 
       <Form.Item
@@ -123,7 +115,7 @@ const Demo = () => {
 
       <Form.Item
         label="Base Salary"
-        name="base-salary"
+        name="basicSalary"
         rules={[{ required: true, message: 'Please input the base salary!' }]}
       >
 		  <Input />
@@ -145,15 +137,6 @@ const Demo = () => {
 		  <Input />
       </Form.Item>
 
-
-
-
-
-
-
-
-
-
       <Form.Item {...tailLayout}>
         <Button type="primary" htmlType="submit">
           Submit
@@ -163,7 +146,7 @@ const Demo = () => {
   );
 };
 
-const designation = [{
+const designationOptions = [{
 	value: 'doctor',
 	label: 'Doctor'
 },
@@ -176,7 +159,7 @@ const designation = [{
 	label: 'Allied Health Professionals'
 }]
 
-const gender = [{
+const genderOptions = [{
 	value: 'male',
 	label: 'Male'
 },
@@ -189,4 +172,4 @@ const gender = [{
 	label: 'Other'
 }]
 
-export default Home
+export default AddStaffMember

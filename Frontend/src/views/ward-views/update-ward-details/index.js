@@ -1,10 +1,11 @@
 import React from 'react'
 import { Form, Input, Button, Checkbox, Card, Cascader} from 'antd';
 import wardService from 'services/WardService';
+const { Search } = Input
 const UpdateDetails = () => {
 	return (
 		<div>
-			<Demo />
+			<Demo/>
 		</div>
 	)
 }
@@ -21,62 +22,77 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
+/*const setEventListeners = () => {
+  document.getElementById("capacity").addEventListener("focusout", console.log("focus out"))
+  document.getElementById("capacity").addEventListener("focus", console.log("focus"))
+}*/
+
 const Demo = () => {
+  let wardDetails;
 
   const onFinish = values => {
-    let id = values.id
-    let category = values.category
-    let capacity = values.capacity
-    let status = values.status
-    let result = wardService.updateWardDetails(id, status)
-    console.log('Successfully updated!', result)
-  };
+    if(values.capacity === undefined) values.capacity = wardDetails.capacity
+    if(values.status === undefined) values.status = wardDetails.status
 
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo);
-  };
+    wardService.updateWardDetails(values)
+      .then((result)=>{
+        console.log(`Successfully Updated! ${result}`)
+      }).catch((e)=>{
+        console.log(`Error @ update-ward-details updateWardDetails: ${e}`)
+    })
+  }
+
+
+  const searchById = (id) => {
+    wardService.readWardDetails(id)
+    .then((details) => {
+      wardDetails = details[0]
+      console.log(wardDetails) 
+      document.getElementById("category").value = wardDetails.category[0].toUpperCase() + wardDetails.category.substring(1)
+      document.getElementById("capacity").value = wardDetails.capacity
+      wardDetails.status? document.getElementById("status").value = "Available" : document.getElementById("status").value = "Unavailable"         
+    }).catch((e)=>{
+      console.log(`Error @ update-ward-details: ${e}`)
+    })    
+  }  
   
   return (
     <Form
       {...layout}
       name="basic"
-      initialValues={{ remember: true }}
       onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
+      initialValues={{ remember: true }}
     >
       <Form.Item
         label="ID"
         name="id"
         rules={[{ required: true, message: 'Please input ward ID!' }]}
       >
-        <Input placeholder='Ward ID' />
+        <Search placeholder="Ward ID" id="id" onSearch={id => searchById(id)} enterButton />
       </Form.Item>
-	  <Form.Item
+      <Form.Item
         label="Category"
         name="category"
-        rules={[{ required: true, message: 'Please select ward category' }]}
-      >
-			<Input disabled={true}/>
+        >
+        <Input disabled={true} id="category" />
       </Form.Item>
       <Form.Item
         label="Ward Capacity"
-        name="capacity"
-        rules={[{ required: true, message: 'Please input the ward capacity' }]}
+        name="capacity"        
       >
-		  <Input placeholder='Capacity' />
+        <Input placeholder='Capacity' id="capacity" onFocus={console.log("Focus")} onFocusOut={console.log("Focus out")}/>
       </Form.Item>
-	  <Form.Item
+      <Form.Item
         label="Status"
         name="status"
-        rules={[{ required: true, message: 'Please select status' }]}
       >
-		  <Cascader options={wardStatus} />
+        <Cascader options={wardStatus} id="status" />
       </Form.Item>
 
       <Form.Item {...tailLayout}>
-        <Button type="primary" htmlType="submit">
-          Save
-        </Button>
+          <Button type="primary" htmlType="submit">
+            Save
+          </Button>
       </Form.Item>
     </Form>
   );
@@ -91,7 +107,7 @@ const wardStatus = [{
 },
 {
 	value: 'false',
-	label: 'UnAvailable'
+	label: 'Unavailable'
 }]
 
 

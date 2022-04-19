@@ -5,9 +5,12 @@ var db = require("./configs/database");
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors')
 
 var wardRouter = require('./routes/ward');
 var channellingRouter = require('./routes/channelling');
+var inventoryRouter = require('./routes/inventory');
+var mortuaryRouter = require('./routes/mortuary');
 var billingRouter = require('./routes/billing');
 var bloodbagRouter = require('./routes/bloodbag');
 var transfusionRouter = require('./routes/bloodtranfusion');
@@ -20,7 +23,7 @@ db.connect();
 
 var app = express();
 
-
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -29,6 +32,8 @@ app.use(cookieParser());
 
 app.use('/ward', wardRouter);
 app.use('/channelling', channellingRouter);
+app.use('/inventory',inventoryRouter);
+app.use('/mortuary', mortuaryRouter);
 app.use('/billing', billingRouter);
 app.use('/bloodbag',bloodbagRouter);
 app.use('/staff', staffRouter);

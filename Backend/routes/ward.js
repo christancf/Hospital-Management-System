@@ -3,71 +3,49 @@ const wardModel = require('../models/ward');
 var router = express.Router();
 const auth = require("../middleware/auth");
 
-//add ward details
-router.post('/details/add', (req, res, next) => {
-  
-  const ward = new wardModel({
-    id: req.body.id,
-    category: req.body.category,
-    capacity: req.body.capacity,
-    status: req.body.status
-  })
-
-  try {
-    //const addWard = ward.save()
-    ward.save();
-   // if(addWard){
-      res.status(200).json({message: 'Successfull'})
-   // }else{
-      //res.status(400).json({message: 'Cannot add data right now!'})
-    //}
-  } catch (error) {
-    res.status(400).json({message: error.message})
-  }
-
-});
-
+//testing
 router.get('/', (req, res, next) => {
   res.send("IT works")
 })
-//read ward details
-router.post('/details/read', (req, res, next) => {
+
+//add ward details
+router.post('/details/add', (req, res, next) => {
   
+  let newWard = new wardModel({
+    id: req.body.id,
+    category: String(req.body.category),
+    capacity: Number(req.body.capacity),
+    status: Boolean(req.body.status)
+  })
+
+  newWard.save()
+  .then(() => {
+    res.json("Ward Added!")
+  }).catch((e) => {
+    console.log(`Error Add: ${e}`)
+  })
+
+});
+
+//read ward details
+router.get('/details/read?:id', (req, res, next) => {
+  wardModel.find({id:String(req.query.id)})
+  .then((wardDetails) => {
+    res.json(wardDetails)
+  }).catch((e) =>{
+    console.log(`Error Read: ${e}`)
+  })
 })
 //update ward details
-router.post('/details/update', (req, res, next) => {
-  
+router.put('/details/update', (req, res, next) => {
+  wardModel.updateOne({id: String(req.body.id)},
+    {$set: {"capacity": String(req.body.capacity), "status": String(req.body.status)}})
+    .then((result) => {
+      res.json(`Successfully Updated!`)
+    }).catch((e) => {
+      console.log(`Error Update: ${e}`)
+    })
 })
-/*router.get('/', auth, function (req, res, next) {
-  
-  res.send('Hello World!');
-
-});
-
-router.get('/users', auth, function (req, res, next) {
-
-  res.send({ user: ['Susith', 'Sayumi', 'Shavi', 'Nimtara', 'Christan'] });
-
-});
-
-router.post('/users', auth, function (req, res, next) {
-
-  const user = new userModel({
-    name: req.body.name,
-    age: req.body.age
-  });
-
-  try {
-
-    const dataToSave = user.save();
-    res.status(200).json(dataToSave);
-
-  }
-  catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-
-});*/
 
 
 

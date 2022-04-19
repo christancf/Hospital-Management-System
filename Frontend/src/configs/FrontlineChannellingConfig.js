@@ -1,22 +1,22 @@
 import { 
-  DashboardOutlined,
-  CopyOutlined
+  BookOutlined,
+  AppstoreAddOutlined
 } from '@ant-design/icons';
 import { FRONTLINE_CHANNELLING_PREFIX_PATH } from 'configs/AppConfig'
 
 const dashBoardNavTree = [{
-  key: 'home',
-  path: `${FRONTLINE_CHANNELLING_PREFIX_PATH}/home`,
-  title: 'home',
-  icon: DashboardOutlined,
+  key: 'addappointment',
+  path: `${FRONTLINE_CHANNELLING_PREFIX_PATH}/add`,
+  title: 'Add Appointment',
+  icon: AppstoreAddOutlined,
   breadcrumb: false,
   submenu: []
 },
 {
-  key: 'reports',
-  path: `${FRONTLINE_CHANNELLING_PREFIX_PATH}/home`,
-  title: 'Susith',
-  icon: CopyOutlined,
+  key: 'currentappointments',
+  path: `${FRONTLINE_CHANNELLING_PREFIX_PATH}/list`,
+  title: 'Current Appointments',
+  icon: BookOutlined,
   breadcrumb: false,
   submenu: []
 }]
