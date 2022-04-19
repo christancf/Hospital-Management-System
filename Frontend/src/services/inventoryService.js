@@ -13,4 +13,13 @@ inventoryService.additem = function (jsonbody){
   })
 }
 
+inventoryService.getItems = function (categoryType){
+
+  return fetch({
+    url: `/inventory/itemlist?category=${categoryType}`,
+    method: 'get',
+
+  })
+}
+
 export default inventoryService
