@@ -34,21 +34,21 @@ router.get('/', (req, res, next) => {
   res.send("IT works")
 })
 
-//read staff member details
+//read staff member details by id
 router.get('/read-details?:id', (req, res, next) => {
   staffModel.find({staffID: req.query.id})
   .then((staffDetails) => res.json(staffDetails))
   .catch((e) => console.log(`Error: ${ e }`))
 });
 
-//read staffs
+//read staff details
 router.get('/read-staffs', (req, res, next) => {
   staffModel.find()
   .then((details) => res.json(details))
   .catch((e) => console.log(`Error: ${ e }`))
 })
 
-//update
+//update staff details
 router.put('/update-details', (req, res, next) => {
   staffModel.updateOne({staffID: req.body.staffID},
     {$set: 
@@ -69,6 +69,14 @@ router.put('/update-details', (req, res, next) => {
     })
       .then(() => res.json("Successfully Updated!"))
       .catch((e) => console.log(`Error: ${ e }`))
+})
+
+//update staff member status
+router.put('/update-status', (req, res, next) => {
+  staffModel.updateOne({staffID: req.body.staffID},
+    {$set: {status: 'Resigned'}})
+    .then(() => res.json("Marked as Resigned!"))
+    .catch((e) => console.log(`Error: ${ e }`))
 })
 
 module.exports = router;
