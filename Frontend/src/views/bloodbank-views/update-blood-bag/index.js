@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
-import {
-  Form,
-  Input,
-  Button,
-  Select,
-  DatePicker, 
-} from 'antd';
+import bloodBankService from 'services/BloodBankService';
+import {Form,Input,Button,Select,DatePicker, } from 'antd';
 
+const { Search } = Input
 const { Option } = Select;
 
 const tailLayout = {
@@ -14,6 +10,32 @@ const tailLayout = {
 };
 
 const UpdateBloodBag = () => {
+
+  const onFinish = values => {
+    let Name = values.Name
+    let NIC = values.NIC
+    let DonationNum = values.DonationNum
+    let DonatedDate = values.DonatedDate
+    let Place = values.Place
+    let BloodGroup = values.BloodGroup
+    let result = bloodBankService.updateBloodBagDetails(Name,NIC,DonationNum,DonatedDate,Place,BloodGroup)
+    console.log('Successfully updated!', result)
+  };
+
+  const onFinishFailed = errorInfo => {
+    console.log('Failed:', errorInfo);
+  };
+
+  const setValues = (bloodBagDetails) => {
+    let Name = document.getElementById('Name')
+    let NIC = document.getElementById('NIC')
+    let DonationNum = document.getElementById('DonationNum')
+    let DonatedDate = document.getElementById('DonatedDate')
+    let Place = document.getElementById('Place')
+    let BloodGroup = document.getElementById('BloodGroup')
+  }
+
+  
 
   return (
     <div>
