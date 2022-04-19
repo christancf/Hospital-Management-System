@@ -37,7 +37,7 @@ const UpdateBloodBag = () => {
 
   
 
-  /*return (
+  return (
     <div>
         <Form.Item label="Donor's Name" >
           <Input />
@@ -76,7 +76,7 @@ const UpdateBloodBag = () => {
           </Button>
       </Form.Item>
     </div>
-  );*/
+  );
 };
 
 export default UpdateBloodBag
