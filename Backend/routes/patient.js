@@ -4,6 +4,23 @@ var router = express.Router();
 const auth = require("../middleware/auth");
 const patientModel = require('../models/patient');
 
+//patient id generate function
+
+// replace patientModel with your model,patientId with the unique id filed in your collection,'/id' with a route path you want
+// it returns the highest id already in the collection 
+router.get('/id', function(req,res,next){
+  patientModel.find().sort({patientId : -1}).limit(1)
+  .then((id) => {
+    res.status(200).json({
+        success:true,
+        message:'sucessful',
+        payload:id[0].patientId
+    })
+}).catch((e) => {
+    res.status(400).json({success:false,message:error.message,payload:{}})
+})
+
+});
 
 //patient admittance function
 router.post('/admittance' , function(req,res,next){
@@ -20,8 +37,6 @@ router.post('/admittance' , function(req,res,next){
     });
 
     try{
-        console.log("id:"+req.body.patient.id);
-        console.log("patientID:"+patient.patientId)
 
         const dataToSave = patient.save();
         res.status(200).json({
