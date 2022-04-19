@@ -26,44 +26,103 @@ router.post('/admittance' , function(req,res,next){
         const dataToSave = patient.save();
         res.status(200).json({
             success:true,
-            message:'inserted sucessful'
+            message:'inserted sucessful',
+            payload:{}
         });
     }
     catch(error){
-        res.status(400).json({success:true,message:error.message})
+        res.status(400).json({success:false,message:error.message,payload:{}})
     }
 });
 
 router.get('/read', function(req,res,next){
     patientModel.find({id:req.query.id})
     .then((patientDetails) => {
-        res.json(patientDetails)
+        res.status(200).json({
+            success:true,
+            message:'inserted sucessful',
+            payload:patientDetails[0]
+        })
     }).catch((e) => {
-        console.log("Error:"+e)
+        res.status(400).json({success:false,message:error.message,payload:{}})
     })
 });
 
+router.delete('/checkout', (req,res,next) => {
+    patientModel.updateOne({id:req.query.id},{$set:{"status":false}})
+    .then((result) => {
+        res.json({
+            success:true,
+            message:'inserted sucessful',
+            payload:{}
+        })
+      }).catch((e) => {
+        res.status(400).json({success:false,message:e.message,payload:{}})
+      })
+})
 router.put('/update', (req, res, next) => {
-    patientModel.updateOne({id: String(req.body.id)},
-      {$set: {"patientId":req.body.patient.id,
-        "fullName":req.body.patient.fullName,
+
+    patientModel.updateOne({"patientId":req.body.patient.id,},
+      {$set: {"fullName":req.body.patient.fullName,
         "nic":req.body.patient.nic,
         "dateOfBirth":req.body.patient.dateOfBirth, 
-        "sex":req.body.patient.sex,
+        "sex":req.body.patient.sex.value,
         "mobile":req.body.patient.mobile,
         "address":req.body.patient.address,
-        "bloodGroup":req.body.patient.bloodGroup,
+        "bloodGroup":req.body.patient.bloodGroup.value,
         "status":true}})
       .then((result) => {
-        res.json(`Successfully Updated!`)
+        res.json({
+            success:true,
+            message:'inserted sucessful',
+            payload:{}
+        })
       }).catch((e) => {
-        console.log(`Error Update: ${e}`)
+        res.status(400).json({success:false,message:e.message,payload:{}})
       })
   })
 
 
 
+  router.get('/patientlist', async (req, res, next) => {
 
+
+
+    try {
+      const response = await patientModel.find({}).then((response) => {
+  
+        res.status(200).json(
+          {
+            succuss: true,
+            message: 'Retirval succussfull',
+            payload: response
+          }
+        );
+  
+      }).catch((error) => {
+        res.status(400).json(
+          {
+            succuss: false,
+            message: error.message,
+            payload: {}
+          }
+        );
+  
+      });
+  
+  
+    }
+    catch (error) {
+      res.status(400).json(
+        {
+          succuss: false,
+          message: error.message,
+          payload : {}
+        }
+      );
+    }
+  
+  });
 
 
 
