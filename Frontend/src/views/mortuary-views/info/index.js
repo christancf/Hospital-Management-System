@@ -2,18 +2,13 @@ import React from 'react'
 import { Table, Divider, Tag } from 'antd';
 import mortuaryService from 'services/MortuaryService';
 const Home = () => {
-	return (
-		<div>
-			<Table columns={columns} 
-      dataSource={data}
-       />
-       <Rome />
-       
-		</div>
-	)
-}
-const Rome = () => {
-  console.log(data)
+  return (
+    <div>
+      <Table columns={columns} dataSource={corpseData}
+      />
+
+    </div>
+  )
 }
 const columns = [
   {
@@ -22,7 +17,7 @@ const columns = [
   },
   {
     title: 'NIC',
-    dataIndex: 'nic',
+    dataIndex: 'NIC',
   },
   {
     title: 'Name',
@@ -30,30 +25,39 @@ const columns = [
   },
   {
     title: 'Cause of Death',
-    dataIndex: 'causeOfDeath',
+    dataIndex: 'cause_of_death',
   },
   {
     title: 'Date of Death',
-    dataIndex: 'dateOfDeath',
+    dataIndex: 'date_time_of_death',
   },
   {
     title: 'Date of Release',
-    dataIndex: 'dateOfRelease'
+    dataIndex: 'date_of_release'
   },
   {
     title: 'Cabinet Number',
-    dataIndex: 'cabinetNo',
+    dataIndex: 'cabinet_number',
   },
   {
     title: 'Status',
     dataIndex: 'status',
   },
 ];
-const data = mortuaryService.getData().then(value=>{
-  const corpseData = value.details
-  // console.log(corpseData)
-});
 
-// const dataJson = data;
-// console.log(dataJson)
+var corpseData
+mortuaryService.getData().then(value => {
+  corpseData = value.payload
+  for (var i = 0; i < corpseData.length; i++) {
+    if (corpseData[i].status == true)
+      corpseData[i].status = "In Mortuary"
+    else {
+      corpseData[i].status = "Released"
+      corpseData[i].date_of_release = new Date(corpseData[i].date_of_release).toLocaleDateString()
+    }
+    corpseData[i].date_time_of_death = new Date(corpseData[i].date_time_of_death).toLocaleDateString()
+      
+
+  }
+});
 export default Home
