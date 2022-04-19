@@ -48,6 +48,10 @@ const dataSchema = new mongoose.Schema({
     home: {
         requried: true,
         type: String
+    },
+    status: {
+        required: true,
+        type: String
     }
 })
 
