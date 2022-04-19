@@ -31,8 +31,8 @@ router.post('/add-details', function (req, res, next) {
   }
   catch (error) {
     res.status(400).json(
-      { 
-        message: 'Cannot add data right now!' 
+      {
+        message: 'Cannot add data right now!'
       }
     );
   }
@@ -47,10 +47,13 @@ router.get('/details/read', async (req, res, next) => {
     res.status(200).json({
       succuss: true,
       message: 'read succussfull',
-      details: bloodbagDetail
+      payload: bloodbagDetail
     })
   } catch (error) {
-    res.status(400).json({message: error.message})
+    res.status(400).json({
+      succuss: true,
+      message: error.message
+    })
   }
 });
 // router.get('/details/read?:id',(req,res)=>{
@@ -58,13 +61,13 @@ router.get('/details/read', async (req, res, next) => {
 // })
 
 //update blood bank details
-router.put('/bag-update/:id',async(req,res)=>{
+router.put('/bag-update/:id', async (req, res) => {
   const newDonorName = req.body.newDonorName
   const newDonorNIC = req.body.newDonorNIC
   const newplace = req.body.place
 
   try {
-    await bloodbag.findById(id,(_error,bagUpdate)=>{
+    await bloodbag.findById(id, (_error, bagUpdate) => {
       bagUpdate.donorName = newDonorName;
       bagUpdate.donorNIC = newDonorNIC;
       bagUpdate.place = newplace;
@@ -78,21 +81,21 @@ router.put('/bag-update/:id',async(req,res)=>{
 });
 
 //delete blood bag
-router.delete('/bag-delete/:id',(req,res)=>{
+router.delete('/bag-delete/:id', (req, res) => {
   try {
-    bloodbagModel.findByIdAndRemove(req.params.id).exec((err,deleteBag)=>{
-    if(err)return res.status(400).json({
-      message:"Delete unsuccesful",err
-    });
+    bloodbagModel.findByIdAndRemove(req.params.id).exec((err, deleteBag) => {
+      if (err) return res.status(400).json({
+        message: "Delete unsuccesful", err
+      });
 
-    return res.json({
-      massege:"succesful"
+      return res.json({
+        massege: "succesful"
+      })
     })
-  })
   } catch (error) {
     console.log(error);
   }
-  
+
 })
 
 
