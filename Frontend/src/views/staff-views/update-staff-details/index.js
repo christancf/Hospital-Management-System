@@ -49,10 +49,7 @@ const Demo = () => {
   }; 
 
   const searchById = (id) => {
-    if(id === ""){
-      console.log("fuck off")
-      return
-    }
+
     staffService.readStaffDetails(id)
     .then((details) => {
       staffDetails = details[0]
