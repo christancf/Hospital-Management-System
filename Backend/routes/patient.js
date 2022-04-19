@@ -6,15 +6,16 @@ const patientModel = require('../models/patient');
 
 //patient id generate function
 
-// replace patientModel with your model,patientId with the unique id filed in your collection,'/id' with a route path you want
-// it returns the highest id already in the collection 
+// replace patientModel with your model, patientId with the unique id filed in your collection,'/id' with a route path you want
+// it returns  one added to highest id already in the collection only works if the unique id is in number format . if it is a
+// string return payload without+1 and add one in frontend  
 router.get('/id', function(req,res,next){
   patientModel.find().sort({patientId : -1}).limit(1)
   .then((id) => {
     res.status(200).json({
         success:true,
         message:'sucessful',
-        payload:id[0].patientId
+        payload:id[0].patientId+1
     })
 }).catch((e) => {
     res.status(400).json({success:false,message:error.message,payload:{}})
