@@ -27,7 +27,6 @@ patientManagementService.patientlist = function (){
   return fetch({
     url: '/patient/patientlist',
     method: 'get'
-
   })
 }
 patientManagementService.delete = function (data){
