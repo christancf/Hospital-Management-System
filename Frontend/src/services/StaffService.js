@@ -39,4 +39,20 @@ staffService.updateStatus = function (data) {
     data
   })
 }
+
+staffService.checkInAttendance = function (data) {
+  return fetch({
+    url: 'staff/attendance/checkin',
+    method: 'post',
+    data: data
+  })
+}
+
+staffService.checkOutAttendance = function (data) {
+  return fetch({
+    url: 'staff/attendance/checkout',
+    method: 'put',
+    data: data
+  })
+}
 export default staffService
