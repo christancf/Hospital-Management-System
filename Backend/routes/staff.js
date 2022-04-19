@@ -19,7 +19,8 @@ router.post('/add-member', function (req, res, next) {
     address: req.body.address,
     basicSalary:Number( req.body.basicSalary),
     mobile: req.body.mobile,
-    home: req.body.home
+    home: req.body.home,
+    status: 'Employed'
   });
 
   staff.save()
@@ -55,14 +56,15 @@ router.put('/update-details', (req, res, next) => {
         staffName: req.body.staffName, 
         NIC: req.body.NIC, 
         email: req.body.email, 
-        designation: req.body.designation, 
+        designation: String(req.body.designation),
         qualification: req.body.qualification, 
         dateOfBirth: req.body.dateOfBirth,
-        gender: req.body.gender,
+        gender: String(req.body.gender),
         address: req.body.address,
-        basicSalary: req.body.basicSalary,
+        basicSalary: Number( req.body.basicSalary),
         mobile: req.body.mobile,
-        home: req.body.home
+        home: req.body.home,
+        status: 'Employed'
       }
     })
       .then(() => res.json("Successfully Updated!"))
