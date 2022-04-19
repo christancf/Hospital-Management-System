@@ -1,5 +1,9 @@
-import { Form, Input, InputNumber, Button, Cascader, DatePicker } from 'antd';
-import { values } from 'lodash';
+import { Form, Input, InputNumber, Button, Cascader, DatePicker,Select,Modal,Spin } from 'antd';
+import moment from 'moment';
+import patientManagementService from 'services/PatientManagement';
+import { useState, useEffect } from 'react';
+
+const { Option } = Select;
 
 function toTimestamp(strDate){
 	var datum = Date.parse(strDate);
@@ -65,62 +69,182 @@ const bloodGroup =[
 
 
 
-const PatientUpdate = () => {
+const PatientAdmittance = () => {
+	const [form] = Form.useForm();
+
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false);
+	const [data, setData] = useState();
+
+	useEffect(() => {
+		patientManagementService.patientDetails(1).then((resp) => {
+			setData(resp.payload);
+			setLoading(false);
+		}).catch((err) => {
+			setLoading(false);
+			setError(true);
+			setData();
+		});
+	}, []);
+
+	function ShowModel(title, delay, innercontent, isSuccess) {
+
+		if (isSuccess) {
+			const modal = Modal.success({
+				title: title,
+				content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+			});
+			const timer = setInterval(() => {
+				delay -= 1;
+				modal.update({
+					content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+				});
+			}, 1000);
+			setTimeout(() => {
+				clearInterval(timer);
+				modal.destroy();
+			}, delay * 1000);
+		}
+
+		else {
+			const modal = Modal.error({
+				title: title,
+				content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+			});
+			const timer = setInterval(() => {
+				delay -= 1;
+				modal.update({
+					content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+				});
+			}, 1000);
+			setTimeout(() => {
+				clearInterval(timer);
+				modal.destroy();
+			}, delay * 1000);
+		}
+	}
+
+	function filter(inputValue, path) {
+		return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
+	}
 
 
 	const onFinish = values => {
 
 		const patient =  {
-			patientId:values.id,
+			id:1,
 			fullName:values.fullName,
 			nic:values.nic,
-			dateOfBirth:values.dateOfBirth, 
+			dateOfBirth:moment(values.dateOfBirth).format("X"), 
 			sex:values.sex,
 			mobile:values.mobile,
 			address:values.address,
 			bloodGroup:values.bloodGroup,
 		}
+
+		const payload={patient:patient}
+
+		patientManagementService.update(payload).then((res) => {
+			ShowModel("Successful!",5,"Patient details updated Sucessfully",true)
+			form.resetFields();
+		}).catch((error) =>{
+			ShowModel("Failed!",5,"Patient details update Failed",false)
+		})
 	
-		console.log(patient)
-		//const res = channellingService.addAppointment(payload)
+		console.log(payload)
+		
 
 		//console.log(res);
 	};
 
-	return (
+	if (loading) {
+		return (
+			<>
+				<center>
+					<Spin size="large" tip="Loading..." delay={500} spinning={loading} />
+				</center>
 
-		<Form {...layout} name="Update" onFinish={onFinish} validateMessages={validateMessages}>
-			<label>Update Patient Details</label>
-			<Form.Item name={['user', 'name']} label="Full  Name" rules={[{ required: true }]} placeholder="Full Name">
-				<Input />
-			</Form.Item>
-			<Form.Item name={['user', 'NIC']} label=" NIC" rules={[{ required: true }]} placeholder="NIC">
-				<Input />
-			</Form.Item>
+			</>
+		)
+	}
+	else if (error) {
 
-			<Form.Item name={['user', 'birthday']} label="Birthday" rules={[{ required: true }]} placeholder=" Birthday">
-				<DatePicker />
-			</Form.Item>
-			<Form.Item name={['user','sex']} label="Sex" rules={[{required:true}]}>
-				<Cascader options={options} placeholder="Sex"></Cascader>
-			</Form.Item> 
-			<Form.Item name={['user', 'contact_no']} label="Contact No" rules={[{ required: true }]} placeholder="Contact Number">
-				<Input />
-			</Form.Item>
-			<Form.Item name={['user', 'Address']} label="Address" rules={[{ required: true }]} placeholder="Address">
-				<Input />
-			</Form.Item>
-			<Form.Item name={['user','bloodGroup']} label="bloodGroup" rules={[{required:true}]}>
-				<Cascader options={bloodGroup} placeholder="bloodGroup"></Cascader>
-			</Form.Item>
+		return (
+			<>
+				<center>
+					<Spin size="large" tip="Loading..." delay={500} spinning={loading} />
+				</center>
 
-			<Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-				<Button type="primary" htmlType="submit">
-				Admit Button
-				</Button>
-			</Form.Item>
-		</Form>
-	);
+			</>
+		)
+
+	}
+
+	else{
+
+		var myDate = new Date(data.dateOfBirth);
+		myDate.toLocaleString();
+
+		return (
+
+			
+
+			<Form {...layout} name="Admittance" onFinish={onFinish} validateMessages={validateMessages}>
+				<label>Admiit New Patient</label>
+				<Form.Item name="fullName" initialValue={data.fullName} label="Full  Name" rules={[{ required: true }]} placeholder="Full Name" >
+					<Input />
+				</Form.Item>
+				<Form.Item name="nic" initialValue={data.nic} label=" NIC" rules={[{ required: true }]} placeholder="NIC">
+					<Input />
+				</Form.Item>
+
+				<Form.Item name="dateOfBirth"  label="Birthday" rules={[{ required: true }]} placeholder=" Birthday">
+					<DatePicker />
+				</Form.Item>
+				<Form.Item name="sex"  label="Sex" rules={[{required:true}]}>
+				<Select
+					labelInValue
+					placeholder="Select Sex"
+					filterOption={false}
+					// showSearch={{ filter }}
+					style={{ width: '100%' }}
+					value={data.sex}
+					
+				>
+					{options.map(d => (
+						<Option key={d.value}>{d.label}</Option>
+					))}
+				</Select>
+					
+				</Form.Item> 
+				<Form.Item name="mobile" initialValue={data.mobile} label="Contact No" rules={[{ required: true }]} placeholder="Contact Number">
+					<Input />
+				</Form.Item>
+				<Form.Item name="address" initialValue={data.address} label="Address" rules={[{ required: true }]} placeholder="Address">
+					<Input />
+				</Form.Item>
+				<Form.Item name="bloodGroup" initialValue={data.bloodGroup} label="bloodGroup" rules={[{required:true}]}>
+				<Select
+					labelInValue
+					placeholder="Select Blood Group"
+					filterOption={false}
+					showSearch={{ filter }}
+					style={{ width: '100%' }}
+				>
+					{bloodGroup.map(d => (
+						<Option key={d.value}>{d.label}</Option>
+					))}
+				</Select>
+				</Form.Item>
+
+				<Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+					<Button type="primary" htmlType="submit">
+					Admit Button
+					</Button>
+				</Form.Item>
+			</Form>
+		);
+					}
 };
 
-export default PatientUpdate;
+export default PatientAdmittance;
