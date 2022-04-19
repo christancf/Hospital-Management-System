@@ -2,6 +2,10 @@ import React from 'react';
 import bloodBankService from '../../../services/BloodBankService'
 import { Form, Input, Button, Select,DatePicker } from 'antd';
 
+function toTimestamp(strDate){
+	var datum = Date.parse(strDate);
+	return datum/1000;
+ }
 
 const { Option } = Select;
 
@@ -24,13 +28,13 @@ class AddBloodBag extends React.Component {
 
   onFinish = values => {
     const donorName = values.donorsName;
-    const donorNIC = values.donor;
+    const donorNIC = values.donorNIC;
     const donationNum = values.donationNum;
-    const donateDate = values.donateDate;
+    const donateDate = toTimestamp(values.donateDate);
     const place = values.place;
     const bloodGroup = values.bloodGroup;
 
-    const results = bloodBankService.addBloodBag({donorName:donorName, donorNIC:donorNIC,donationNum:donationNum,donateDate:donateDate,place:place,bloodGroup:bloodGroup});
+    const results = bloodBankService.addBloodBag({donorName:donorName, donorNIC:donorNIC,donationNumber:donationNum,donateDate:donateDate,place:place,bloodGroup:bloodGroup});
     console.log(results.succussfull);
   };
 
@@ -57,10 +61,10 @@ class AddBloodBag extends React.Component {
         <Form.Item label="Donation Number " name="donationNum" rules={[{ required: true, message: 'Please input Donation Number!' }]}>
         <Input />
         </Form.Item>
-        <Form.Item label="Donated Date & Time" name="dateTime">
+        <Form.Item label="Donated Date & Time" name="donateDate">
         <DatePicker />
         </Form.Item>
-        <Form.Item label="Place" name="Place">
+        <Form.Item label="Place" name="place">
         <Input />
         </Form.Item>
 

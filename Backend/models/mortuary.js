@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const dataSchema = new mongoose.Schema({
+    id: {
+        required: true,
+        type: Number
+    },
     NIC: {
         required: true,
         type: String,
@@ -48,6 +52,10 @@ const dataSchema = new mongoose.Schema({
     receiver_type: {
         required: false,
         type: String
+    },
+    date_of_release: {
+        required: false,
+        type: Number
     }
 })
 
