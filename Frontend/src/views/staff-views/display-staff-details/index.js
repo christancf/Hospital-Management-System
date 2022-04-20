@@ -118,9 +118,9 @@ const columns = [
     key: 'action',
     render: (text, record) => (
       <span>
-        <a href='google.com'>View</a>
+        <a href=''>View</a>
         <Divider type="vertical" />
-        <a href='google.com'>Edit</a>
+        <a href='http://localhost:8080/staff/update-staff-details'>Edit</a>
       </span>
     ),
   },

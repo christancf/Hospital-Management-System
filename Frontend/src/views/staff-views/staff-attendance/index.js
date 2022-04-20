@@ -1,10 +1,11 @@
 import React from 'react'
-import { Form, Input, Button, Cascader, message, Card } from 'antd';
+import { Form, Input, Button, message, Card, Select } from 'antd';
 import staffService from 'services/StaffService';
 
 const { Search } = Input;
 const checkin = 'checkin'
 const checkout = 'checkout'
+const { Option } = Select
 
 const StaffAttendance = () => {
 	return (
@@ -118,12 +119,11 @@ const tailLayout = {
 					<Input disabled="true" id="qualification" />
 				</Form.Item>
 
-				<Form.Item
-				label="Attendance Type"
-				name="attendanceType"
-				rules={[{ required: true, message: 'Please select attendance type' }]}
-				>
-				<Cascader options={ attendanceType } id="attendanceType" />
+				<Form.Item name="attendanceType" label="Attendance Type" >
+					<Select allowClear>
+						<Option value="check in">Check In</Option>
+						<Option value="check out">Check Out</Option>
+					</Select>
 				</Form.Item>
 			
 				<Form.Item {...tailLayout}>
@@ -138,16 +138,5 @@ const tailLayout = {
 		</Card>
 	);
   };
-
-
-//Attendance Option
-const attendanceType = [{
-	value: 'check in',
-	label: 'Check In'
-},
-{
-	value: 'check out',
-	label: 'Check Out'
-}]
   
 export default StaffAttendance
