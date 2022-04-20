@@ -28,11 +28,11 @@ const validateMessages = {
 const options = [
 	{
 		label:"Male",
-		value:"male"
+		value:"Male"
 	},
 	{
 		label:"Female",
-		value:"female"
+		value:"Female"
 	}
 ]
 const bloodGroup =[
@@ -206,10 +206,10 @@ const PatientAdmittance = () => {
 				<Form.Item name="dateOfBirth" initialValue={moment(new Date(data.dateOfBirth*1000))} label="Birthday"  rules={[{ required: true }]} placeholder=" Birthday">
 					<DatePicker  />
 				</Form.Item>
-				<Form.Item name="sex"  label="Sex" rules={[{required:true}]}>
+				<Form.Item name="sex" initialValue={data.bloodGroup} label="Sex" rules={[{required:true}]}>
 				<Select
 					
-					 placeholder="Select Sex"
+					placeholder="Select Sex"
 					filterOption={false}
 					showSearch={{ filter }}
 					style={{ width: '100%' }}
