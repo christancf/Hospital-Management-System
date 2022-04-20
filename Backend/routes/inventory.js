@@ -59,6 +59,22 @@ router.get('/itemlist', async function (req, res, next) {
 
 })
 
+//incrementing item id
+router.get('/id', function(req,res,next){
+  itemModel.find().sort({id : -1}).limit(1)
+  .then((id) => {
+    res.status(200).json({
+        success:true,
+        message:'sucessful',
+        payload:id[0].id+1
+    })
+}).catch((e) => {
+    res.status(400).json({success:false,message:e.message,payload:{}})
+})
+
+});
+
+
 
 
 module.exports = router;
