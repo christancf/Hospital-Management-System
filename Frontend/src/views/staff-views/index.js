@@ -15,6 +15,7 @@ export const StaffViews = () => {
         <Route path={`${STAFF_PREFIX_PATH}/staff-resignation`} component={lazy(() => import(`./staff-resignation`))} />
         <Route path={`${STAFF_PREFIX_PATH}/staff-salary-bonuses`} component={lazy(() => import(`./staff-salary-bonuses`))} />
         <Route path={`${STAFF_PREFIX_PATH}/calculate-total-salary`} component={lazy(() => import(`./calculate-total-salary`))} />
+        <Route path={`${STAFF_PREFIX_PATH}/staff-reports`} component={lazy(() => import(`./staff-reports`))} />
         <Redirect from={`${STAFF_PREFIX_PATH}`} to={`${STAFF_PREFIX_PATH}/home`} />
       </Switch>
     </Suspense>
