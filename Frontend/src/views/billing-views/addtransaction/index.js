@@ -1,161 +1,370 @@
-import React, { useState } from 'react';
-// import {
-//   Form,
-//   Input,
-//   Button,
-//   TreeSelect,
-// } from 'antd';
-// const AddBill = () => {
-//   const [componentSize, setComponentSize] = useState('small');
-//   const onFormLayoutChange = ({ size }) => {
-//     setComponentSize(size);
-//   };
-//   return (
-//     <div>
-//       <Form
-//         labelCol={{ span: 4 }}
-//         wrapperCol={{ span: 14 }}
-//         layout="horizontal"
-//         initialValues={{ size: componentSize }}
-//         onValuesChange={onFormLayoutChange}
-//         size={componentSize}
-//       >
-      
-//         <Form.Item label="Patient ID">
-//           <Input />
-//         </Form.Item>
-// 		<Form.Item label="Patient Name">
-//           <Input />
-//         </Form.Item>
-//         <Form.Item label="Type">
-//           <TreeSelect
-//             treeData={[
-//               { title: 'Doctor Charges', value: 'Doctor Charges', children: [{ title: 'Bamboo', value: 'bamboo' }] },{ title: 'Room Charges', value: 'Room Charges', children: [{ title: 'Bamboo', value: 'bamboo' }] },{ title: 'Item Charges', value: 'Item Charges', children: [{ title: 'Bamboo', value: 'bamboo' }] },
-//             ]}
-//           />
-//         </Form.Item>
-
-//         <Form.Item label="Item Name">
-//           <Input />
-//         </Form.Item>
-
-// 		<Form.Item label="QTY">
-//           <Input />
-//         </Form.Item>
-
-//         <Form.Item>
-//           <Button>Clear</Button>
-// 		  <Button className="mr-2" type="primary" htmlType="submit">
-// 		  Add/Update
-//           </Button>
-//           <Button>Finish</Button>
-//         </Form.Item>
-
-//       </Form>
-//     </div>
-//   );
-// 		};
-
-import { Form, Input, Button, Select } from 'antd';
+import React from 'react'
+import { useState, useEffect } from 'react';
+import { Form, Input, InputNumber, Button, Select, DatePicker, Card, Spin, Modal, Row, Col, Table } from 'antd';
+import billingService from 'services/BillingService';
 
 const { Option } = Select;
 
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
-};
+const Home = () => {
 
-class Demo extends React.Component {
-  formRef = React.createRef();
 
-  onGenderChange = value => {
-    this.formRef.current.setFieldsValue({
-      note: `Hi, ${value === 'male' ? 'man' : 'lady'}!`,
-    });
-  };
+  const [form] = Form.useForm();
+  const [patientLoading, setPatientLoading] = useState(true);
+  const [patientname, setPatientname] = useState(false);
+  const [patientError, setPatientError] = useState(false);
+  const [patientData, setPatientData] = useState();
 
-  onFinish = values => {
-    const PatientId = values.PatientId; 
-    const PatientName = values.PatientName;
-    const types = values.types;
-    const ItemName = values.ItemName;
-    const QTY = values.QTY;
-    
-    console.log(values);
-  };
+  const [transactionLoading, setTransactionLoading] = useState(true);
+  const [transactionError, setTransactionError] = useState(false);
+  const [transactionData, setTransactionData] = useState();
 
-  onReset = () => {
-    this.formRef.current.resetFields();
-  };
 
-  onFill = () => {
-    this.formRef.current.setFieldsValue({
-      note: 'Hello world!',
-      gender: 'male',
-    });
-  };
+  const [itemLoading, setitemLoading] = useState(true);
+  const [itemData, setItemData] = useState();
 
-  render() {
-    return (
-      <Form {...layout} ref={this.formRef} name="control-ref" onFinish={this.onFinish}>
-        <Form.Item name="PatientId" label="Patient ID" rules={[{ required: true }]}>
-          <Input />
-        </Form.Item>
-        <Form.Item name="PatientName" label="Patient Name" rules={[{ required: true }]}>
-          <Input />
-        </Form.Item>
-        <Form.Item name="types" label="Types" rules={[{ required: true }]}>
-          <Select
-            placeholder="Select"
-            onChange={this.onGenderChange}
-            allowClear
-          >
-            <Option value="Item Charges">Item Charges</Option>
-            <Option value="Doctor Charges">Doctor Charges</Option>
-            <Option value="Room Charges">Room Charges</Option>
-          </Select>
-        </Form.Item>
-        <Form.Item name="ItemName" label="Item Name" rules={[{ required: true }]}>
-          <Input />
-        </Form.Item>
 
-        <Form.Item name="QTY" label="QTY" rules={[{ required: true }]}>
-          <Input />
-        </Form.Item>
-        <Form.Item
-          noStyle
-          shouldUpdate={(prevValues, currentValues) => prevValues.gender !== currentValues.gender}
-        >
-          {({ getFieldValue }) => {
-            return getFieldValue('gender') === 'other' ? (
-              <Form.Item
-                name="customizeGender"
-                label="Customize Gender"
-                rules={[{ required: true }]}
-              >
-                <Input />
-              </Form.Item>
-            ) : null;
-          }}
-        </Form.Item>
-        <Form.Item {...tailLayout}>
-          <Button className="mr-2" type="primary" htmlType="Add">
-            Add
-          </Button>
-          <Button className="mr-2" htmlType="button" onClick={this.onReset}>
-            Reset
-          </Button>
-          {/* <Button className="mr-2" type="link" htmlType="button" onClick={this.onFill}>
-            Fill form
-          </Button> */}
-        </Form.Item>
-      </Form>
-    );
+  const columns = [
+    {
+      title: 'Item ID',
+      dataIndex: 'itemId',
+      key: 'itemId',
+      render: text => <a>{text}</a>,
+    },
+    {
+      title: 'Quantity',
+      dataIndex: 'qty',
+      key: 'qty',
+    },
+    {
+      title: 'Item Charge',
+      dataIndex: 'itemCharge',
+      key: 'itemCharge',
+    },
+    {
+      title: 'Doctor Charge',
+      dataIndex: 'doctorCharge',
+      key: 'doctorCharge',
+    },
+    {
+      title: 'Room Charge',
+      dataIndex: 'roomCharge',
+      key: 'roomCharge',
+    },
+    {
+      title: 'Tax',
+      dataIndex: 'tax',
+      key: 'tax',
+    },
+    {
+      title: 'Total',
+      dataIndex: 'total',
+      key: 'total',
+    }
+  ];
+
+  let TransactionList = {}
+
+  function ShowModel(title, delay, innercontent, isSuccess) {
+
+    if (isSuccess) {
+      const modal = Modal.success({
+        title: title,
+        content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+      });
+      const timer = setInterval(() => {
+        delay -= 1;
+        modal.update({
+          content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+        });
+      }, 1000);
+      setTimeout(() => {
+        clearInterval(timer);
+        modal.destroy();
+      }, delay * 1000);
+    }
+
+    else {
+      const modal = Modal.error({
+        title: title,
+        content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+      });
+      const timer = setInterval(() => {
+        delay -= 1;
+        modal.update({
+          content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+        });
+      }, 1000);
+      setTimeout(() => {
+        clearInterval(timer);
+        modal.destroy();
+      }, delay * 1000);
+    }
   }
+
+  useEffect(() => {
+
+
+    billingService.getAllPatients().then((resp) => {
+      setPatientData(resp.payload);
+      setPatientLoading(false);
+
+    }).catch((err) => {
+      setPatientLoading(false);
+      setPatientError(true);
+      setPatientData();
+    });
+
+
+    billingService.getAllItems().then((resp) => {
+      setItemData(resp.payload);
+      setitemLoading(false);
+
+    }).catch((err) => {
+      setitemLoading(false);
+      setItemData();
+    });
+
+
+  }, []);
+
+  const onFinishTransaction = (values) => {
+
+    console.log(values);
+
+    const sendingObj = {
+      patientId: values.patientid,
+      type: values.type.value,
+      itemId: values.itemname,
+      qty: values.qty,
+      patientName: values.patientid,
+      roomCharges: 100,
+      itemCharges: 100,
+      doctorCharges: 100,
+      tax: 50,
+      total: 500
+    }
+
+    console.log(sendingObj);
+
+    billingService.addTransactions(sendingObj).then((resp) => {
+
+      if (resp.succuss) {
+        ShowModel(
+          "Successfull !",
+          4,
+          "Your Transaction successfully added",
+          true
+        );
+        form.resetFields(['type']);
+        onPatientSearch();
+
+      }
+      else {
+        ShowModel(
+          "Unsccessfull !",
+          4,
+          "Your Transaction placement faild",
+          false
+        );
+      }
+
+
+
+    }).catch((error) => {
+
+      ShowModel(
+        "Unsccessfull !",
+        4,
+        "Your Transaction placement faild",
+        false
+      );
+
+    })
+
+  }
+
+  const onPatientSearch = (value) => {
+
+
+    setPatientname(true);
+
+    billingService.getAllTransactionToPatient(value).then((resp) => {
+
+      TransactionList = resp.payload.map((transaction) => {
+        return {
+          itemId: transaction.itemId,
+          qty: transaction.qty,
+          itemCharge: transaction.itemCharges,
+          doctorCharge: transaction.doctorCharges,
+          roomCharge: transaction.roomCharges,
+          tax: transaction.tax,
+          total: transaction.total
+        }
+      });
+      setTransactionData(TransactionList);
+      setTransactionLoading(false);
+
+    }).catch((err) => {
+      setTransactionLoading(false);
+      setTransactionError(true);
+      setTransactionData();
+    });
+
+  }
+
+  const formLayout = {
+    labelCol: { span: 6 },
+    wrapperCol: { span: 14 },
+  };
+  const tailLayout = {
+    wrapperCol: { offset: 4, span: 20 },
+  };
+
+
+  if (!patientLoading) {
+
+    const optionList = patientData.map((patient) => {
+      return (
+        <Option value={patient.patientId}>{patient.patientId} - {patient.fullName}</Option>
+      )
+    })
+
+    if (!itemLoading) {
+
+      const itemoptionList = itemData.map((item) => {
+        return (
+          <Option value={item.id}>{item.item_name} - {item.id}</Option>
+        )
+      })
+
+      return (
+        <>
+          <Row>
+            <Col span={12}> <Card style={{ width: 600, height: 600 }}>
+              <h2 className='text-center'>Add Transaction</h2>
+              <Form
+                {...formLayout}
+                form={form}
+                onFinish={onFinishTransaction}
+              >
+
+                <Form.Item name="patientid"
+                  label="Patient ID">
+                  <Select
+                    showSearch
+                    placeholder="Select a Patient"
+                    optionFilterProp="children"
+                    onSelect={onPatientSearch}
+
+                  >
+                    {optionList}
+                  </Select>
+
+                </Form.Item>
+
+                <Form.Item
+                  name="type"
+                  label="Type"
+
+                >
+                  <Select
+
+                    labelInValue
+                    placeholder="Select Type"
+                    filterOption={false}
+                    style={{ width: '100%' }}
+                  >
+                    <Option key="item charges">Item Charges</Option>
+                    <Option key="room charges">Room Charges</Option>
+                    <Option key="doctor charges">Doctor Charges</Option>
+                  </Select>
+                </Form.Item>
+
+
+                <Form.Item name="itemname"
+                  label="Item Name">
+                  <Select
+                    showSearch
+                    placeholder="Select a Item"
+                    optionFilterProp="children"
+                    onChange={()=> {}}
+
+                  >
+                    {itemoptionList}
+                  </Select>
+
+                </Form.Item>
+                <Form.Item name="qty"
+                  label="Item Quantity"
+                >
+                  <InputNumber />
+
+                </Form.Item>
+
+                <Form.Item {...tailLayout}>
+                  <Button shape="round" className="mr-2" htmlType="button" onClick={() => { form.resetFields(); }}>
+                    Clear
+                  </Button>
+                  <Button shape="round" className="mr-2" type="primary" htmlType="submit">
+                    Add / Update
+                  </Button>
+
+                  <Button shape="round" className="mr-2" type="primary" onClick={() => {
+                    window.location = '../billing/billlist';
+                  }}>
+                    Finish
+                  </Button>
+                </Form.Item>
+
+
+              </Form>
+
+
+            </Card>
+            </Col>
+            <Col span={12}> <Card style={{ width: 600, height: 600 }}>
+
+              {!transactionLoading ? <>
+                <Table columns={columns} dataSource={transactionData} />
+              </> : <></>}
+
+
+
+            </Card>
+            </Col>
+          </Row>
+
+
+
+        </>
+      )
+
+    }
+    else {
+      return (
+        <>
+          <center>
+            <Spin size="large" tip="Loading..." delay={500} spinning={patientLoading} />
+          </center>
+
+        </>
+      )
+    }
+
+
+
+  }
+  else {
+    return (
+      <>
+        <center>
+          <Spin size="large" tip="Loading..." delay={500} spinning={patientLoading} />
+        </center>
+
+      </>
+    )
+  }
+
 }
 
-
-export default Demo
+export default Home
