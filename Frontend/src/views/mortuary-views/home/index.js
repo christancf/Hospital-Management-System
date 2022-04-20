@@ -1,33 +1,40 @@
-import { Card, Popover, Button, Row, Col } from 'antd';
+import { Card, Popover, Button, Row, Col, Modal } from 'antd';
 import { useState, useEffect } from 'react';
 import mortuaryService from 'services/MortuaryService';
 
-const text = <span>Title</span>;
+// function ShowModel(innercontent) {
+
+//   const modal = Modal.success({
+//     title: "Corpse Information",
+//     content: `Cabinet Number: ${innercontent}`,
+//     closable: true
+//   });
+
+// }
+
 const content = (props) => {
-
-  function nextPage(props) {
-    localStorage.setItem("cabinetNumber", props.letter + props.number)
-    // window.location.href='/mortuary/add'
-  }
-
+  const cabinet_no = props.letter + props.number
   if (props.isOccupied == true) {
 
     return (
       <div>
         <p>OCCUPIED</p>
         <p>{props.letter}{props.number}</p>
-        <Button type='primary'>More Info</Button>
+        {/* <Button type='primary' onClick={() => { ShowModel(cabinet_no) }}>More Info</Button> */}
+
 
       </div>
     )
 
   }
   else {
+    const passCabinetNo = `/mortuary/add?cabinetNo=${props.letter}${props.number}`;
 
     return (
       <div>
         <p>{props.letter}{props.number}</p>
-        <Button type='primary' onClick={nextPage(props)}>Add Corpse</Button>
+        <p>VACANT</p>
+        <Button type='primary' href={passCabinetNo}>Add Corpse</Button>
       </div>
     )
 
@@ -36,27 +43,27 @@ const content = (props) => {
 
 };
 
-const GridList = (props)=> {
+const GridList = (props) => {
 
   const RowSet = [];
   for (let i = 0; i < props.data.length; i += 8) {
     const rowObj = props.data.slice(i, i + 8);
-    
+
     const rowList = [];
-    for(let j = 0; j < rowObj.length; j ++){
+    for (let j = 0; j < rowObj.length; j++) {
 
       rowList.push(
         <Col span={3}> {rowObj[j]} </Col>
       );
     }
 
-     RowSet.push(<Row gutter={[48, 16]}>{rowList}</Row>);
+    RowSet.push(<Row gutter={[48, 16]}>{rowList}</Row>);
 
-}
+  }
 
-  return(
+  return (
     <>
-    {RowSet}
+      {RowSet}
     </>
   )
 
@@ -132,7 +139,7 @@ const Home = () => {
     return (
       <>
         <center><h1>Mortuary Space Allocation</h1></center>
-        <GridList data= {cabinetArray}></GridList>
+        <GridList data={cabinetArray}></GridList>
       </>
     )
   }
@@ -144,7 +151,7 @@ const Cabinet = (props) => {
   const isOccupied = props.isOccupied
   if (isOccupied) {
     return (
-      <Popover placement="bottomRight" title={text} content={content({ letter: props.letter, number: props.number, isOccupied: props.isOccupied })} arrowPointAtCenter>
+      <Popover placement="bottomRight" content={content({ letter: props.letter, number: props.number, isOccupied: props.isOccupied })} arrowPointAtCenter>
         <Card style={{ width: 100, borderColor: '#ff6b72', borderWidth: '3px' }} hoverable>
           <h1 className='text-center'>{props.letter}{props.number}</h1>
         </Card>
@@ -152,7 +159,7 @@ const Cabinet = (props) => {
     )
   } else {
     return (
-      <Popover placement="bottomRight" title={text} content={content({ letter: props.letter, number: props.number, isOccupied: props.isOccupied })} arrowPointAtCenter>
+      <Popover placement="bottomRight" content={content({ letter: props.letter, number: props.number, isOccupied: props.isOccupied })} arrowPointAtCenter>
         <Card style={{ width: 100, borderColor: 'green', borderWidth: '3px' }} hoverable>
           <h1 className='text-center'>{props.letter}{props.number}</h1>
         </Card>
