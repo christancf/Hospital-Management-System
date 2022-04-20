@@ -150,40 +150,6 @@ const ViewAppointment = () => {
         },
     ];
 
-    const rowdata = [
-        {
-            NIC: '1',
-            name: 'John Brown',
-            age: 32,
-            contact: +94768898654,
-            doctor: 'Dr. Kaputu Kaak',
-            date: 'New York No. 1 Lake Park',
-            status: "cancelled",
-            qnumb: 1
-        },
-        {
-            NIC: '2',
-            name: 'Jim Green',
-            age: 42,
-            contact: +94768898654,
-            doctor: 'Dr. Kaputu Kaak',
-            date: 'London No. 1 Lake Park',
-            status: "pending",
-            qnumb: 2
-        },
-        {
-            NIC: '3',
-            name: 'Joe Black',
-            age: 32,
-            contact: +94768898654,
-            doctor: 'Dr. Kaputu Kaak',
-            date: 'Sidney No. 1 Lake Park',
-            status: "completed",
-            qnumb: 3
-        },
-    ];
-
-
     if (loading) {
         return (
             <>

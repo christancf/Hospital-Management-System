@@ -44,8 +44,6 @@ const AddAppointment = () => {
     const [appointmentData, setAppointmentData] = useState();
 
 
-    console.log(appointmentId);
-
     useEffect(() => {
         channellingService.searchAppointment(appointmentId).then((resp) => {
             setAppointmentData(resp.payload[0]);
@@ -189,21 +187,25 @@ const AddAppointment = () => {
     else {
         if (!appointmentLoading) {
 
-            const res_data = data;
-            const options = res_data.map((item) => {
+            const options = data.map((item) => {
 
-                return {
-                    text: item.staffName,
-                    value: item.staffID
+                return (<Option key={item.staffID}>{item.staffName}</Option>)
+            });
+
+            const doctorName = data.find((item) => {
+                if (item.staffID == appointmentData.doctor_id) {
+                    return true;
+                }
+                else {
+                    return false;
                 }
             });
-            console.log(appointmentData)
-           
-            const rendOption = options.map((option) => {
 
-                return (<Option key={option.value}>{option.text}</Option>)
+         
+            form.setFieldsValue({
+                doctor_id: doctorName.staffName
 
-            });
+              });
             return (
                 <>
                     <Card style={{ width: 800 }}>
@@ -224,19 +226,18 @@ const AddAppointment = () => {
                             <Form.Item name="contact_no" label="Contact No" rules={[{ required: true }]} placeholder="Contact Number" initialValue={appointmentData.contact_no}>
                                 <Input />
                             </Form.Item>
-                            <Form.Item name="doctor_id" label="Doctor" rules={[{ required: true }]} >
+                            <Form.Item name="doctor_id" label="Doctor" rules={[{ required: true }]}>
                                 {/* <Cascader options={options} placeholder="Please select Doctor" showSearch={{ filter }} />, */}
 
                                 <Select
 
-                                    labelInValue
                                     placeholder="Select users"
                                     filterOption={false}
                                     showSearch={{ filter }}
                                     style={{ width: '100%' }}
-                                    defaultValue={{ value: "Anura Wijesinghe" }}
+
                                 >
-                                    {rendOption}
+                                    {options}
                                 </Select>
                             </Form.Item>
                             <Form.Item name="date" label="Appointment Date" rules={[{ required: true }]} initialValue={moment(new Date(appointmentData.date))}>

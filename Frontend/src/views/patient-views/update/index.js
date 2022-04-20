@@ -5,6 +5,9 @@ import { useState, useEffect } from 'react';
 
 const { Option } = Select;
 
+const queryParams = new URLSearchParams(window.location.search);
+const patientId = queryParams.get('patientId');
+
 function toTimestamp(strDate){
 	var datum = Date.parse(strDate);
 	return datum/1000;
@@ -29,7 +32,7 @@ const options = [
 	},
 	{
 		label:"Female",
-		value:"Female"
+		value:"female"
 	}
 ]
 const bloodGroup =[
@@ -76,8 +79,10 @@ const PatientAdmittance = () => {
 	const [error, setError] = useState(false);
 	const [data, setData] = useState();
 
+	
+
 	useEffect(() => {
-		patientManagementService.patientDetails(1).then((resp) => {
+		patientManagementService.patientDetails(patientId).then((resp) => {
 			setData(resp.payload);
 			setLoading(false);
 		}).catch((err) => {
@@ -132,7 +137,7 @@ const PatientAdmittance = () => {
 	const onFinish = values => {
 
 		const patient =  {
-			id:1,
+			id:patientId,
 			fullName:values.fullName,
 			nic:values.nic,
 			dateOfBirth:moment(values.dateOfBirth).format("X"), 
@@ -181,16 +186,16 @@ const PatientAdmittance = () => {
 	}
 
 	else{
-
-		// var myDate = new Date(data.dateOfBirth);
-		// myDate.toLocaleString();
-
+		console.log(data);
 		return (
 
 			
 
-			<Form {...layout} name="Admittance" onFinish={onFinish} validateMessages={validateMessages}>
-				<label>Admiit New Patient</label>
+			<Form {...layout} name="Admittance" onFinish={onFinish} form={form} validateMessages={validateMessages}>
+				<label>Update Patient details</label>
+				<Form.Item name="id" label="Patient ID" initialValue={patientId} rules={[{ required: true }]} placeholder="Patient ID">
+				<Input disabled />
+			</Form.Item>
 				<Form.Item name="fullName" initialValue={data.fullName} label="Full  Name" rules={[{ required: true }]} placeholder="Full Name" >
 					<Input />
 				</Form.Item>
@@ -198,23 +203,25 @@ const PatientAdmittance = () => {
 					<Input />
 				</Form.Item>
 
-				<Form.Item name="dateOfBirth"  label="Birthday" rules={[{ required: true }]} placeholder=" Birthday">
-					<DatePicker />
+				<Form.Item name="dateOfBirth" initialValue={moment(new Date(data.dateOfBirth*1000))} label="Birthday"  rules={[{ required: true }]} placeholder=" Birthday">
+					<DatePicker  />
 				</Form.Item>
 				<Form.Item name="sex"  label="Sex" rules={[{required:true}]}>
 				<Select
-					labelInValue
-					placeholder="Select Sex"
-					filterOption={false}
-					// showSearch={{ filter }}
-					style={{ width: '100%' }}
-					value={data.sex}
 					
+					 placeholder="Select Sex"
+					filterOption={false}
+					showSearch={{ filter }}
+					style={{ width: '100%' }}
+					defaultValue={data.sex}					
 				>
+					
 					{options.map(d => (
-						<Option key={d.value}>{d.label}</Option>
+						<Option  value={d.value}>{d.label}</Option>
 					))}
+					
 				</Select>
+				
 					
 				</Form.Item> 
 				<Form.Item name="mobile" initialValue={data.mobile} label="Contact No" rules={[{ required: true }]} placeholder="Contact Number">
@@ -225,11 +232,12 @@ const PatientAdmittance = () => {
 				</Form.Item>
 				<Form.Item name="bloodGroup" initialValue={data.bloodGroup} label="bloodGroup" rules={[{required:true}]}>
 				<Select
-					labelInValue
+					
 					placeholder="Select Blood Group"
 					filterOption={false}
 					showSearch={{ filter }}
 					style={{ width: '100%' }}
+					defaultValue={data.bloodGroup}
 				>
 					{bloodGroup.map(d => (
 						<Option key={d.value}>{d.label}</Option>
