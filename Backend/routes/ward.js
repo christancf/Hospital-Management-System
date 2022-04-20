@@ -1,5 +1,7 @@
 var express = require('express');
 const wardModel = require('../models/ward');
+const staffModel = require('../models/staff');
+const assignNurseModel = require('../models/assigned-nurses')
 var router = express.Router();
 const auth = require("../middleware/auth");
 
@@ -13,9 +15,9 @@ router.post('/details/add', (req, res, next) => {
   
   let newWard = new wardModel({
     id: req.body.id,
-    category: String(req.body.category),
-    capacity: Number(req.body.capacity),
-    status: Boolean(req.body.status)
+    category: req.body.category,
+    capacity: req.body.capacity,
+    status: req.body.status
   })
 
   newWard.save()
@@ -38,14 +40,80 @@ router.get('/details/read?:id', (req, res, next) => {
 })
 //update ward details
 router.put('/details/update', (req, res, next) => {
-  wardModel.updateOne({id: String(req.body.id)},
-    {$set: {"capacity": String(req.body.capacity), "status": String(req.body.status)}})
-    .then((result) => {
+  wardModel.updateOne({id: req.body.id},
+    {$set: {"capacity": req.body.capacity, "status": req.body.status}})
+    .then(() => {
       res.json(`Successfully Updated!`)
     }).catch((e) => {
       console.log(`Error Update: ${e}`)
     })
 })
+
+//retrieve ward categories
+router.get('/category/names', (req, res, next) => {
+  wardModel.aggregate([{$group: { _id: '$category'}}])
+  .then((d) => res.json(d))
+  .catch((e) => console.log(`Error retrieving categories: ${ e }`))
+})
+
+//retrieve ward ids according to the category
+router.get('/category/ids?:category', (req, res, next) => {
+  wardModel.find({category: req.query.category}, {_id:0, id:1})
+  .then((d) => res.json(d))
+  .catch((e) => console.log(`Error: ${ e }`))
+})
+
+//retrieve nurse name and qualification
+router.get('/nurse/read?:id', (req, res, next) => {
+  staffModel.findOne({staffID: req.query.id, designation: "nurse"}, {_id:0, staffName:1, qualification:1})
+  .then((data) => res.json(data))
+  .catch((e) => console.log(`Error: ${ e }`))
+})
+
+//assign nurse
+router.post('/nurse/assign', (req, res, next) => {
+  if(req.body.role !== undefined){
+    const assign = new assignNurseModel({
+      nurseID: req.body.id,
+      assignedDate: req.body.assignedDate,
+      reassignDate: req.body.reassignDate,
+      wardCategory: req.body.category,
+      wardID: req.body.wardID,
+      role: req.body.role
+    })
+    assign.save()
+    .then((d) => res.json(d))
+    .catch((e) => console.log(`Error: ${ e }`))
+  }else{
+    const assign = new assignNurseModel({
+      nurseID: req.body.id,
+      assignedDate: req.body.assignedDate,
+      reassignDate: req.body.reassignDate,
+      wardCategory: req.body.category,
+      wardID: req.body.wardID
+    })
+    assign.save()
+    .then((d) => res.json(d))
+    .catch((e) => console.log(`Error: ${ e }`))
+  }
+  
+})
+
+//read all assigned nurses
+router.get('/nurse/assigned-details', (req, res, next) => {
+  assignNurseModel.find({})
+  .then((data) => res.json(data))
+  .catch((e) => console.log(`Error: ${ e }`))
+})
+
+
+
+
+
+
+
+
+
 
 
 
