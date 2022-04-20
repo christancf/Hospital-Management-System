@@ -44,4 +44,34 @@ mortuaryService.getOccupiedData = function () {
     }
   )
 }
+
+//get auto incremented id
+mortuaryService.getId = function () {
+  return fetch(
+    {
+      url: '/mortuary/id',
+      method: 'get'
+    }
+  )
+}
+//read for update function
+mortuaryService.readForUpdate = function (params) {
+  return fetch(
+    {
+      url: '/mortuary/update/read',
+      method: 'post',
+      data: params
+    }
+  )
+}
+//update function
+mortuaryService.updateCorpse = function (params) {
+  return fetch(
+    {
+      url: '/mortuary/update',
+      method: 'post',
+      data: params
+    }
+  )
+}
 export default mortuaryService

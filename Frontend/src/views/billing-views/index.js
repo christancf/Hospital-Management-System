@@ -7,9 +7,10 @@ export const BillingViews = () => {
   return (
     <Suspense fallback={<Loading cover="content"/>}>
       <Switch>
-        <Route path={`${BILLING_PREFIX_PATH}/home`} component={lazy(() => import(`./home`))} />
-        <Route path={`${BILLING_PREFIX_PATH}/add-details`} component={lazy(() => import(`./addtransaction`))} />
-        <Redirect from={`${BILLING_PREFIX_PATH}`} to={`${BILLING_PREFIX_PATH}/home`} />
+        <Route path={`${BILLING_PREFIX_PATH}/transactions`} component={lazy(() => import(`./addtransaction`))} />
+        <Route path={`${BILLING_PREFIX_PATH}/billlist`} component={lazy(() => import(`./Bill-List`))} />
+        <Route path={`${BILLING_PREFIX_PATH}/totalbills`} component={lazy(() => import(`./total-bill`))} />
+        <Redirect from={`${BILLING_PREFIX_PATH}`} to={`${BILLING_PREFIX_PATH}/transactions`} />
       </Switch>
     </Suspense>
   )

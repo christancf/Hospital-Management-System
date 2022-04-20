@@ -1,8 +1,9 @@
 import React from 'react'
-import { Form, Input, Button, Cascader, DatePicker, message, Card } from 'antd';
+import { Form, Input, Button, DatePicker, message, Card, Select } from 'antd';
 import staffService from 'services/StaffService';
 
 const add = 'add'
+const { Option } = Select
 
 const AddStaffMember = () => {
   return (
@@ -17,7 +18,7 @@ const layout = {
   wrapperCol: { span: 8 },
 };
 const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
+  wrapperCol: { offset: 12, span: 16 },
 };
 
 const Demo = () => {
@@ -80,12 +81,12 @@ const Demo = () => {
           <Input />
         </Form.Item>
 
-      <Form.Item
-          label="Designation"
-          name="designation"
-          rules={[{ required: true, message: 'Please select the designation!' }]}
-        >
-        <Cascader options={designationOptions} />
+        <Form.Item name="designation" label="Designation" >
+          <Select allowClear>
+            <Option value="doctor">Doctor</Option>
+            <Option value="nurse">Nurse</Option>
+            <Option value="allied health professionals">Allied Health Professionals</Option>
+          </Select>
         </Form.Item>
 
         <Form.Item
@@ -104,12 +105,12 @@ const Demo = () => {
             <DatePicker />
         </Form.Item>
 
-        <Form.Item
-          label="Gender"
-          name="gender"
-          rules={[{ required: true, message: 'Please select the gender!' }]}
-        >
-        <Cascader options={genderOptions} />
+        <Form.Item name="gender" label="Gender" >
+          <Select allowClear>
+            <Option value="male">Male</Option>
+            <Option value="female">Female</Option>
+            <Option value="other">Other</Option>
+          </Select>
         </Form.Item>
 
         <Form.Item
@@ -146,7 +147,7 @@ const Demo = () => {
 
         <Form.Item {...tailLayout}>
 
-          <Button htmlType="reset" style={{marginRight: 215}}>
+          <Button htmlType="reset" style={{marginRight: 30}}>
             Discard
           </Button>
 
@@ -159,31 +160,5 @@ const Demo = () => {
     </Card>
   );
 };
-
-const designationOptions = [{
-	value: 'doctor',
-	label: 'Doctor'
-},
-{
-	value: 'nurse',
-	label: 'Nurse'
-},
-{
-	value: 'allied health professionals',
-	label: 'Allied Health Professionals'
-}]
-
-const genderOptions = [{
-	value: 'male',
-	label: 'Male'
-},
-{
-	value: 'female',
-	label: 'Female'
-},
-{
-	value: 'other',
-	label: 'Other'
-}]
 
 export default AddStaffMember

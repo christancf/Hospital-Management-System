@@ -9,6 +9,7 @@ export const FrontlineChannellingViews = () => {
       <Switch>
         <Route path={`${FRONTLINE_CHANNELLING_PREFIX_PATH}/add`} component={lazy(() => import(`./add-addpointment`))} />
         <Route path={`${FRONTLINE_CHANNELLING_PREFIX_PATH}/list`} component={lazy(() => import(`./view-appointment`))} />
+        <Route path={`${FRONTLINE_CHANNELLING_PREFIX_PATH}/edit`} component={lazy(() => import(`./edit-appointment`))} />
         <Redirect from={`${FRONTLINE_CHANNELLING_PREFIX_PATH}`} to={`${FRONTLINE_CHANNELLING_PREFIX_PATH}/add`} />
       </Switch>
     </Suspense>

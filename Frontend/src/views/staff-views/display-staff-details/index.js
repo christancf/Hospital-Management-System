@@ -25,6 +25,9 @@ const DisplayStaffDetails = () => {
     })
 	}, []);
 
+  const searchByName = (name) => {
+  }
+
   if (loading) {
 		return (
 			<>
@@ -53,7 +56,7 @@ const DisplayStaffDetails = () => {
         <Title>Staff Details</Title>
         <Search 
           placeholder="input search text" 
-          onSearch={value => console.log(value)} enterButton 
+          onSearch={value => searchByName(value)} enterButton 
           style={{width: 300, marginBottom: 20}} />
         <Table columns={columns} dataSource={data} onChange={onChange}/>        
       </div>
@@ -115,9 +118,9 @@ const columns = [
     key: 'action',
     render: (text, record) => (
       <span>
-        <a href='google.com'>View</a>
+        <a href=''>View</a>
         <Divider type="vertical" />
-        <a href='google.com'>Edit</a>
+        <a href='http://localhost:8080/staff/update-staff-details'>Edit</a>
       </span>
     ),
   },
