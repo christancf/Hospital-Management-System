@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const dataSchema = new mongoose.Schema({
+    bagId:{
+        required:true,
+        type:Number
+    },
     donorName: {
         required: true,
         type: String
@@ -22,7 +26,7 @@ const dataSchema = new mongoose.Schema({
         type: String
     },
     bloodGroup:{
-        required:true,
+        required:false,
         type: String
     },
     // status:{
