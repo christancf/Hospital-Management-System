@@ -23,5 +23,39 @@ wardService.updateWardDetails = function (data) {
     data: data
   })
 }
+wardService.readWardCategory = () => {
+  return fetch({
+    url: 'ward/category/names',
+    method: 'get'
+  })
+}
 
+wardService.readWardCategoryIDs = (category) => {
+  return fetch({
+    url:'ward/category/ids?category='+category,
+    method: 'get'
+  })
+}
+
+wardService.readStaffNameAndQualification = (id) => {
+  return fetch({
+    url: 'ward/nurse/read?id='+ id,
+    method: 'get'
+  })
+}
+
+wardService.assignNurse = (data) => {
+  return fetch({
+    url: 'ward/nurse/assign',
+    method: 'post',
+    data
+  })
+}
+
+wardService.getNurses = () => {
+  return fetch({
+    url: 'ward/nurse/assigned-details',
+    method: 'get'
+  })
+}
 export default wardService
