@@ -1,6 +1,8 @@
-import { Form, Input, InputNumber, Button, Cascader, DatePicker,Select,Modal } from 'antd';
+import { Form, Input, InputNumber, Button, Cascader, DatePicker,Select,Modal,Spin } from 'antd';
 import moment from 'moment';
 import patientManagementService from 'services/PatientManagement';
+import { useState, useEffect } from 'react';
+
 const { Option } = Select;
 
 function toTimestamp(strDate){
@@ -70,6 +72,21 @@ const bloodGroup =[
 const PatientAdmittance = () => {
 	const [form] = Form.useForm();
 
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false);
+	const [data, setData] = useState();
+
+	useEffect(() => {
+		patientManagementService.id().then((resp) => {
+			setData(resp.payload);
+			setLoading(false);
+		}).catch((err) => {
+			setLoading(false);
+			setError(true);
+			setData();
+		});
+	}, []);
+
 	function ShowModel(title, delay, innercontent, isSuccess) {
 
 		if (isSuccess) {
@@ -115,7 +132,7 @@ const PatientAdmittance = () => {
 	const onFinish = values => {
 
 		const patient =  {
-			id:1,
+			id:values.id,
 			fullName:values.fullName,
 			nic:values.nic,
 			dateOfBirth:moment(values.dateOfBirth).format("X"), 
@@ -128,7 +145,7 @@ const PatientAdmittance = () => {
 		const payload={patient:patient}
 
 		patientManagementService.admittance(payload).then((res) => {
-			ShowModel("Successful!",5,"Patient admiited Sucessfully",true)
+			ShowModel("Successful!",5,"Patient admiited Sucessfully",true);
 			form.resetFields();
 		}).catch((error) =>{
 			ShowModel("Failed!",5,"Patient Admiitance Failed",false)
@@ -140,10 +157,36 @@ const PatientAdmittance = () => {
 		//console.log(res);
 	};
 
+	if (loading) {
+		return (
+			<>
+				<center>
+					<Spin size="large" tip="Loading..." delay={500} spinning={loading} />
+				</center>
+
+			</>
+		)
+	}
+	else if (error) {
+
+		return (
+			<>
+				<center>
+					<Spin size="large" tip="Loading..." delay={500} spinning={loading} />
+				</center>
+
+			</>
+		)
+
+	}
+	else{
 	return (
 
-		<Form {...layout} name="Admittance" onFinish={onFinish} validateMessages={validateMessages}>
-			<label>Admiit New Patient</label>
+		<Form {...layout} name="Admittance" form={form} onFinish={onFinish} validateMessages={validateMessages}>
+			<label>Admit New Patient</label>
+			<Form.Item name="id" label="Patient ID" initialValue={data} rules={[{ required: true }]} placeholder="Patient ID">
+				<Input disabled />
+			</Form.Item>
 			<Form.Item name="fullName" label="Full  Name" rules={[{ required: true }]} placeholder="Full Name">
 				<Input />
 			</Form.Item>
@@ -195,6 +238,7 @@ const PatientAdmittance = () => {
 			</Form.Item>
 		</Form>
 	);
+		}
 };
 
 export default PatientAdmittance;

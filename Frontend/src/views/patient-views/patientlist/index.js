@@ -22,8 +22,8 @@ const PatientList = () =>{
 		},
 		{
 			title: 'Date of Birth',
-			dataIndex: 'dateofBirth',
-			key: 'dateofBirth',
+			dataIndex: 'dateOfBirth',
+			key: 'dateOfBirth',
 		},
 		{
 			title: 'Sex',
@@ -126,9 +126,18 @@ const PatientList = () =>{
 	}
 
 	else{
+
+		console.log(data)
+		
+		for (var i = 0; i < data.length; i++) {
+		
+			data[i].dateOfBirth = new Date(data[i].dateOfBirth*1000).toLocaleDateString()
+		
+		  }
+
 		return(
 			<>
-        <h1 className='text-left' >View Appointments</h1>
+        <h1 className='text-left' >View Patients</h1>
         <Table columns={columns} dataSource={data} />
         </>
 		)

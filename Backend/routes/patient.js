@@ -18,7 +18,7 @@ router.get('/id', function(req,res,next){
         payload:id[0].patientId+1
     })
 }).catch((e) => {
-    res.status(400).json({success:false,message:error.message,payload:{}})
+    res.status(400).json({success:false,message:e.message,payload:{}})
 })
 
 });
@@ -106,11 +106,11 @@ router.put('/update', (req, res, next) => {
 
     try {
       const response = await patientModel.find({}).then((response) => {
-  
+        
         res.status(200).json(
           {
             succuss: true,
-            message: 'Retirval succussfull',
+            message: 'Retrival succussfull',
             payload: response
           }
         );
