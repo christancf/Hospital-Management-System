@@ -102,7 +102,7 @@ router.get('/home', async function (req, res, next) {
 
 // READ for update page
 router.post('/update/read', async function (req, res, next) {
-
+// console.log(req.query.id)
   try {
     let corpseDetails = await corpseModel.find({id:req.body.id}, { NIC: 1, name: 1, sex: 1, address: 1, date_of_birth:1, date_time_of_death:1, cause_of_death: 1, date_time_of_death: 1, cabinet_number: 1, _id: 0 }).then((response)=> {
 

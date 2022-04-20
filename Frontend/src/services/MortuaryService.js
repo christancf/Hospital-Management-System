@@ -58,7 +58,9 @@ mortuaryService.getId = function () {
 mortuaryService.readForUpdate = function (params) {
   return fetch(
     {
+      // url: `/mortuary/update/read?id:${params}`,
       url: '/mortuary/update/read',
+
       method: 'post',
       data: params
     }
