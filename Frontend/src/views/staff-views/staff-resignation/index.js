@@ -23,6 +23,8 @@ const tailLayout = {
   };
 
   const Demo = () => {
+
+	const [form] = Form.useForm();
 	let staffDetails
   
 	const onFinish = values => {

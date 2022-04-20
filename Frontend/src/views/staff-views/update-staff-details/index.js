@@ -1,28 +1,29 @@
 import React from 'react'
-import { Form, Input, Button, Cascader, DatePicker, Typography } from 'antd';
+import { Form, Input, Button, Cascader, DatePicker, message, Card } from 'antd';
 import staffService from 'services/StaffService';
 
-const { Title } = Typography
 const { Search } = Input;
+const update = 'update'
 
 const UpdateStaffDetails = () => {
 	return (
 		<div>
-      <Title>Edit Staff Details</Title>
 			<Demo />
 		</div>
 	)
 }
 
 const layout = {
-  labelCol: { span: 4 },
+  labelCol: { span: 8 },
   wrapperCol: { span: 8 },
 };
 const tailLayout = {
-  wrapperCol: { offset: 5, span: 16 },
+  wrapperCol: { offset: 8, span: 16 },
 };
 
 const Demo = () => {
+
+  const [form] = Form.useForm();
   let staffDetails
 
   const onFinish = values => {
@@ -40,8 +41,9 @@ const Demo = () => {
     if(values.home === undefined) values.home = staffDetails.home
 
     staffService.updateStaffDetails(values)
-    .then(() => console.log("Successfully Updated!"))
-    .catch((e) => console.log(`Error: ${ e }`))
+    .then(() => message.success({content: 'Successfully Updated', update, duration: 2}))
+    .catch((e) => message.error({content: 'Please try again!', update, duration: 2}))
+    form.resetFields();
   };
 
   const onFinishFailed = errorInfo => {
@@ -73,105 +75,113 @@ const Demo = () => {
   };
 
   return (
-    <Form
-      {...layout}
-      name="basic"
-      initialValues={{ remember: true }}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-    >
-      <Form.Item
-        label="Staff ID"
-        name="staffID"  
-        rules={[{ required: true, message: 'Please input the staff ID!' }]}      
+    <Card style={{backgroundColor: '#efefef'}}>
+      <h1 className='text-left' style={{ marginLeft: 460, marginBottom: 20 }}>Edit Staff Details</h1>
+      <Form
+        {...layout}
+        name="basic"
+        initialValues={{ remember: true }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        form={form}
       >
-         <Search placeholder="Enter Staff ID" onSearch={id => searchById(id)} enterButton />
-      </Form.Item>
+        <Form.Item
+          label="Staff ID"
+          name="staffID"  
+          rules={[{ required: true, message: 'Please input the staff ID!' }]}      
+        >
+          <Search placeholder="Enter Staff ID" onSearch={id => searchById(id)} enterButton />
+        </Form.Item>
+
+        <Form.Item
+          label="Name"
+          name="staffName"        
+        >
+          <Input id="staffName" />
+        </Form.Item>
 
       <Form.Item
-        label="Name"
-        name="staffName"        
-      >
-        <Input id="staffName" />
-      </Form.Item>
-
-	  <Form.Item
-        label="NIC"
-        name="NIC"        
-      >
-        <Input id="NIC" />
-      </Form.Item>
-
-	  <Form.Item
-        label="E-mail"
-        name="email"
-        rules={[{ pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$", message: 'Please enter a valid email!' }]}
-      >
-        <Input id="email" />
-      </Form.Item>
-
-	  <Form.Item
-        label="Designation"
-        name="designation"        
-      >
-		  <Cascader options={designationOptions} id="designation" />
-      </Form.Item>
+          label="NIC"
+          name="NIC"        
+        >
+          <Input id="NIC" />
+        </Form.Item>
 
       <Form.Item
-        label="Qualification"
-        name="qualification"        
-      >
-		  <Input id="qualification" />
-      </Form.Item>
+          label="E-mail"
+          name="email"
+          rules={[{ pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$", message: 'Please enter a valid email!' }]}
+        >
+          <Input id="email" />
+        </Form.Item>
 
-      <Form.Item 
-        label="Date Of Birth"
-        name="dateOfBirth"
-      >
+      <Form.Item
+          label="Designation"
+          name="designation"        
+        >
+         <Cascader options={designationOptions} id="designation" />
+        </Form.Item>
+
+        <Form.Item
+          label="Qualification"
+          name="qualification"        
+        >
+          <Input id="qualification" />
+        </Form.Item>
+
+        <Form.Item 
+          label="Date Of Birth"
+          name="dateOfBirth"
+        >
           <DatePicker id="dateOfBirth" />
-      </Form.Item>
+        </Form.Item>
 
-      <Form.Item
-        label="Gender"
-        name="gender"
-      >
-		  <Cascader options={genderOptions} id="gender" />
-      </Form.Item>
+        <Form.Item
+          label="Gender"
+          name="gender"
+        >
+          <Cascader options={genderOptions} id="gender" />
+        </Form.Item>
 
-      <Form.Item
-        label="Address"
-        name="address"
-      >
-		  <Input id="address" />
-      </Form.Item>
+        <Form.Item
+          label="Address"
+          name="address"
+        >
+          <Input id="address" />
+        </Form.Item>
 
-      <Form.Item
-        label="Basic Salary"
-        name="basicSalary"
-      >
-		  <Input id="basicSalary" />
-      </Form.Item>
+        <Form.Item
+          label="Basic Salary"
+          name="basicSalary"
+        >
+          <Input id="basicSalary" />
+        </Form.Item>
 
-      <Form.Item
-        label="Mobile"
-        name="mobile"
-      >
-		  <Input id="mobile" />
-      </Form.Item>
+        <Form.Item
+          label="Mobile"
+          name="mobile"
+        >
+          <Input id="mobile" />
+        </Form.Item>
 
-      <Form.Item
-        label="Home"
-        name="home"
-      >
-		  <Input id="home" />
-      </Form.Item>
+        <Form.Item
+          label="Home"
+          name="home"
+        >
+          <Input id="home" />
+        </Form.Item>
 
-      <Form.Item {...tailLayout}>
-        <Button type="primary" htmlType="submit">
-          Submit
-        </Button>
-      </Form.Item>
-    </Form>
+        <Form.Item {...tailLayout}>
+          <Button htmlType="reset" style={{ marginRight: 200 }}>
+            Discard
+          </Button>
+          <Button type="primary" htmlType="submit">
+            Submit
+          </Button>
+        </Form.Item>
+      </Form>
+    </Card>
+   
   );
 };
 
