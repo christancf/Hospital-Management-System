@@ -1,13 +1,16 @@
 import React from 'react'
-import { Form, Input, Button, DatePicker, Cascader, Radio } from 'antd';
+import { Form, Input, Button, DatePicker, Cascader, Radio, Modal } from 'antd';
 import moment from 'moment';
 import mortuaryService from 'services/MortuaryService';
 
+const queryParams = new URLSearchParams(window.location.search);
+const cabinetNo = queryParams.get('cabinetNo');
 
 const Home = () => {
 	return (
 		<div>
 			<h1>Add Corpse Details</h1>
+			<h2>Cabinet Number: {cabinetNo}</h2>
 			<Demo />
 		</div>
 	)
@@ -28,43 +31,112 @@ function disabledDate(current) {
 function range(start, end) {
 	const result = [];
 	for (let i = start; i < end; i++) {
-	  result.push(i);
+		result.push(i);
 	}
 	return result;
 }
 
 function disabledDateTime() {
 	return {
-	  disabledHours: () => {
-		  const now = new Date()
-		  let hour = now.getHours()
-		  return range(hour, 24);
+		disabledHours: () => {
+			const now = new Date()
+			let hour = now.getHours()
+			return range(hour, 24);
 		}
 	};
 }
 
+function ShowModel(title, delay, innercontent, isSuccess) {
+
+	if (isSuccess) {
+		const modal = Modal.success({
+			title: title,
+			content: `${innercontent}.This popup will be destroyed after ${delay} seconds.`,
+			onOk: () => {window.location = '.../home'}
+		});
+		const timer = setInterval(() => {
+			delay -= 1;
+			modal.update({
+				content: `${innercontent}.This popup will be destroyed after ${delay} seconds.`,
+			});
+
+		}, 1000);
+		
+		setTimeout(() => {
+			clearInterval(timer);
+			
+			modal.destroy();
+			window.location = '.../home'
+		}, delay * 1000);
+	}
+
+	else {
+		const modal = Modal.error({
+			title: title,
+			content: `${innercontent}.This popup will be destroyed after ${delay} seconds.`,
+		});
+		const timer = setInterval(() => {
+			delay -= 1;
+			modal.update({
+				content: `${innercontent}.This popup will be destroyed after ${delay} seconds.`,
+			});
+		}, 1000);
+		setTimeout(() => {
+			clearInterval(timer);
+			modal.destroy();
+		}, delay * 1000);
+	}
+}
 const Demo = () => {
 
-	 const onFinish = values => {
+	const onFinish = values => {
+		console.log(values.cod);
+		if (values.cod == undefined) {
+			values.cod = null;
+		}
+		if (values.sod == undefined) {
+			values.sod = null;
+		}
 		const corpseData = {
+			cabinet_number: cabinetNo,
 			NIC: values.nic,
 			name: values.name,
 			sex: values.sex,
 			address: values.address,
 			date_of_birth: moment(values.dob).valueOf(),
 			date_time_of_death: moment(values.dod).valueOf(),
-			cause_of_death: values.cod[0],
+			cause_of_death: (values.cod == null) ?  values.cod : values.cod[0],
 			specifics_of_death: values.sod
 		}
-		const result = mortuaryService.addCorpse(corpseData)
-		result.then(value => {
-			if(value.success == true) {
-				console.log('Successfully added:', values);
-				window.location = '.../home'
+		mortuaryService.addCorpse(corpseData).then((value) => {
+
+
+			if (value.success == true) {
+				ShowModel(
+					"Successful !",
+					4,
+					"The new corpse was added",
+					true
+				);
 			} else {
-				alert('Try inserting again')
+				ShowModel(
+					"Unsuccessful !",
+					4,
+					"The new corpse was not added, please try again",
+					false
+				);
 			}
-		  })
+		}).catch((error) => {
+
+			ShowModel(
+				"Unsccessfull !",
+				4,
+				"The new corpse was not added, please try again",
+				false
+			);
+
+		})
+
 	};
 
 	const onFinishFailed = errorInfo => {
@@ -113,7 +185,7 @@ const Demo = () => {
 			>
 				<Input.TextArea />
 			</Form.Item>
-			
+
 			<Form.Item
 				label="Date of Birth"
 				name="dob"
@@ -137,7 +209,7 @@ const Demo = () => {
 					disabledDate={disabledDate}
 					disabledTime={disabledDateTime}
 					showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
-    			/>
+				/>
 			</Form.Item>
 
 			<Form.Item
@@ -145,24 +217,24 @@ const Demo = () => {
 				name="cod"
 				rules={[{ required: false }]}
 			>
-				<Cascader options={causeOfDeath} placeholder="Select Cause of Death"/>
+				<Cascader options={causeOfDeath} placeholder="Select Cause of Death" />
 			</Form.Item>
 
 			<Form.Item
 				label="Specifics about Death"
 				name="sod"
-				rules={[{ required: false}]}
+				rules={[{ required: false }]}
 			>
 				<Input.TextArea />
 			</Form.Item>
 
-		  <Form.Item {...tailLayout}>
-			<Button type="primary" htmlType="submit">
-			  Submit
-			</Button>
-		  </Form.Item>
+			<Form.Item {...tailLayout}>
+				<Button type="primary" htmlType="submit">
+					Submit
+				</Button>
+			</Form.Item>
 		</Form>
-	  );
+	);
 }
 const causeOfDeath = [{
 	value: 'Natural',
