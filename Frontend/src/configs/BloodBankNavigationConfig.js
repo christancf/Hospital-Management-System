@@ -18,7 +18,7 @@ const dashBoardNavTree = [{
   breadcrumb: false,
   submenu: [{
     key: 'bloodInformation',
-    path: `${BLOODBANK_PREFIX_PATH}/blood-information`,
+    path: `${BLOODBANK_PREFIX_PATH}/bags-informations`,
     title: 'Blood Information',
     icon: DashboardOutlined,
     breadcrumb: false,
