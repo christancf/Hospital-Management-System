@@ -109,7 +109,7 @@ console.log(data);
 				{ text: 'AB-">AB negative(AB-)', value: 'AB-' },],
 				onFilter: (value, record) => record.bloodGroup.includes(value),
 
-				// render: bloodGroup => bloodGroup=()=>(
+				// render:  bloodGroup=()=>(
 				// 	<span>
 				// 	  {bloodGroup.map(tag => {
 				// 		let color = tag.length > 5 ? 'geekblue' : 'green';
