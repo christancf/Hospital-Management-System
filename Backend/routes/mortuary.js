@@ -134,7 +134,7 @@ router.post('/update/read', async function (req, res, next) {
 
 })
 //update corpse
-router.post('/update', function (req, res, next) {
+router.post('/update/corpse', function (req, res, next) {
 
   const id = req.query.id
 
@@ -142,8 +142,8 @@ router.post('/update', function (req, res, next) {
 
     corpseModel.findOneAndUpdate({ id: id }, {
       $set: {
-        NIC: req.query.NIC,
-        name: req.query.name,
+        NIC: req.body.NIC,
+        name: req.body.name,
         sex: req.body.sex,
         address: req.body.address,
         date_of_birth: req.body.date_of_birth,
@@ -161,6 +161,7 @@ router.post('/update', function (req, res, next) {
       );
 
     }).catch((err) => {
+      console.log(err)
       res.status(400).json(
         {
           succuss: false,

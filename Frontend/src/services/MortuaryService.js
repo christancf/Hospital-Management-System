@@ -67,10 +67,10 @@ mortuaryService.readForUpdate = function (params) {
   )
 }
 //update function
-mortuaryService.updateCorpse = function (params) {
+mortuaryService.updateCorpse = function (id,params) {
   return fetch(
     {
-      url: '/mortuary/update',
+      url: `/mortuary/update/corpse?id=${id}`,
       method: 'post',
       data: params
     }

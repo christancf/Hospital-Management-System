@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, DatePicker, Cascader, Radio, Modal } from 'antd';
+import { Form, Input, Button, DatePicker, Cascader, Radio, Modal, Select } from 'antd';
 import moment from 'moment';
 import mortuaryService from 'services/MortuaryService';
+const { Option } = Select;
 
 const queryParams = new URLSearchParams(window.location.search);
 const id = queryParams.get('id');
@@ -90,9 +91,62 @@ const Demo = () => {
 
     const onFinish = values => {
 
+        
+        const payload = {
+            NIC: values.NIC,
+            name: values.name,
+            sex: values.sex,
+            address: values.address,
+            date_of_birth: moment(values.dob).valueOf(),
+            date_time_of_death: moment(values.dod).valueOf(),
+            cause_of_death: values.cod,
+            specifics_of_death: values.sod
+        }
+
+        mortuaryService.updateCorpse(id, payload).then((res) => {
+
+            if (res.succuss) {
+                ShowModel(
+                    "Successfull !",
+                    3,
+                    "Your corpse modification successfull",
+                    true
+                );
+                form.resetFields();
+
+            }
+            else {
+                ShowModel(
+                    "Unsccessfull !",
+                    3,
+                    "Your corpse modification faild",
+                    false
+                );
+            }
+
+
+
+
+        }).catch((error) => {
+
+            ShowModel(
+                "Unsccessfull !",
+                3,
+                "Your corpse modification faild",
+                false
+            );
+
+        })
+
+
     }
     const onFinishFailed = errorInfo => {
-        console.log('Failed:', errorInfo);
+        ShowModel(
+            "Unsccessfull !",
+            3,
+            "Your corpse modification faild",
+            false
+        );
     };
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -101,9 +155,6 @@ const Demo = () => {
     useEffect(() => {
         mortuaryService.readForUpdate({ id: id }).then((res) => {
             const mydata = res.payload[0];
-            mydata.date_of_birth = new Date(mydata.date_of_birth * 1000).toLocaleDateString()
-            mydata.date_time_of_death = new Date(mydata.date_time_of_death * 1000).toLocaleString()
-            // cabinet_number = mydata.cabinet_number;
             setData(mydata);
             setLoading(false);
 
@@ -128,17 +179,18 @@ const Demo = () => {
         )
     }
     else {
-        // console.log(data.date_of_birth)
+        console.log(data)
+        const speci_death = (data.specifics_of_death == undefined) ? "" : data.specifics_of_death;
         form.setFieldsValue({
             id: id,
             nic: data.NIC,
             name: data.name,
             sex: data.sex,
             address: data.address,
-            date_of_birth: new Date(data.date_of_birth).toLocaleDateString,
-            date_time_of_death: data.date_time_of_death,
-            cause_of_death: data.cause_of_death,
-            specifics_of_death: data.specifics_of_death
+            dob: moment(new Date(data.date_of_birth)),
+            dod: moment(new Date(data.date_time_of_death)),
+            cod: data.cause_of_death,
+            sod: speci_death
         })
         // console.log(data.date_of_birth)
 
@@ -226,7 +278,14 @@ const Demo = () => {
                     name="cod"
                     rules={[{ required: false }]}
                 >
-                    <Cascader options={causeOfDeath} placeholder="Select Cause of Death" />
+                    <Select
+
+                        placeholder="Select Cause of Death"
+                        filterOption={false}
+                        style={{ width: '100%' }}
+                    >
+                        {causeOfDeath}
+                    </Select>
                 </Form.Item>
 
                 <Form.Item
@@ -246,20 +305,10 @@ const Demo = () => {
         )
     }
 }
-const causeOfDeath = [{
-    value: 'Natural',
-    label: 'Natural'
-},
-{
-    value: 'Accident',
-    label: 'Accident'
-},
-{
-    value: 'Homicide',
-    label: 'Homicide'
-},
-{
-    value: 'Suicide',
-    label: 'Suicide'
-}]
+const causeOfDeath = [
+    <Option key="Natural">Natural</Option>,
+    <Option key="Accident">Accident</Option>,
+    <Option key="Homicide">Homicide</Option>,
+    <Option key="Suicide">Suicide</Option>
+]
 export default Home
