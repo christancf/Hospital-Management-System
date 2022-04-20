@@ -44,9 +44,6 @@ const AddWardForm = () => {
     console.log('Failed:', errorInfo);
   };
 
-  const resetFields = () => {
-    form.resetFields()
-  }
   return(
     <Form {...layout} name="Add Ward" form={form} initialValues={{ remember: true }} onFinish={onFinish} onFinishFailed={onFinishFailed}>
       <Form.Item label="ID" name="id" rules={[{ required: true, message: 'Please input ward ID!' }]}>
@@ -70,9 +67,9 @@ const AddWardForm = () => {
       </Form.Item>
 
       <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="button" onClick={resetFields} style={{backgroundColor: '#000', marginRight: 20}}>Discard</Button>
-          <Button type="primary" htmlType="submit">Save</Button>
-      </Form.Item>
+						<Button htmlType="reset">Discard</Button>
+						<Button type="primary" htmlType="submit" style={{marginLeft: 20}}>Save</Button>
+				</Form.Item>
     </Form>
   )
 }

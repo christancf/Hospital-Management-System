@@ -92,10 +92,6 @@ const AssignNursesForm = () => {
       console.log(`Error @ update-ward-details: ${e}`)
     })    
   }
-	
-	const resetFields = () => {
-    form.resetFields()
-  }
 
 	if (loading) {
 		return (
@@ -152,8 +148,8 @@ const AssignNursesForm = () => {
 					</Select>
 				</Form.Item>
 				<Form.Item {...tailLayout}>
-						<Button type="primary" htmlType="button" onClick={resetFields} style={{backgroundColor: '#000', marginRight: 20}}>Discard</Button>
-						<Button type="primary" htmlType="submit">Save</Button>
+						<Button htmlType="reset">Discard</Button>
+						<Button type="primary" htmlType="submit" style={{marginLeft: 20}}>Save</Button>
 				</Form.Item>
 			</Form>
 		)

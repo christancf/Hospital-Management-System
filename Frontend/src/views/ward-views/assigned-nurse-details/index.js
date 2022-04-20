@@ -46,25 +46,45 @@ const AssignedNurseDetails= () => {
         <>Hi</>
       )
     }else{
+
+      const resData = data
+      const savedData = []
+      const search = (str) => {
+        if(str === '') {
+          return setData(resData)
+        }
+        str = str.toUpperCase()
+        data.map(d => {
+          let staffName = d.details[0].staffName.toUpperCase()
+          if(staffName === str || staffName.includes(str)) {
+            savedData.push(d)
+          }
+          return (
+            null
+          )
+        })
+        setData(savedData)
+      }
+
     const unAssignNurse = id => {
       wardService.unassignNurse(id)
       .then(() => window.location.reload())
       .catch((e) => console.log(`Error: ${ e }`))
-    }
-    const resData = data  
+    } 
     return (
       <div>
         <Row>
           <Col span={5} >
             <Search
               placeholder="input search text"
-              onSearch={value => console.log(value)}
+              onSearch={value => search(value)}
+              allowClear
               style={{ width: 250 }}
             />
           </Col>  
           <Col span={18}>
             <Row>              
-            {resData.map(d => (
+            {data.map(d => (
               <Col span={6} offset={1} >
                 <Card bordered={false} style={{width: 200, fontSize:10, color: '#000'}}>
                   <span>{`Staff ID: ${d.nurseID}`}</span><br/>
