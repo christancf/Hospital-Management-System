@@ -32,7 +32,7 @@ const options = [
 	},
 	{
 		label:"Female",
-		value:"Female"
+		value:"female"
 	}
 ]
 const bloodGroup =[
@@ -186,7 +186,7 @@ const PatientAdmittance = () => {
 	}
 
 	else{
-
+		console.log(data);
 		return (
 
 			
@@ -208,18 +208,20 @@ const PatientAdmittance = () => {
 				</Form.Item>
 				<Form.Item name="sex"  label="Sex" rules={[{required:true}]}>
 				<Select
-					labelInValue
-					placeholder="Select Sex"
+					
+					 placeholder="Select Sex"
 					filterOption={false}
-					// showSearch={{ filter }}
+					showSearch={{ filter }}
 					style={{ width: '100%' }}
-					
-					
+					defaultValue={data.sex}					
 				>
+					
 					{options.map(d => (
-						<Option value={data.sex} key={d.value}>{d.label}</Option>
+						<Option  value={d.value}>{d.label}</Option>
 					))}
+					
 				</Select>
+				
 					
 				</Form.Item> 
 				<Form.Item name="mobile" initialValue={data.mobile} label="Contact No" rules={[{ required: true }]} placeholder="Contact Number">
@@ -230,11 +232,12 @@ const PatientAdmittance = () => {
 				</Form.Item>
 				<Form.Item name="bloodGroup" initialValue={data.bloodGroup} label="bloodGroup" rules={[{required:true}]}>
 				<Select
-					labelInValue
+					
 					placeholder="Select Blood Group"
 					filterOption={false}
 					showSearch={{ filter }}
 					style={{ width: '100%' }}
+					defaultValue={data.bloodGroup}
 				>
 					{bloodGroup.map(d => (
 						<Option key={d.value}>{d.label}</Option>
