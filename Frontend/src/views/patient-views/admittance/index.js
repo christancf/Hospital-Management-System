@@ -25,7 +25,7 @@ const validateMessages = {
 const options = [
 	{
 		label:"Male",
-		value:"male"
+		value:"Male"
 	},
 	{
 		label:"Female",
