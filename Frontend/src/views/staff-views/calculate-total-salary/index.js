@@ -7,7 +7,9 @@ const CalculateTotalSalary = () => {
 	return (
 		<div>
 			<Title>Calculate Total Salary</Title>
-    		<Button type="primary">Primary</Button>
+    		<Button type="primary" style={{marginBottom: 20, float: 'right'}}>
+				Calculate Total Salary
+			</Button>
 			<Table columns={columns} dataSource={data} onChange={onChange} />
 		</div>
 	)
