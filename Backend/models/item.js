@@ -28,6 +28,11 @@ const dataSchema = new mongoose.Schema({
     total_quantity: {
         required: true,
         type: Number
+    },
+
+    status:{
+        required:true,
+        type:Boolean
     }
 })
 

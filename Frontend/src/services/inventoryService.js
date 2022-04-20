@@ -22,6 +22,33 @@ inventoryService.getItems = function (categoryType){
   })
 }
 
+
+inventoryService.updateItemDetails = function(data) {
+  return fetch({
+    url: '/inventory/update-details',
+    method: 'put',
+    data: data
+  })
+}
+
+inventoryService.itemDetails = function (data){
+  
+  return fetch({
+    url: `/inventory/read?id=${data}`,
+    method: 'get',
+
+  })
+}
+
+inventoryService.delete = function (data){
+
+  return fetch({
+    url: `/inventory/itemlist/delete?id=${data}`,
+    method: 'delete',
+
+  })
+}
+
 //get auto incremented id
 
 inventoryService.getId = function () {
