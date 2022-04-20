@@ -25,6 +25,9 @@ const DisplayStaffDetails = () => {
     })
 	}, []);
 
+  const searchByName = (name) => {
+  }
+
   if (loading) {
 		return (
 			<>
@@ -53,7 +56,7 @@ const DisplayStaffDetails = () => {
         <Title>Staff Details</Title>
         <Search 
           placeholder="input search text" 
-          onSearch={value => console.log(value)} enterButton 
+          onSearch={value => searchByName(value)} enterButton 
           style={{width: 300, marginBottom: 20}} />
         <Table columns={columns} dataSource={data} onChange={onChange}/>        
       </div>
