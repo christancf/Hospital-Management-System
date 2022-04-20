@@ -1,5 +1,6 @@
 import React from 'react'
 import { Form, Input, Button, Typography } from 'antd';
+import staffService from 'services/StaffService';
 
 const { Title } = Typography
 const { Search } = Input;
@@ -22,15 +23,36 @@ const tailLayout = {
   };
 
   const Demo = () => {
-  
 
+	const [form] = Form.useForm();
+	let staffDetails
+  
 	const onFinish = values => {
+		if(values.staffName === undefined) values.staffName = staffDetails.staffName
+		if(values.NIC === undefined) values.NIC = staffDetails.NIC
+		if(values.designation === undefined) values.designation = staffDetails.designation
+		if(values.qualification === undefined) values.qualification = staffDetails.qualification
+
+		staffService.updateStatus(values)
+		.then(() => console.log("Mark as Resigned!"))
+		.catch((e) => console.log(`Error: ${ e }`))
 	};
   
 	const onFinishFailed = errorInfo => {
+		console.log('Failed: ', errorInfo);
 	}; 
   
 	const searchById = (id) => {
+
+		staffService.readStaffDetails(id)
+		.then((details) => {
+			staffDetails = details[0] 
+			document.getElementById('staffName').value = staffDetails.staffName
+			document.getElementById('NIC').value = staffDetails.NIC
+			document.getElementById('designation').value = staffDetails.designation[0].toUpperCase() + staffDetails.designation.substring(1)
+			document.getElementById('qualification').value = staffDetails.qualification
+		})
+		.catch((e) => console.log(`Error: ${ e }`))
 	};
   
 	return (
