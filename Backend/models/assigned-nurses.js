@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const dataSchema = new mongoose.Schema({
     nurseID: {
       required: true,
-      type: String
+      type: Number
     },
     assignedDate: {
       required: true,
