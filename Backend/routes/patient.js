@@ -52,7 +52,7 @@ router.post('/admittance' , function(req,res,next){
 });
 
 router.get('/read', function(req,res,next){
-    patientModel.find({id:req.query.id})
+    patientModel.find({patientId:req.query.id})
     .then((patientDetails) => {
         res.status(200).json({
             success:true,

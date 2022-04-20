@@ -5,6 +5,9 @@ import { useState, useEffect } from 'react';
 
 const { Option } = Select;
 
+const queryParams = new URLSearchParams(window.location.search);
+const patientId = queryParams.get('patientId');
+
 function toTimestamp(strDate){
 	var datum = Date.parse(strDate);
 	return datum/1000;
@@ -79,7 +82,7 @@ const PatientAdmittance = () => {
 	
 
 	useEffect(() => {
-		patientManagementService.patientDetails(1).then((resp) => {
+		patientManagementService.patientDetails(patientId).then((resp) => {
 			setData(resp.payload);
 			setLoading(false);
 		}).catch((err) => {
@@ -134,7 +137,7 @@ const PatientAdmittance = () => {
 	const onFinish = values => {
 
 		const patient =  {
-			id:1,
+			id:patientId,
 			fullName:values.fullName,
 			nic:values.nic,
 			dateOfBirth:moment(values.dateOfBirth).format("X"), 

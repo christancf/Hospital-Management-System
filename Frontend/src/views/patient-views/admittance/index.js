@@ -103,6 +103,7 @@ const PatientAdmittance = () => {
 			setTimeout(() => {
 				clearInterval(timer);
 				modal.destroy();
+				window.location.reload(false);
 			}, delay * 1000);
 		}
 
@@ -146,7 +147,7 @@ const PatientAdmittance = () => {
 
 		patientManagementService.admittance(payload).then((res) => {
 			ShowModel("Successful!",5,"Patient admiited Sucessfully",true);
-			form.resetFields();
+			
 		}).catch((error) =>{
 			ShowModel("Failed!",5,"Patient Admiitance Failed",false)
 		})

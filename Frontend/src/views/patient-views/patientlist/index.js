@@ -1,9 +1,61 @@
-import { Table, Divider, Tag ,Modal,Spin} from 'antd';
+import { Table, Divider, Tag ,Modal,Spin,notification} from 'antd';
 import patientManagementService from 'services/PatientManagement';
 import { useState, useEffect } from 'react';
+const { confirm } = Modal;
 
 const PatientList = () =>{
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false);
+	const [data, setData] = useState();
 
+	useEffect(() => {
+		patientManagementService.patientlist().then((resp) => {
+			setData(resp.payload);
+			setLoading(false);
+		}).catch((err) => {
+			setLoading(false);
+			setError(true);
+			setData();
+		});
+	}, []);
+	
+	const openNotification = (title, content) => {
+		notification.open({
+		  message: title,
+		  description: content,
+		  onClick: () => {
+			console.log('Notification Clicked!');
+		  },
+		});
+	  };
+
+	const deleteAppointment = (id) => {
+
+		confirm({
+			title: 'Do you want to discharge this patient?',
+			content: 'When clicked the OK button, patient will be discharged',
+			onOk() {
+			  return new Promise((resolve, reject) => {
+	
+				patientManagementService.delete(id).then((ress)=> {
+					openNotification("Successfull !", "Patient Discharged Sucessfully");
+					setTimeout(function(){
+						window.location.reload(false);
+					}, 2000);
+					
+	
+				}).catch((errors)=> {
+					openNotification("Unsuccessfull !", "Patient Discharge Process Failed");
+	
+				})
+				setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
+			  }).catch(() => console.log('Oops errors!'));
+			},
+			onCancel() {},
+		  });
+	
+	
+	}
 	const columns = [
 		{
 			title:"Patient ID",
@@ -45,24 +97,22 @@ const PatientList = () =>{
 			dataIndex: 'bloodGroup',
 			key: 'bloodGroup',
 		},
+		{
+            title: 'Action',
+            key: 'action',
+            render: (text, record) => (
+                <span>
+                    <a href={`../patient/update?patientId=${record.patientId}`}>Update</a>
+                    <Divider type="vertical" />
+                    <a onClick={()=> { deleteAppointment(record.patientId)}}>Delete</a>
+                </span>
+            ),
+        },
 
 
 	]
 
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
-	const [data, setData] = useState();
-
-	useEffect(() => {
-		patientManagementService.patientlist().then((resp) => {
-			setData(resp.payload);
-			setLoading(false);
-		}).catch((err) => {
-			setLoading(false);
-			setError(true);
-			setData();
-		});
-	}, []);
+	
 
 	function ShowModel(title, delay, innercontent, isSuccess) {
 
@@ -134,6 +184,8 @@ const PatientList = () =>{
 			data[i].dateOfBirth = new Date(data[i].dateOfBirth*1000).toLocaleDateString()
 		
 		  }
+		
+		  
 
 		return(
 			<>
