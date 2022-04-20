@@ -50,7 +50,7 @@ function ShowModel(title, delay, innercontent, isSuccess) {
         const modal = Modal.success({
             title: title,
             content: `${innercontent}.This popup will be destroyed after ${delay} seconds.`,
-            onOk: () => { window.location = '.../home' }
+            onOk: () => { window.location = '../mortuary/info' }
         });
         const timer = setInterval(() => {
             delay -= 1;
@@ -64,7 +64,7 @@ function ShowModel(title, delay, innercontent, isSuccess) {
             clearInterval(timer);
 
             modal.destroy();
-            window.location = '.../home'
+            window.location = '../mortuary/info'
         }, delay * 1000);
     }
 
@@ -107,9 +107,9 @@ const Demo = () => {
 
             if (res.succuss) {
                 ShowModel(
-                    "Successfull !",
+                    "Successful !",
                     3,
-                    "Your corpse modification successfull",
+                    "Your corpse modification successful",
                     true
                 );
                 form.resetFields();
@@ -117,9 +117,9 @@ const Demo = () => {
             }
             else {
                 ShowModel(
-                    "Unsccessfull !",
+                    "Unsuccessful !",
                     3,
-                    "Your corpse modification faild",
+                    "Your corpse modification failed",
                     false
                 );
             }
@@ -130,9 +130,9 @@ const Demo = () => {
         }).catch((error) => {
 
             ShowModel(
-                "Unsccessfull !",
+                "Unsuccessful !",
                 3,
-                "Your corpse modification faild",
+                "Your corpse modification failed",
                 false
             );
 
@@ -142,7 +142,7 @@ const Demo = () => {
     }
     const onFinishFailed = errorInfo => {
         ShowModel(
-            "Unsccessfull !",
+            "Unsuccessfull !",
             3,
             "Your corpse modification faild",
             false
