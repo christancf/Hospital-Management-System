@@ -1,7 +1,8 @@
 var express = require('express');
-const wardModel = require('../models/ward');
-const staffModel = require('../models/staff');
+const wardModel = require('../models/ward')
+const staffModel = require('../models/staff')
 const assignNurseModel = require('../models/assigned-nurses')
+const attendanceModel = require('../models/attendance')
 var router = express.Router();
 const auth = require("../middleware/auth");
 
@@ -63,9 +64,9 @@ router.get('/category/ids?:category', (req, res, next) => {
   .catch((e) => console.log(`Error: ${ e }`))
 })
 
-//retrieve nurse name and qualification
+//retrieve nurse details when id provided
 router.get('/nurse/read?:id', (req, res, next) => {
-  staffModel.findOne({staffID: req.query.id, designation: "nurse"}, {_id:0, staffName:1, qualification:1})
+  staffModel.findOne({staffID: req.query.id, designation: "nurse"})
   .then((data) => res.json(data))
   .catch((e) => console.log(`Error: ${ e }`))
 })
@@ -106,7 +107,33 @@ router.get('/nurse/assigned-details', (req, res, next) => {
   .catch((e) => console.log(`Error: ${ e }`))
 })
 
+router.get('/nurse/details', (req, res, next) => {
+  assignNurseModel.aggregate([{
+    $lookup: {
+      from: "staffs",
+      localField: "nurseID",
+      foreignField: "staffID",
+      as: 'details'
+    }
+  }])
+  .then((resp) => res.json(resp))
+  .catch((e) => res.json(e))
+})
 
+//check status
+router.get('/nurse/status?:id', (req, res, next) => {
+    attendanceModel.find({staffID: req.query.id})
+    .then(data => res.json(data))
+    .catch(e => res.json(e))
+  
+})
+
+//unassign a nurse
+router.delete('/nurse/unassign?:id', (req, res, next) => {
+  assignNurseModel.findOneAndRemove({nurseID: req.query.id})
+  .then(() => res.json('Nurse Unassigned!'))
+  .catch(e => res.json(e))
+})
 
 
 

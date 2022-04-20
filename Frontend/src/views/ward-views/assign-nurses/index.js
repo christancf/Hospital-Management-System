@@ -79,7 +79,7 @@ const AssignNursesForm = () => {
   };
   
 	const searchById = (id) => {
-    wardService.readStaffNameAndQualification(id)
+    wardService.getNurseDetails(id)
     .then((details) => { 
 			console.log(details)
 			if(details != null){
@@ -143,7 +143,7 @@ const AssignNursesForm = () => {
 					</Select>
 				</Form.Item>
 				<Form.Item label="Ward ID" name="wardID" rules={[{ required: true, message: 'Please select ward id' }]}>
-					<Select placeholder='Ward ID' id="wardId" rend>
+					<Select placeholder='Ward ID' id="wardId" >
 					</Select>
 				</Form.Item>
 				<Form.Item label="Role" name="role">
