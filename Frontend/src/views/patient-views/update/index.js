@@ -193,6 +193,9 @@ const PatientAdmittance = () => {
 
 			<Form {...layout} name="Admittance" onFinish={onFinish} form={form} validateMessages={validateMessages}>
 				<label>Update Patient details</label>
+				<Form.Item name="id" label="Patient ID" initialValue={patientId} rules={[{ required: true }]} placeholder="Patient ID">
+				<Input disabled />
+			</Form.Item>
 				<Form.Item name="fullName" initialValue={data.fullName} label="Full  Name" rules={[{ required: true }]} placeholder="Full Name" >
 					<Input />
 				</Form.Item>

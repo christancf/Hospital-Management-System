@@ -59,13 +59,13 @@ router.get('/read', function(req,res,next){
             message:'inserted sucessful',
             payload:patientDetails[0]
         })
-    }).catch((e) => {
+    }).catch((error) => {
         res.status(400).json({success:false,message:error.message,payload:{}})
     })
 });
 
 router.delete('/checkout', (req,res,next) => {
-    patientModel.updateOne({id:req.query.id},{$set:{"status":false}})
+    patientModel.updateOne({patientId:req.query.id},{$set:{"status":false}})
     .then((result) => {
         res.json({
             success:true,
@@ -105,7 +105,7 @@ router.put('/update', (req, res, next) => {
 
 
     try {
-      const response = await patientModel.find({}).then((response) => {
+      const response = await patientModel.find({status:"true"},).then((response) => {
         
         res.status(200).json(
           {
