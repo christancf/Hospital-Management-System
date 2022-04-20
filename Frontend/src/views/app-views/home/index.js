@@ -1,12 +1,13 @@
 import React from 'react'
 import { Card , Button} from 'antd'
-import { MORTUARY_PREFIX_PATH, STAFF_PREFIX_PATH, WARD_PREFIX_PATH } from 'configs/AppConfig'
+import { MORTUARY_PREFIX_PATH, PATIENT_PREFIX_PATH, STAFF_PREFIX_PATH, WARD_PREFIX_PATH,} from 'configs/AppConfig'
 const Home = () => {
 	return (
 		<div>
 			<Ward />
 			<Mortuary/>
 			<Staff/>
+			<Patient/>
 		</div>
 	)
 }
@@ -36,6 +37,17 @@ const Mortuary = () => {
 	)
 }
 
+const Patient = () => {
+	return(
+		<div>
+			<Card title="Patient Management" style={{ width: 300, height: 300 }}>
+				<Button type="link" htmlType="button" href={PATIENT_PREFIX_PATH + '/home'}>
+					Login
+				</Button>
+			</Card>
+		</div>
+	)
+}
 const Staff = () => {
 	return(
 		<div>
