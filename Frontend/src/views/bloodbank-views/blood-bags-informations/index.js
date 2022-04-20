@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import { Table, Typography, Spin, Tag,Divider } from 'antd';
+import { Table, Typography, Spin, Button,Divider,Tag } from 'antd';
 import bloodBankService from 'services/BloodBankService'
+import moment from 'moment';
 
 const { Title } = Typography
 
 const BloodBags = () => {
+
+	function toTimestamp(strDate){
+		var datum = Date.parse(strDate);
+		return datum/1000;
+	 }
 
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
@@ -45,10 +51,17 @@ const BloodBags = () => {
 
 	}
 	else {
+console.log(data);
+		for (var i = 0; i < data.length; i++) {
+            data[i].donateDate = new Date(data[i].donateDate*1000).toLocaleDateString()
+
+          }
+
 		const bloodBags = data.map((response) => {
 			return {
+				bagId:response.bagId,
 				donorName: response.donorName,
-				// donorNIC: response.donorNIC,
+				donorNIC: response.donorNIC,
 				donationNumber: response.donationNumber,
 				donateDate: response.donateDate,
 				place: response.place,
@@ -59,7 +72,7 @@ const BloodBags = () => {
 		const columns = [
 			{
 				title: 'Bag ID',
-				dataIndex: 'bagID',
+				dataIndex: 'bagId',
 			},
 			{
 				title: 'Donors Name',
@@ -96,6 +109,24 @@ const BloodBags = () => {
 				{ text: 'AB-">AB negative(AB-)', value: 'AB-' },],
 				onFilter: (value, record) => record.bloodGroup.includes(value),
 
+				// render: bloodGroup => bloodGroup=()=>(
+				// 	<span>
+				// 	  {bloodGroup.map(tag => {
+				// 		let color = tag.length > 5 ? 'geekblue' : 'green';
+				// 		if (tag === 'A+') {
+				// 		  color = 'volcano';
+				// 		}
+				// 		else if (tag === 'O+'){
+				// 			color = 'green';
+				// 		}
+				// 		return (
+				// 		  <Tag color={color} key={tag}>
+				// 			{tag.toUpperCase()}
+				// 		  </Tag>
+				// 		);
+				// 	  })}
+				// 	</span>
+				//   ),
 			},
 			{
 				title: 'Action',
@@ -113,7 +144,10 @@ const BloodBags = () => {
 		return (
 			<div>
 				<Title>Blood Bags Details</Title>
+				<Button type="primary" href='/bloodbank/add-details'>Add Blood Bag</Button>
+				<br></br>
 				<Table columns={columns} dataSource={bloodBags} />
+				
 			</div>
 		)
 
@@ -123,47 +157,4 @@ const BloodBags = () => {
 }
 
 export default BloodBags
-
-
-/*this.state={
-	bags:[]
-};
-
-export default function BloodBags(){
-
-	const[bloodbags,setBloodBags] = useState([]);
-
-	useEffect(()=>{
-		function getBloodBags(){
-			bloodBankService.readBloodDetails().then(function (res){
-				console.log(res)
-				bloodbags = setBloodBags(res.details);
-
-
-					<div>
-						<p>p</p>
-					</div>
-
-			}).catch(function (error){
-				console.log(error)
-			});
-
-
-		}
-		getBloodBags();
-	},[])
-
-	return(
-		<div>
-
-				<div>
-					<p>{}</p>
-				</div>
-
-		</div>
-	)
-}
-*/
-
-// axios.get
 

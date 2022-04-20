@@ -9,13 +9,13 @@ bloodBankService.addBloodBag = function (jsonbody){
     url: '/bloodbag/add-details',
     method: 'post',
     data: jsonbody
-
+    
   })
 }
 
 bloodBankService.updateBloodDetails = function(data) {
   return fetch({
-    url: '/bloodbag/bag-update/:id',
+    url: '/bloodbag/update-details',
     method: 'put',
     data: data
   })
@@ -33,6 +33,24 @@ bloodBankService.deleteBloodDetails = function(data) {
     url: '/bloodbag/bag-delete/:id',
     method: 'delete',
     data: data
+  })
+}
+
+bloodBankService.bloodBagDetails = function (data){
+  
+  return fetch({
+    url: `/bloodbag/read?id=${data}`,
+    method: 'get',
+
+  })
+}
+
+bloodBankService.bagId = function (){
+  
+  return fetch({
+    url: `/bloodbag/bagId`,
+    method: 'get',
+
   })
 }
 
