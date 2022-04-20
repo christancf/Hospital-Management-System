@@ -206,7 +206,6 @@ const UpdateBloodBag = () => {
 				</Form.Item>
 				<Form.Item name="bloodGroup" initialValue={data.bloodGroup} label="bloodGroup" rules={[{ required: true }]}>
 					<Select
-						labelInValue
 						placeholder="Select Blood Group"
 						filterOption={false}
 						showSearch={{ filter }}

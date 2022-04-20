@@ -109,7 +109,7 @@ const BloodBags = () => {
 				{ text: 'O negative(O-)', value: 'O-' },
 				{ text: 'AB positive(AB+)', value: 'AB+' },
 				{ text: 'AB-">AB negative(AB-)', value: 'AB-' },],
-				onFilter: (value, record) => record.bloodGroup.includes(value),
+				onFilter: (value, record) => record.tags.includes(value),
 
 				render: tags => (
 					<span>
