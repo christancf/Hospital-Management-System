@@ -52,7 +52,7 @@ function ShowModel(title, delay, innercontent, isSuccess) {
 		const modal = Modal.success({
 			title: title,
 			content: `${innercontent}.This popup will be destroyed after ${delay} seconds.`,
-			onOk: () => { window.location = '.../home' }
+			onOk: () => { window.location = '../mortuary/home' }
 		});
 		const timer = setInterval(() => {
 			delay -= 1;
@@ -66,8 +66,8 @@ function ShowModel(title, delay, innercontent, isSuccess) {
 			clearInterval(timer);
 
 			modal.destroy();
-			window.location = '.../home'
-		}, delay * 1000);
+			window.location = '../mortuary/home'
+		}, delay * 1000)
 	}
 
 	else {
