@@ -1,9 +1,10 @@
 import React from 'react'
-import { Form, Input, Button, Cascader, DatePicker, message, Card } from 'antd';
+import { Form, Input, Button, DatePicker, message, Card, Select } from 'antd';
 import staffService from 'services/StaffService';
 
 const { Search } = Input;
 const update = 'update'
+const { Option } = Select;
 
 const UpdateStaffDetails = () => {
 	return (
@@ -18,7 +19,7 @@ const layout = {
   wrapperCol: { span: 8 },
 };
 const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
+  wrapperCol: { offset: 12, span: 16 },
 };
 
 const Demo = () => {
@@ -27,18 +28,17 @@ const Demo = () => {
   let staffDetails
 
   const onFinish = values => {
-    if(values.staffName === undefined) values.staffName = staffDetails.staffName
-    if(values.NIC === undefined) values.NIC = staffDetails.NIC
-    if(values.email === undefined) values.email = staffDetails.email
-    if(values.designation === undefined) values.designation = staffDetails.designation
-    if(values.qualification === undefined) values.qualification = staffDetails.qualification
-    if(values.dateOfBirth === undefined) values.dateOfBirth = staffDetails.dateOfBirth
-    else values.dateOfBirth = values.dateOfBirth['_d'].getTime()
-    if(values.gender === undefined) values.gender = staffDetails.gender
-    if(values.address === undefined) values.address = staffDetails.address
-    if(values.basicSalary === undefined) values.basicSalary = staffDetails.basicSalary
-    if(values.mobile === undefined) values.mobile = staffDetails.mobile
-    if(values.home === undefined) values.home = staffDetails.home
+    values.staffName = staffDetails.staffName
+    values.NIC = staffDetails.NIC
+    values.email = staffDetails.email
+    values.designation = staffDetails.designation
+    values.values.qualification = staffDetails.qualification
+    if(values.dateOfBirth === undefined) values.dateOfBirth = staffDetails.dateOfBirthvalues.dateOfBirth['_d'].getTime()
+    values.gender = staffDetails.gender
+    values.address = staffDetails.address
+    values.basicSalary = staffDetails.basicSalary
+    values.mobile = staffDetails.mobile
+    values.home = staffDetails.home
 
     staffService.updateStaffDetails(values)
     .then(() => message.success({content: 'Successfully Updated', update, duration: 2}))
@@ -55,21 +55,24 @@ const Demo = () => {
     staffService.readStaffDetails(id)
     .then((details) => {
       staffDetails = details[0]
-      document.getElementById('staffName').value = staffDetails.staffName
-      document.getElementById('NIC').value = staffDetails.NIC
-      document.getElementById('email').value = staffDetails.email
-      document.getElementById('designation').value = staffDetails.designation[0].toUpperCase() + staffDetails.designation.substring(1)
-      document.getElementById('qualification').value = staffDetails.qualification
-      
+        
       let d  = new Date(staffDetails.dateOfBirth)
-      
+      // let d = moment(staffDetails.dateOfBirth)
+      // let s = d.format("YYYY-MM-DD")
+      //console.log(d)
       document.getElementById('dateOfBirth').value = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()
-
-      document.getElementById('gender').value = staffDetails.gender[0].toUpperCase() + staffDetails.gender.substring(1)
-      document.getElementById('address').value = staffDetails.address
-      document.getElementById('basicSalary').value = staffDetails.basicSalary
-      document.getElementById('mobile').value = staffDetails.mobile
-      document.getElementById('home').value = staffDetails.home
+      form.setFieldsValue({
+        staffName: staffDetails.staffName,
+        NIC: staffDetails.NIC,
+        email: staffDetails.email,
+        designation: staffDetails.designation,
+        qualification: staffDetails.qualification,
+        //dateOfBirth: 
+        gender: staffDetails.gender,
+        address: staffDetails.address,
+        basicSalary: staffDetails.basicSalary,
+        mobile: staffDetails.mobile,
+        home: staffDetails.home})
     })
     .catch((e) => console.log(`Error: ${ e }`))
   };
@@ -115,11 +118,12 @@ const Demo = () => {
           <Input id="email" />
         </Form.Item>
 
-      <Form.Item
-          label="Designation"
-          name="designation"        
-        >
-         <Cascader options={designationOptions} id="designation" />
+        <Form.Item name="designation" label="Designation" >
+          <Select allowClear>
+            <Option value="doctor">Doctor</Option>
+            <Option value="nurse">Nurse</Option>
+            <Option value="allied health professionals">Allied Health Professionals</Option>
+          </Select>
         </Form.Item>
 
         <Form.Item
@@ -133,14 +137,15 @@ const Demo = () => {
           label="Date Of Birth"
           name="dateOfBirth"
         >
-          <DatePicker id="dateOfBirth" />
+          <DatePicker id="dateOfBirth" format={"YYYY-MM-DD"} />
         </Form.Item>
 
-        <Form.Item
-          label="Gender"
-          name="gender"
-        >
-          <Cascader options={genderOptions} id="gender" />
+        <Form.Item name="gender" label="Gender" >
+          <Select allowClear>
+            <Option value="male">Male</Option>
+            <Option value="female">Female</Option>
+            <Option value="other">Other</Option>
+          </Select>
         </Form.Item>
 
         <Form.Item
@@ -172,7 +177,7 @@ const Demo = () => {
         </Form.Item>
 
         <Form.Item {...tailLayout}>
-          <Button htmlType="reset" style={{ marginRight: 200 }}>
+          <Button htmlType="reset" style={{ marginRight: 30 }}>
             Discard
           </Button>
           <Button type="primary" htmlType="submit">
@@ -184,31 +189,5 @@ const Demo = () => {
    
   );
 };
-
-const designationOptions = [{
-	value: 'doctor',
-	label: 'Doctor'
-},
-{
-	value: 'nurse',
-	label: 'Nurse'
-},
-{
-	value: 'allied health professionals',
-	label: 'Allied Health Professionals'
-}]
-
-const genderOptions = [{
-	value: 'male',
-	label: 'Male'
-},
-{
-	value: 'female',
-	label: 'Female'
-},
-{
-	value: 'other',
-	label: 'Other'
-}]
 
 export default UpdateStaffDetails
