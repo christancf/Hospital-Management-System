@@ -31,10 +31,6 @@ const UpdateWardForm = () => {
 
   const onFinish = values => {
     message.loading({content:'Please Wait...', key})
-    
-    if(values.capacity === undefined) values.capacity = wardDetails.capacity
-    if(values.status === undefined) values.status = wardDetails.status
-
     wardService.updateWardDetails(values)
       .then((result)=>{
         message.success({content:'Updated Successfully!', key, duration: 2})

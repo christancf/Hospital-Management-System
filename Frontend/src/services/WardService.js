@@ -37,7 +37,7 @@ wardService.readWardCategoryIDs = (category) => {
   })
 }
 
-wardService.readStaffNameAndQualification = (id) => {
+wardService.getNurseDetails = (id) => {
   return fetch({
     url: 'ward/nurse/read?id='+ id,
     method: 'get'
@@ -52,10 +52,25 @@ wardService.assignNurse = (data) => {
   })
 }
 
-wardService.getNurses = () => {
+wardService.getAssignedNurses = () => {
   return fetch({
-    url: 'ward/nurse/assigned-details',
+    url: 'ward/nurse/details',
     method: 'get'
   })
 }
+
+wardService.checkStatus = (id) => {
+  return fetch({
+    url:'ward/nurse/status?id='+id,
+    method: 'get'
+  })
+}
+
+wardService.unassignNurse = id => {
+  return fetch({
+    url: 'ward/nurse/unassign?id='+ id,
+    method: 'delete'
+  })
+}
+
 export default wardService
