@@ -1,6 +1,9 @@
 import { 
   DashboardOutlined,
-  FormOutlined 
+  FormOutlined,
+  PlusOutlined,
+  UnorderedListOutlined,
+  ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import { BLOODBANK_PREFIX_PATH } from 'configs/AppConfig'
 
@@ -20,7 +23,7 @@ const dashBoardNavTree = [{
     key: 'bloodInformation',
     path: `${BLOODBANK_PREFIX_PATH}/bags-informations`,
     title: 'Blood Information',
-    icon: DashboardOutlined,
+    icon: UnorderedListOutlined,
     breadcrumb: false,
     submenu: []
   },
@@ -28,7 +31,7 @@ const dashBoardNavTree = [{
     key: 'addBloodBag',
     path: `${BLOODBANK_PREFIX_PATH}/add-details`,
     title: 'Add Blood Bag',
-    icon: FormOutlined,
+    icon: PlusOutlined,
     breadcrumb: false,
     submenu: []
   },
@@ -36,7 +39,7 @@ const dashBoardNavTree = [{
     key: 'disposalBloodBag',
     path: `${BLOODBANK_PREFIX_PATH}/disposal-bag`,
     title: 'Disposal Of Blood Bag',
-    icon: FormOutlined,
+    icon: ExclamationCircleOutlined,
     breadcrumb: false,
     submenu: []
   }]
