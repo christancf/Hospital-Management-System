@@ -44,4 +44,14 @@ mortuaryService.getOccupiedData = function () {
     }
   )
 }
+
+//get auto incremented id
+mortuaryService.getId = function () {
+  return fetch(
+    {
+      url: '/mortuary/id',
+      method: 'get'
+    }
+  )
+}
 export default mortuaryService

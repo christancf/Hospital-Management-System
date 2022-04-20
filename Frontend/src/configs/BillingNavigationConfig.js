@@ -4,43 +4,32 @@ import {
 } from '@ant-design/icons';
 import { BILLING_PREFIX_PATH } from 'configs/AppConfig'
 
-const dashBoardNavTree = [{
-  key: 'home',
-  path: `${BILLING_PREFIX_PATH}/home`,
-  title: 'home',
-  icon: DashboardOutlined,
+const dashBoardNavTree = [
+{
+  key: 'Bill List',
+  path: `${BILLING_PREFIX_PATH}/billlist`,
+  title: 'Bill List',
+  icon: CopyOutlined,
   breadcrumb: false,
   submenu: []
 },
 {
-  key: 'transaction-details',
-  title: 'transaction Details',
+  key: 'Add Transaction',
+  path: `${BILLING_PREFIX_PATH}/transactions`,
+  title: 'Add Transaction',
+  icon: FileAddOutlined,
   breadcrumb: false,
-  submenu: [{
-    key: 'Bill List',
-    path: `${BILLING_PREFIX_PATH}/list details`,
-    title: 'Bill List',
-    icon: CopyOutlined,
-    breadcrumb: false,
-    submenu: []
-  },
-  {
-    key: 'Add Transaction',
-    path: `${BILLING_PREFIX_PATH}/add-details`,
-    title: 'Add Transaction',
-    icon: FileAddOutlined,
-    breadcrumb: false,
-    submenu: []
-  },
-  {
-    key: 'Total Bill',
-    path: `${BILLING_PREFIX_PATH}/bill details`,
-    title: 'Total Bill ',
-    icon: ReadOutlined,
-    breadcrumb: false,
-    submenu: []
-  }]
-}]
+  submenu: []
+},
+{
+  key: 'Total Bill',
+  path: `${BILLING_PREFIX_PATH}/totalbills`,
+  title: 'Total Bill ',
+  icon: ReadOutlined,
+  breadcrumb: false,
+  submenu: []
+}
+]
 const billingNavigationConfig = [
   ...dashBoardNavTree
 ]

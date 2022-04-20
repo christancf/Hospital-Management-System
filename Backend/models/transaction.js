@@ -19,22 +19,22 @@ const transactionData = new mongoose.Schema({
     },
     billId: {
         required: true,
-        type: Number
+        type: String
     },
     patientName: {
         required: true,
         type: String
     },
     roomCharges: {
-        required: true,
+        required: false,
         type: Number
     },
     itemCharges: {
-        required: true,
+        required: false,
         type: Number
     },
     doctorCharges: {
-        required: true,
+        required: false,
         type: Number
     },
     tax: {
