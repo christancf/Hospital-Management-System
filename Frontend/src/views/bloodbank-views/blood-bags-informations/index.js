@@ -58,6 +58,8 @@ console.log(data);
           }
 
 		const bloodBags = data.map((response) => {
+
+			console.log(response)
 			return {
 				bagId:response.bagId,
 				donorName: response.donorName,
@@ -65,7 +67,7 @@ console.log(data);
 				donationNumber: response.donationNumber,
 				donateDate: response.donateDate,
 				place: response.place,
-				bloodGroup: response.bloodGroup
+				tags: response.bloodGroup
 			}
 		})
 
@@ -97,8 +99,8 @@ console.log(data);
 			},
 			{
 				title: 'Blood Group',
-				dataIndex: 'bloodGroup',
-				key:'bloodGroup',
+				dataIndex: 'tags',
+				key:'tags',
 				filters: [{ text: 'A positive(A+)', value: 'A+' },
 				{ text: 'A negative(A-)', value: 'A-' },
 				{ text: 'B positive(B+)', value: 'B+' },
@@ -109,24 +111,27 @@ console.log(data);
 				{ text: 'AB-">AB negative(AB-)', value: 'AB-' },],
 				onFilter: (value, record) => record.bloodGroup.includes(value),
 
-				// render:  bloodGroup=()=>(
-				// 	<span>
-				// 	  {bloodGroup.map(tag => {
-				// 		let color = tag.length > 5 ? 'geekblue' : 'green';
-				// 		if (tag === 'A+') {
-				// 		  color = 'volcano';
-				// 		}
-				// 		else if (tag === 'O+'){
-				// 			color = 'green';
-				// 		}
-				// 		return (
-				// 		  <Tag color={color} key={tag}>
-				// 			{tag.toUpperCase()}
-				// 		  </Tag>
-				// 		);
-				// 	  })}
-				// 	</span>
-				//   ),
+				render:  tags => (
+					<span>
+						{tags == "A+" &&
+                        <Tag color='volcano' key={tags}>
+                            {tags.toUpperCase()}
+                        </Tag>
+                    }
+                    {tags == "O+" &&
+                        <Tag color='green' key={tags}>
+                            {tags.toUpperCase()}
+                        </Tag>
+
+                    }
+                    {['A-','B+','B-','O-','AB+','AB-'].includes(tags) &&
+                        <Tag color='geekblue' key={tags}>
+                            {tags.toUpperCase()}
+                        </Tag>
+
+                    }
+					</span>
+				  ),
 			},
 			{
 				title: 'Action',

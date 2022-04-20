@@ -45,17 +45,25 @@ router.post('/add-details', function (req, res, next) {
 //read blood bank details
 router.get('/details/read', async (req, res, next) => {
   try {
-    let bloodbagDetail = await bloodbagModel.find({})
-    res.status(200).json({
-      succuss: true,
-      message: 'read succussfull',
-      payload: bloodbagDetail
+    let bloodbagDetail = await bloodbagModel.find({}).then((response)=> {
+      res.status(200).json({
+        succuss: true,
+        message: 'read succussfull',
+        payload: response
+      })
+
+    }).catch((errr)=> {
+      res.status(400).json({
+        succuss: true,
+        message: error.message
+      });
     })
+
   } catch (error) {
     res.status(400).json({
       succuss: true,
       message: error.message
-    })
+    });
   }
 });
 
