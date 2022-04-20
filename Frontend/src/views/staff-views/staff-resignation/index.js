@@ -1,25 +1,24 @@
 import React from 'react'
-import { Form, Input, Button, Typography } from 'antd';
+import { Form, Input, Button, message, Card } from 'antd';
 import staffService from 'services/StaffService';
 
-const { Title } = Typography
 const { Search } = Input;
+const resign = 'resign'
 
 const StaffResignation = () => {
 	return (
 		<div>
-			<Title>Staff Resignation</Title>
 			<Demo></Demo>
 		</div>
 	)
 }
 
 const layout = {
-	labelCol: { span: 4 },
+	labelCol: { span: 8 },
 	wrapperCol: { span: 8 },
   };
 const tailLayout = {
-	wrapperCol: { offset: 5, span: 16 },
+	wrapperCol: { offset: 9, span: 16 },
   };
 
   const Demo = () => {
@@ -34,8 +33,9 @@ const tailLayout = {
 		if(values.qualification === undefined) values.qualification = staffDetails.qualification
 
 		staffService.updateStatus(values)
-		.then(() => console.log("Mark as Resigned!"))
-		.catch((e) => console.log(`Error: ${ e }`))
+		.then(() => message.success({content: 'Marked as Resigned!', resign, duration: 2}))
+		.catch((e) => message.error({content: 'Please try again!', resign, duration: 2}))
+		form.resetFields();
 	};
   
 	const onFinishFailed = errorInfo => {
@@ -56,59 +56,61 @@ const tailLayout = {
 	};
   
 	return (
-	  <Form
-		{...layout}
-		name="basic"
-		initialValues={{ remember: true }}
-		onFinish={onFinish}
-		onFinishFailed={onFinishFailed}
-	  >
-		<Form.Item
-		  label="Staff ID"
-		  name="staffID"
-		  rules={[{ required: true, message: 'Please input the staff ID!' }]}
-		>
-		   <Search placeholder="Enter Staff ID" onSearch={id => searchById(id)} enterButton />
-		</Form.Item>
-  
-		<Form.Item
-		  label="Name"
-		  name="staffName"
-		  //rules={[{ required: true, message: 'Please input the name!' }]}
-		>
-		  <Input disabled="true" id="staffName" />
-		</Form.Item>
-  
-		<Form.Item
-		  label="NIC"
-		  name="NIC"
-		  //rules={[{ required: true, message: 'Please input the NIC!' }]}
-		>
-		  <Input disabled="true" id="NIC" />
-		</Form.Item>
-  
-		<Form.Item
-		  label="Designation"
-		  name="designation"
-		  //rules={[{ required: true, message: 'Please select the designation!' }]}
-		>
-			<Input disabled="true" id="designation" />
-		</Form.Item>
-  
-		<Form.Item
-		  label="Qualification"
-		  name="qualification"
-		  //rules={[{ required: true, message: 'Please input the qualification!' }]}
-		>
-			<Input disabled="true" id="qualification" />
-		</Form.Item>
-    
-		<Form.Item {...tailLayout}>
-		  <Button type="primary" htmlType="submit">
-			Mark As Resigned
-		  </Button>
-		</Form.Item>
-	  </Form>
+		<Card style={{backgroundColor: '#efefef'}}>
+			<h1 className='text-left' style={{ marginLeft: 450, marginBottom: 20 }}>Staff Resignation</h1>
+			<Form
+			{...layout}
+			name="basic"
+			initialValues={{ remember: true }}
+			onFinish={onFinish}
+			onFinishFailed={onFinishFailed}
+			>
+				<Form.Item
+				label="Staff ID"
+				name="staffID"
+				rules={[{ required: true, message: 'Please input the staff ID!' }]}
+				>
+					<Search placeholder="Enter Staff ID" onSearch={id => searchById(id)} enterButton />
+				</Form.Item>
+		
+				<Form.Item
+				label="Name"
+				name="staffName"
+				>
+					<Input disabled="true" id="staffName" />
+				</Form.Item>
+		
+				<Form.Item
+				label="NIC"
+				name="NIC"
+				>
+					<Input disabled="true" id="NIC" />
+				</Form.Item>
+		
+				<Form.Item
+				label="Designation"
+				name="designation"
+				>
+					<Input disabled="true" id="designation" />
+				</Form.Item>
+		
+				<Form.Item
+				label="Qualification"
+				name="qualification"
+				>
+					<Input disabled="true" id="qualification" />
+				</Form.Item>
+			
+				<Form.Item {...tailLayout}>
+					<Button htmlType="reset" style={{marginRight: 30}}>
+						Discard
+					</Button>
+					<Button type="primary" htmlType="submit">
+						Mark As Resigned
+					</Button>
+				</Form.Item>
+			</Form>
+		</Card>
 	);
   };
 
