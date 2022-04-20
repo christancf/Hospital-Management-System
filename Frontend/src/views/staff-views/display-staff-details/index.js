@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Spin, Table, Tag, Typography, Divider  } from 'antd';
+import { Spin, Table, Tag, Typography, Divider, Input  } from 'antd';
 import staffService from 'services/StaffService';
 
 const { Title } = Typography
+const { Search } = Input
 
 const DisplayStaffDetails = () => {
   
@@ -50,6 +51,10 @@ const DisplayStaffDetails = () => {
     return (
       <div >
         <Title>Staff Details</Title>
+        <Search 
+          placeholder="input search text" 
+          onSearch={value => console.log(value)} enterButton 
+          style={{width: 300, marginBottom: 20}} />
         <Table columns={columns} dataSource={data} onChange={onChange}/>        
       </div>
     ) 
@@ -118,14 +123,8 @@ const columns = [
   },
 ];
 
-
-
-
-
 function onChange(pagination, filters, sorter, extra) {
   console.log('params', pagination, filters, sorter, extra);
 }
-
-//ReactDOM.render(, mountNode);
 
 export default DisplayStaffDetails
