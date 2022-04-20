@@ -1,5 +1,4 @@
 import { Form, Input, InputNumber, Button, Cascader, DatePicker,Select,Modal } from 'antd';
-import { values } from 'lodash';
 import moment from 'moment';
 import patientManagementService from 'services/PatientManagement';
 const { Option } = Select;
