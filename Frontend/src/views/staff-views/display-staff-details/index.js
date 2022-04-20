@@ -25,8 +25,6 @@ const DisplayStaffDetails = () => {
     })
 	}, []);
 
-  const searchByName = (name) => {
-  }
 
   if (loading) {
 		return (
@@ -51,12 +49,32 @@ const DisplayStaffDetails = () => {
 
 	}
   else {
+    const resData = data
+    const savedData = []
+    const searchByName = (name) => {
+      console.log(name)
+      if(name === '') {
+        return setData(resData)
+      }
+      name = name.toUpperCase()
+      data.map(d => {
+        let staffName = d.staffName.toUpperCase()
+        if(staffName === name || staffName.includes(name)) {
+          savedData.push(d)
+        }
+        return (
+          null
+        )
+      })
+      setData(savedData)
+  }
+
     return (
       <div >
         <Title>Staff Details</Title>
         <Search 
           placeholder="input search text" 
-          onSearch={value => searchByName(value)} enterButton 
+          onSearch={value => searchByName(value)} enterButton allowClear
           style={{width: 300, marginBottom: 20}} />
         <Table columns={columns} dataSource={data} onChange={onChange}/>        
       </div>
