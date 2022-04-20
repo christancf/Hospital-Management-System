@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-
 import { Form, Input, Button, DatePicker, Cascader, Radio, Modal } from 'antd';
 import moment from 'moment';
 import mortuaryService from 'services/MortuaryService';
@@ -156,6 +155,7 @@ const Demo = () => {
 			setLoading(false);
 
 		}).catch((err) => {
+			console.log(error)
 			setLoading(false);
 			setError(true);
 			setData();
@@ -164,17 +164,13 @@ const Demo = () => {
 	if (loading) {
 		return (
 			<>
-				<h1>Add Corpse Details</h1>
-				<h2>Cabinet Number: {cabinetNo}</h2>
-				<p>Data Loading</p>
+				<p>Form Loading</p>
 			</>
 		)
 	}
 	else if (error) {
 		return (
 			<>
-				<h1>Add Corpse Details</h1>
-				<h2>Cabinet Number: {cabinetNo}</h2>
 				<p>Error</p>
 			</>
 		)
@@ -190,11 +186,11 @@ const Demo = () => {
 				onFinishFailed={onFinishFailed}
 			>
 				<Form.Item
-					label="CorpseID"
+					// label="CorpseID"
 					name="id"
 					initialValue={data}				
 				>
-					<Input placeholder={data} disabled/>
+					{/* <Input placeholder={data} disabled/> */}
 				</Form.Item>
 				<Form.Item
 					label="NIC"
@@ -300,3 +296,5 @@ const causeOfDeath = [{
 	label: 'Suicide'
 }]
 export default Home
+
+
