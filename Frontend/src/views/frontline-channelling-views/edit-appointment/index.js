@@ -204,6 +204,11 @@ const AddAppointment = () => {
                 return (<Option key={option.value}>{option.text}</Option>)
 
             });
+
+            form.setFieldsValue({
+                doctor_id: appointmentData.staffID,
+
+              });
             return (
                 <>
                     <Card style={{ width: 800 }}>
@@ -234,7 +239,6 @@ const AddAppointment = () => {
                                     filterOption={false}
                                     showSearch={{ filter }}
                                     style={{ width: '100%' }}
-                                    defaultValue={{ value: "Anura Wijesinghe" }}
                                 >
                                     {rendOption}
                                 </Select>
