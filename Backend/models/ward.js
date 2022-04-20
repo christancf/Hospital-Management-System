@@ -15,7 +15,7 @@ const dataSchema = new mongoose.Schema({
     },
     status: {
         required: true,
-        type: Boolean
+        type: String
     }
 })
 
