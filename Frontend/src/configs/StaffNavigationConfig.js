@@ -1,5 +1,13 @@
 import { 
-  DashboardOutlined
+  DashboardOutlined,
+  TeamOutlined,
+  UserAddOutlined,
+  EditOutlined,
+  UserDeleteOutlined,
+  ScheduleOutlined,
+  TransactionOutlined,
+  AccountBookOutlined,
+  LineChartOutlined
 } from '@ant-design/icons';
 import { STAFF_PREFIX_PATH } from 'configs/AppConfig'
 
@@ -15,7 +23,7 @@ const dashBoardNavTree = [{
   key: 'display-staff-details',
   path: `${STAFF_PREFIX_PATH}/display-staff-details`,
   title: 'Display Staff Details',
-  icon: DashboardOutlined,
+  icon: TeamOutlined,
   breadcrumb: false,
   submenu: []
 },
@@ -23,15 +31,15 @@ const dashBoardNavTree = [{
   key: 'add-staff-member',
   path: `${STAFF_PREFIX_PATH}/add-staff-member`,
   title: 'Add Staff Member',
-  icon: DashboardOutlined,
+  icon: UserAddOutlined,
   breadcrumb: false,
   submenu: []
 },
 {
   key: 'update-staff-details',
   path: `${STAFF_PREFIX_PATH}/update-staff-details`,
-  title: 'Update Staff Details',
-  icon: DashboardOutlined,
+  title: 'Edit Staff Details',
+  icon: EditOutlined,
   breadcrumb: false,
   submenu: []
 },
@@ -39,7 +47,7 @@ const dashBoardNavTree = [{
   key: 'staff-resignation',
   path: `${STAFF_PREFIX_PATH}/staff-resignation`,
   title: 'Staff Resignation',
-  icon: DashboardOutlined,
+  icon: UserDeleteOutlined,
   breadcrumb: false,
   submenu: []
 },
@@ -47,15 +55,15 @@ const dashBoardNavTree = [{
   key: 'staff-attendance',
   path: `${STAFF_PREFIX_PATH}/staff-attendance`,
   title: 'Staff Attendance',
-  icon: DashboardOutlined,
+  icon: ScheduleOutlined,
   breadcrumb: false,
   submenu: []
 },
 {
   key: 'staff-salary-bonuses',
   path: `${STAFF_PREFIX_PATH}/staff-salary-bonuses`,
-  title: 'Staff Salary Extensions',
-  icon: DashboardOutlined,
+  title: 'Staff Salary Bonuses',
+  icon: TransactionOutlined,
   breadcrumb: false,
   submenu: []
 },
@@ -63,7 +71,15 @@ const dashBoardNavTree = [{
   key: 'calculate-total-salary',
   path: `${STAFF_PREFIX_PATH}/calculate-total-salary`,
   title: 'Calculate Total Salary',
-  icon: DashboardOutlined,
+  icon: AccountBookOutlined,
+  breadcrumb: false,
+  submenu: []
+},
+{
+  key: 'staff-reports',
+  path: `${STAFF_PREFIX_PATH}/staff-reports`,
+  title: 'Staff Reports',
+  icon: LineChartOutlined,
   breadcrumb: false,
   submenu: []
 }]

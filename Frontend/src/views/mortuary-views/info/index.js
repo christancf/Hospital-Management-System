@@ -1,12 +1,10 @@
 import React from 'react'
-import { Table, Divider, Tag } from 'antd';
+import { Table, Tooltip } from 'antd';
 import mortuaryService from 'services/MortuaryService';
 const Home = () => {
   return (
     <div>
-      <Table columns={columns} dataSource={corpseData}
-      />
-
+      <Table columns={columns} dataSource={corpseData }/>
     </div>
   )
 }
@@ -61,3 +59,6 @@ mortuaryService.getData().then(value => {
   }
 });
 export default Home
+
+
+

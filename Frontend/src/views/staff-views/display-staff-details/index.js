@@ -1,87 +1,130 @@
-import React from 'react'
-import { Table, Typography } from 'antd';
+import React, { useEffect, useState } from 'react'
+import { Spin, Table, Tag, Typography, Divider, Input  } from 'antd';
+import staffService from 'services/StaffService';
 
 const { Title } = Typography
+const { Search } = Input
 
 const DisplayStaffDetails = () => {
-	return (
-		<div>
-			<Title>Staff Details</Title>
-			<Table columns={columns} dataSource={data} onChange={onChange} />
-		</div>
-	)
-}
+  
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false);
+	const [data, setData] = useState();
 
-// let { sortedInfo } = this.state;
-//     sortedInfo = sortedInfo || {};
+	useEffect(() => {
+		staffService.readStaffs()
+    .then((details) => {      
+      setData(details)
+      setLoading(false)
+    })
+    .catch((e) => {
+      setLoading(false)
+      setError(true)
+      setData()
+      console.log(`Error @ display-staff: ${e}`)
+    })
+	}, []);
+
+  if (loading) {
+		return (
+			<>
+				<center>
+					<Spin size="large" tip="Loading..." delay={500} spinning={loading} />
+				</center>
+
+			</>
+		)
+	}
+	else if (error) {
+
+		return (
+			<>
+				<center>
+					<Spin size="large" tip="Loading..." delay={500} spinning={loading} />
+				</center>
+
+			</>
+		)
+
+	}
+  else {
+    return (
+      <div >
+        <Title>Staff Details</Title>
+        <Search 
+          placeholder="input search text" 
+          onSearch={value => console.log(value)} enterButton 
+          style={{width: 300, marginBottom: 20}} />
+        <Table columns={columns} dataSource={data} onChange={onChange}/>        
+      </div>
+    ) 
+  }
+}
 
 const columns = [
   {
     title: 'Staff ID',
     dataIndex: 'staffID',
-	sorter: {
-		compare: (a, b) => a.staffID - b.staffID,
-		multiple: 4,
-	},
+    key: 'staffID',
+    sorter: {
+      compare: (a, b) => a.staffID - b.staffID,
+      multiple: 1,
+    }
   },
   {
     title: 'Staff Name',
     dataIndex: 'staffName',
-	// sorter: (a, b) => a.staffName.length - b.staffName.length,
-	// sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
-	// ellipsis: true,
+    key: 'staffName',
   },
   {
     title: 'Designation',
     dataIndex: 'designation',
-    // sorter: {
-    //   compare: (a, b) => a.designation - b.designation,
-    //   multiple: 2,
-    // },
+    key: 'designation'
   },
   {
     title: 'Qualification',
     dataIndex: 'qualification',
-    // sorter: {
-    //   compare: (a, b) => a.qualification - b.qualification,
-    //   multiple: 1,
-    // },
+    key: 'qualification'
   },
   {
-	title: 'Basic Salary',
-	dataIndex: 'basicSalary'
+    title: 'Basic Salary',
+    dataIndex: 'basicSalary',
+    key: 'basicSalary'
   },
   {
-	title: 'Status',
-	dataIndex: 'status'
-  }
-];
-
-const data = [
-  {
-    key: '1',
-    staffID: '2341',
-    staffName: 'Tharusha Wijesinghe',
-    designation: 'Doctor',
-    qualification: 'MBBS',
-	basicSalary: 250000,
-	status: 'Employed',
+    title: 'Status',
+    key: 'status',
+    dataIndex: 'status',
+    // render: tags => (
+    //   <span>
+    //     {tags.map (tag => {
+    //       let color = 'red'
+    //       if(tag === 'Employed') color = 'green'
+    //       return (
+          
+    //         <Tag color={color} key={tag}>
+    //           {tag.toUpperCase()}
+    //         </Tag>
+    //       );
+    //     })}
+    //   </span>
+    // ),
   },
   {
-	key: '2',
-    staffID: '4536',
-    staffName: 'Preshanthi Anushika',
-    designation: 'Nurse',
-    qualification: 'BSN',
-	basicSalary: 150000,
-	status: 'Employed',
-  }
+    title: '',
+    key: 'action',
+    render: (text, record) => (
+      <span>
+        <a href='google.com'>View</a>
+        <Divider type="vertical" />
+        <a href='google.com'>Edit</a>
+      </span>
+    ),
+  },
 ];
 
 function onChange(pagination, filters, sorter, extra) {
   console.log('params', pagination, filters, sorter, extra);
 }
-
-//ReactDOM.render(, mountNode);
 
 export default DisplayStaffDetails

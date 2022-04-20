@@ -1,7 +1,6 @@
 import React from 'react';
 import inventoryService from '../../../services/inventoryService'
 import { Form, Input, Button, Select,DatePicker , Modal} from 'antd';
-import { TRUE } from 'node-sass';
 
 
 const { Option } = Select;
@@ -14,57 +13,14 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-class ShowModel extends React.Component {
-  
-}
+
 
 class additem extends React.Component {
   formRef = React.createRef();
-  state = { visible: false };
+  
 
-  showModal = () => {
-    this.setState({
-      visible: true,
-    });
-  };
-
-  handleOk = e => {
-    console.log(e);
-    this.setState({
-      visible: false,
-    });
-  };
-
-  ShowModel = params => {
-
-    if (params.SUCCESS == true){
-      return(
-        <>
-        <Modal
-            title="Information"
-            visible={this.state.visible}
-            onOk={this.handleOk}
-          >
-            <p>Insertion successful</p>
-          </Modal>
-        </>
-      )
-    }
-    else{
-      return(
-        <>
-        <Modal
-            title="Information"
-            visible={this.state.visible}
-            onOk={this.handleOk}
-          >
-            <p>Insertion Unsuccessful</p>
-          </Modal>
-        </>
-      )
-    }
-
-  }
+  
+  
   onGenderChange = value => {
     this.formRef.current.setFieldsValue({
       note: `Hi, ${value === 'male' ? 'man' : 'lady'}!`,
@@ -104,8 +60,9 @@ class additem extends React.Component {
   //   });
   // };
 
-  render() {
-    return (
+  
+    render() {
+      return (
     
       <Form {...layout} ref={this.formRef} name="control-ref" onFinish={this.onFinish}>
         <Form.Item name="item_name" label="item_name" >
@@ -136,7 +93,7 @@ class additem extends React.Component {
         <Input />
         </Form.Item>
 
-        <this.ShowModel SUCCESS={true}></this.ShowModel>
+        
         {/* <Form.Item
           noStyle
           shouldUpdate={(prevValues, currentValues) => prevValues.gender !== currentValues.gender}
@@ -165,6 +122,8 @@ class additem extends React.Component {
     );
   }
 }
+
+
 
  export default additem;
 

@@ -3,12 +3,30 @@ const corpseModel = require('../models/mortuary');
 var router = express.Router();
 const auth = require("../middleware/auth");
 
+//generate auto incremented id
+router.get('/id', function(req,res,next){
+  corpseModel.find().sort({id : -1}).limit(1)
+  .then((response) => {
+    res.status(200).json({
+        success:true,
+        message:'sucessful',
+        payload:response[0].id + 1
+    })
+}).catch((e) => {
+    res.status(400).json({
+      success:false,
+      message:error.message,
+      payload:{}
+    })
+})
+
+});
 
 //add corpse initially
 router.post('/add', function (req, res, next) {
 
   const corpse = new corpseModel({
-    id: 1,
+    id: req.body.id,
     NIC: req.body.NIC,
     name: req.body.name,
     sex: req.body.sex,
@@ -17,8 +35,7 @@ router.post('/add', function (req, res, next) {
     date_time_of_death: req.body.date_time_of_death,
     cause_of_death: req.body.cause_of_death,
     specifics_of_death: req.body.specifics_of_death,
-    // cabinet_number: req.body.cabinet_number,
-    cabinet_number: 'A1',
+    cabinet_number: req.body.cabinet_number,
     status: true,
     receiver_name: null,
     receiver_type: null,
