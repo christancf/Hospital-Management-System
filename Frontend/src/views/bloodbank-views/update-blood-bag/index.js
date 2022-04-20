@@ -1,9 +1,12 @@
-import { Form, Input, InputNumber, Button, Cascader, DatePicker, Select, Modal, Spin } from 'antd';
+import { Form, Input, InputNumber, Button, Cascader, DatePicker, Select, Modal, Spin, Typography } from 'antd';
 import moment from 'moment';
 import { useState, useEffect } from 'react';
 import bloodBankService from 'services/BloodBankService';
-
+const { Title } = Typography
 const { Option } = Select;
+
+const queryParams = new URLSearchParams(window.location.search);
+const bagId = queryParams.get('bagId');
 
 function toTimestamp(strDate) {
 	var datum = Date.parse(strDate);
@@ -59,9 +62,9 @@ const bloodGroup = [
 
 
 const UpdateBloodBag = () => {
-	const onReset = () => {
-		form.resetFields();
-	};
+	// const onReset = () => {
+	// 	form.resetFields();
+	// };
 
 	const [form] = Form.useForm();
 
@@ -70,7 +73,7 @@ const UpdateBloodBag = () => {
 	const [data, setData] = useState();
 
 	useEffect(() => {
-		bloodBankService.bloodBagDetails(6).then((resp) => {
+		bloodBankService.bloodBagDetails(bagId).then((resp) => {
 			setData(resp.payload);
 			setLoading(false);
 		}).catch((err) => {
@@ -125,7 +128,7 @@ const UpdateBloodBag = () => {
 	const onFinish = values => {
 
 		const bloodbag = {
-			bagId: 6,
+			bagId: bagId,
 			donorName: values.donorName,
 			donorNIC: values.donorNIC,
 			donationNumber: values.donationNumber,
@@ -182,7 +185,10 @@ const UpdateBloodBag = () => {
 
 
 			<Form {...layout} name="BloodBagUpdate" onFinish={onFinish} validateMessages={validateMessages}>
-				<label>Admiit New Patient</label>
+				<Title>Edit Blood Bag Details</Title><br></br>
+				<Form.Item name="bagId" label="Bag Id" initialValue={bagId} placeholder="Bag Id" >
+					<Input disabled />
+				</Form.Item>
 				<Form.Item name="donorName" initialValue={data.donorName} label="Donor's  Name" rules={[{ required: true }]} placeholder="Donor's  Name" >
 					<Input />
 				</Form.Item>
@@ -192,7 +198,7 @@ const UpdateBloodBag = () => {
 				<Form.Item name="donationNumber" initialValue={data.donationNumber} label=" Donation Number" rules={[{ required: true }]} placeholder="Donation Number">
 					<Input />
 				</Form.Item>
-				<Form.Item name="donateDate" initialValue={moment(new Date(data.donateDate*1000))} label="Donate Date"  rules={[{ required: true }]} placeholder=" Donate Date">
+				<Form.Item name="donateDate" initialValue={moment(new Date(data.donateDate * 1000))} label="Donate Date" rules={[{ required: true }]} placeholder=" Donate Date">
 					<DatePicker />
 				</Form.Item>
 				<Form.Item name="place" initialValue={data.place} label="Place" rules={[{ required: true }]} placeholder="Place">
@@ -200,7 +206,6 @@ const UpdateBloodBag = () => {
 				</Form.Item>
 				<Form.Item name="bloodGroup" initialValue={data.bloodGroup} label="bloodGroup" rules={[{ required: true }]}>
 					<Select
-						labelInValue
 						placeholder="Select Blood Group"
 						filterOption={false}
 						showSearch={{ filter }}
@@ -213,12 +218,12 @@ const UpdateBloodBag = () => {
 				</Form.Item>
 
 				<Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-					<Button className="mr-2" htmlType="button" onClick={onReset}>
+					{/* <Button className="mr-2" htmlType="button" onClick={onReset}>
 						Reset
-					</Button>
+					</Button> */}
 
 					<Button type="primary" htmlType="submit">
-						Admit Button
+						Update
 					</Button>
 				</Form.Item>
 			</Form>

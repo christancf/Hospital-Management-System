@@ -45,21 +45,29 @@ router.post('/add-details', function (req, res, next) {
 //read blood bank details
 router.get('/details/read', async (req, res, next) => {
   try {
-    let bloodbagDetail = await bloodbagModel.find({})
-    res.status(200).json({
-      succuss: true,
-      message: 'read succussfull',
-      payload: bloodbagDetail
+    let bloodbagDetail = await bloodbagModel.find({}).then((response)=> {
+      res.status(200).json({
+        succuss: true,
+        message: 'read succussfull',
+        payload: response
+      })
+
+    }).catch((errr)=> {
+      res.status(400).json({
+        succuss: true,
+        message: error.message
+      });
     })
+
   } catch (error) {
     res.status(400).json({
       succuss: true,
       message: error.message
-    })
+    });
   }
 });
 
-
+//read one
 router.get('/read', function(req,res,next){
   bloodbagModel.find({bagId:req.query.id})
   .then((bloodBag) => {
@@ -92,31 +100,7 @@ router.put('/update-details', (req, res, next) => {
     }).catch((e) => {
       res.status(400).json({success:false,message:e.message,payload:{}})
     })
-})
-
-
-
-
-
-
-// router.put('/update-details', async (req, res) => {
-//   const newDonorName = req.body.newDonorName
-//   const newDonorNIC = req.body.newDonorNIC
-//   const newplace = req.body.place
-
-//   try {
-//     await bloodbag.findById(id, (_error, bagUpdate) => {
-//       bagUpdate.donorName = newDonorName;
-//       bagUpdate.donorNIC = newDonorNIC;
-//       bagUpdate.place = newplace;
-//       bagUpdate.save()
-//     });
-//   } catch (error) {
-//     console.log(error)
-//   }
-
-//   res.send("Updated");
-// });
+});
 
 //delete blood bag
 router.delete('/bag-delete/:id', (req, res) => {
@@ -136,6 +120,7 @@ router.delete('/bag-delete/:id', (req, res) => {
 
 });
 
+//get ID
 router.get('/bagId', function(req,res,next){
   bloodbagModel.find().sort({bagId : -1}).limit(1)
   .then((id) => {
