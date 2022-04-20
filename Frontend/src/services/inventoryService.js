@@ -22,4 +22,22 @@ inventoryService.getItems = function (categoryType){
   })
 }
 
+//get auto incremented id
+
+inventoryService.getId = function () {
+
+  return fetch(
+
+    {
+
+      url: '/inventory/id',
+
+      method: 'get'
+
+    }
+
+  )
+
+}
+
 export default inventoryService
