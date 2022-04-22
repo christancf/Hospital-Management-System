@@ -9,12 +9,13 @@ const AssignedNurseDetails= () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [data, setData] = useState()
+  const [fullData, setFullData] = useState()
   //const []
   
   useEffect(() => {
     wardService.getAssignedNurses()
     .then(res => {
-      console.log(res)
+      setFullData(res)
       setData(res)
       setLoading(false)
     })
@@ -22,6 +23,7 @@ const AssignedNurseDetails= () => {
       setLoading(false)
       setError(true)
       setData()
+      setFullData()
       console.log(`Error: ${e}`)
     })
   }, [])
@@ -46,22 +48,16 @@ const AssignedNurseDetails= () => {
         <>Hi</>
       )
     }else{
-
-      const resData = data
       const savedData = []
       const search = (str) => {
-        if(str === '') {
-          return setData(resData)
-        }
+        if(str === '') return setData(fullData)
         str = str.toUpperCase()
-        data.map(d => {
+        fullData.map(d => {
           let staffName = d.details[0].staffName.toUpperCase()
           if(staffName === str || staffName.includes(str)) {
             savedData.push(d)
           }
-          return (
-            null
-          )
+          return
         })
         setData(savedData)
       }
@@ -77,7 +73,8 @@ const AssignedNurseDetails= () => {
           <Col span={5} >
             <Search
               placeholder="input search text"
-              onSearch={value => search(value)}
+              id="searchTxt"
+              onInput={() => search(document.getElementById('searchTxt').value)}
               allowClear
               style={{ width: 250 }}
             />
