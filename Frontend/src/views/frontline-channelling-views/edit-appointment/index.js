@@ -200,7 +200,14 @@ const AddAppointment = () => {
                     return false;
                 }
             });
-
+            function disabledDate(current) {
+                // Can not select days before today and today
+                return current && current < moment().endOf('day');
+              }
+              function disabledDate2(current) {
+                // Can not select days before today and today
+                return current && current > moment().endOf('day');
+              }
          
             form.setFieldsValue({
                 doctor_id: doctorName.staffName
@@ -221,7 +228,7 @@ const AddAppointment = () => {
                                 <Input />
                             </Form.Item>
                             <Form.Item name="birthday" label="Birthday" rules={[{ required: true }]} placeholder="Patient Birthday" initialValue={moment(new Date(appointmentData.birthday))}>
-                                <DatePicker />
+                                <DatePicker disabledDate={disabledDate2}/>
                             </Form.Item>
                             <Form.Item name="contact_no" label="Contact No" rules={[{ required: true }]} placeholder="Contact Number" initialValue={appointmentData.contact_no}>
                                 <Input />
@@ -241,7 +248,7 @@ const AddAppointment = () => {
                                 </Select>
                             </Form.Item>
                             <Form.Item name="date" label="Appointment Date" rules={[{ required: true }]} initialValue={moment(new Date(appointmentData.date))}>
-                                <DatePicker />
+                                <DatePicker disabledDate={disabledDate} />
                             </Form.Item>
                             <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
                                 <Button type="primary" htmlType="submit">
