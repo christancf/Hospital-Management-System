@@ -234,7 +234,7 @@ const PatientAdmittance = () => {
 
 			<Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
 				<Button type="primary" htmlType="submit">
-				Admit Button
+				Admit 
 				</Button>
 			</Form.Item>
 		</Form>

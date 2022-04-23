@@ -108,6 +108,7 @@ const PatientAdmittance = () => {
 			setTimeout(() => {
 				clearInterval(timer);
 				modal.destroy();
+				window.location.reload(false);
 			}, delay * 1000);
 		}
 
@@ -159,7 +160,7 @@ const PatientAdmittance = () => {
 		console.log(payload)
 		
 
-		//console.log(res);
+		
 	};
 
 	if (loading) {
@@ -186,7 +187,7 @@ const PatientAdmittance = () => {
 	}
 
 	else{
-		console.log(data);
+		
 		return (
 
 			
@@ -206,14 +207,13 @@ const PatientAdmittance = () => {
 				<Form.Item name="dateOfBirth" initialValue={moment(new Date(data.dateOfBirth*1000))} label="Birthday"  rules={[{ required: true }]} placeholder=" Birthday">
 					<DatePicker  />
 				</Form.Item>
-				<Form.Item name="sex" initialValue={data.bloodGroup} label="Sex" rules={[{required:true}]}>
+				<Form.Item name="sex" initialValue={data.sex} label="Sex" rules={[{required:true}]}>
 				<Select
 					
 					placeholder="Select Sex"
 					filterOption={false}
 					showSearch={{ filter }}
 					style={{ width: '100%' }}
-					defaultValue={data.sex}					
 				>
 					
 					{options.map(d => (
@@ -237,7 +237,6 @@ const PatientAdmittance = () => {
 					filterOption={false}
 					showSearch={{ filter }}
 					style={{ width: '100%' }}
-					defaultValue={data.bloodGroup}
 				>
 					{bloodGroup.map(d => (
 						<Option key={d.value}>{d.label}</Option>
@@ -247,7 +246,7 @@ const PatientAdmittance = () => {
 
 				<Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
 					<Button type="primary" htmlType="submit">
-					Admit Button
+					Update
 					</Button>
 				</Form.Item>
 			</Form>
