@@ -27,7 +27,6 @@ function disabledDate(current) {
 	// Can not select days before today and today
 	return current && current > moment().endOf('day');
 }
-
 function range(start, end) {
 	const result = [];
 	for (let i = start; i < end; i++) {
@@ -88,7 +87,7 @@ function ShowModel(title, delay, innercontent, isSuccess) {
 	}
 }
 const Demo = () => {
-
+	let dob
 	const onFinish = values => {
 
 		if (values.cod == undefined) {
@@ -143,11 +142,16 @@ const Demo = () => {
 	const onFinishFailed = errorInfo => {
 		console.log('Failed:', errorInfo);
 	};
-
+	const [form] = Form.useForm();
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
 	const [data, setData] = useState();
 
+	function disabledDateForDeath(current) {
+		let dob = form.getFieldValue('dob')
+		// console.log(dob)
+		return (current && current > moment().endOf('day')) || (current && current < dob);
+	}
 	useEffect(() => {
 		mortuaryService.getId().then((res) => {
 
@@ -176,11 +180,11 @@ const Demo = () => {
 		)
 	}
 	else {
-
 		return (
 			<Form
 				{...layout}
 				name="basic"
+				form={form}
 				initialValues={{ remember: true }}
 				onFinish={onFinish}
 				onFinishFailed={onFinishFailed}
@@ -233,6 +237,7 @@ const Demo = () => {
 					rules={[{ required: true, message: 'Please input the Date of Birth!' }]}
 				>
 					<DatePicker
+						// name='dobs'
 						placeholder='Select Date'
 						format="YYYY-MM-DD"
 						disabledDate={disabledDate}
@@ -246,8 +251,9 @@ const Demo = () => {
 				>
 					<DatePicker
 						placeholder='Select Date & Time'
+						showNow = {false}
 						format="YYYY-MM-DD HH:mm:ss"
-						disabledDate={disabledDate}
+						disabledDate={disabledDateForDeath}
 						disabledTime={disabledDateTime}
 						showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
 					/>
