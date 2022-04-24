@@ -94,7 +94,7 @@ const AddBloodTransfusion = () => {
 		  setTimeout(() => {
 			clearInterval(timer);
 			modal.destroy();
-			window.location.reload(false)
+			// window.location.reload(false)
 		  }, delay * 1000);
 		}
 	
@@ -129,7 +129,7 @@ const AddBloodTransfusion = () => {
 		}
 		console.log(payload)
 	
-		bloodBankService.AddBloodTransfusion(payload).then((res) => {
+		bloodBankService.addTransfusion(payload).then((res) => {
 		  ShowModel("Successful!", 5, "Blood Bag Added Sucessfully", true)
 		  form.resetFields();
 		}).catch((error) => {
