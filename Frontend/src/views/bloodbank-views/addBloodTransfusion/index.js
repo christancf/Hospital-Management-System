@@ -76,21 +76,6 @@ const AddBloodTransfusion = () => {
 			setError(true);
 			setData();
 		});
-
-
-		// if(form.getFieldValue['category'] !== undefined){
-		// 	wardService.readWardCategoryIDs(form.getFieldValue['category'])
-		// 	.then((res) => {
-		// 		setOptions(res)
-		// 		setLoading(false)
-		// 	})
-		// 	.catch((e) => {
-		// 		setIloading(false)
-		// 		setIerror(true)
-		// 		setOptions()
-		// 		console.log(`Error: ${ e }`)
-		// 	})
-		// }
 	}, [])
 
 	function ShowModel(title, delay, innercontent, isSuccess) {
@@ -207,7 +192,7 @@ const AddBloodTransfusion = () => {
 			return current && current > moment().startOf('day');
 		}
 
-		
+
 		const resData = data
 		return (
 			<Form {...layout} name="add blood transfusion" form={form} onFinish={onFinish} initialValues={{ remember: true }}>
