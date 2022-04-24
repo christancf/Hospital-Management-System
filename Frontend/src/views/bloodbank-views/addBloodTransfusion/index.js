@@ -137,9 +137,7 @@ const AddBloodTransfusion = () => {
 		})
 	
 		console.log(payload)
-	
-	
-		//console.log(res);
+
 	  };
 
 	const searchById = (patientId) => {
