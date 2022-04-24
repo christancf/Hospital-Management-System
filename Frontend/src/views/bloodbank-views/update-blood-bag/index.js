@@ -99,6 +99,7 @@ const UpdateBloodBag = () => {
 			setTimeout(() => {
 				clearInterval(timer);
 				modal.destroy();
+				window.location.href="../bloodbank/bags-informations";
 			}, delay * 1000);
 		}
 
@@ -177,13 +178,14 @@ const UpdateBloodBag = () => {
 
 	else {
 
+		function disabledDate2(current) {
+			// Can not select days before today and today
+			return current && current > moment().endOf('day');
+		  }
 		// var myDate = new Date(data.dateOfBirth);
 		// myDate.toLocaleString();
 
 		return (
-
-
-
 			<Form {...layout} name="BloodBagUpdate" onFinish={onFinish} validateMessages={validateMessages}>
 				<Title>Edit Blood Bag Details</Title><br></br>
 				<Form.Item name="bagId" label="Bag Id" initialValue={bagId} placeholder="Bag Id" >
@@ -192,14 +194,14 @@ const UpdateBloodBag = () => {
 				<Form.Item name="donorName" initialValue={data.donorName} label="Donor's  Name" rules={[{ required: true }]} placeholder="Donor's  Name" >
 					<Input />
 				</Form.Item>
-				<Form.Item name="donorNIC" initialValue={data.donorNIC} label=" Donor's NIC" rules={[{ required: true }]} placeholder="Donor's NIC">
+				<Form.Item name="donorNIC" initialValue={data.donorNIC} label=" Donor's NIC" rules={[{ required: true,pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' , message: 'Enter valid NIC' }]} placeholder="Donor's NIC">
 					<Input />
 				</Form.Item>
 				<Form.Item name="donationNumber" initialValue={data.donationNumber} label=" Donation Number" rules={[{ required: true }]} placeholder="Donation Number">
 					<Input />
 				</Form.Item>
 				<Form.Item name="donateDate" initialValue={moment(new Date(data.donateDate * 1000))} label="Donate Date" rules={[{ required: true }]} placeholder=" Donate Date">
-					<DatePicker />
+					<DatePicker disabledDate={disabledDate2} />
 				</Form.Item>
 				<Form.Item name="place" initialValue={data.place} label="Place" rules={[{ required: true }]} placeholder="Place">
 					<Input />
