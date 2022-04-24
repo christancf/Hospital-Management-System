@@ -80,7 +80,6 @@ const Home = () => {
       setTimeout(() => {
         clearInterval(timer);
         modal.destroy();
-        window.location.reload(false)
       }, delay * 1000);
     }
 
@@ -156,8 +155,8 @@ const Home = () => {
           "Your Transaction successfully added",
           true
         );
-        form.resetFields(['type']);
-        onPatientSearch();
+        form.resetFields(['type','itemname','qty']);
+        onPatientSearch(form.getFieldValue('patientid'));
 
       }
       else {
@@ -250,7 +249,7 @@ const Home = () => {
               >
 
                 <Form.Item name="patientid"
-                  label="Patient ID">
+                  label="Patient ID" rules={[{ required: true }]}>
                   <Select
                     showSearch
                     placeholder="Select a Patient"
@@ -265,7 +264,7 @@ const Home = () => {
 
                 <Form.Item
                   name="type"
-                  label="Type"
+                  label="Type" rules={[{ required: true }]}
 
                 >
                   <Select
@@ -276,14 +275,14 @@ const Home = () => {
                     style={{ width: '100%' }}
                   >
                     <Option key="item charges">Item Charges</Option>
-                    <Option key="room charges">Room Charges</Option>
-                    <Option key="doctor charges">Doctor Charges</Option>
+                    <Option key="room charges" disabled={true}>Room Charges</Option>
+                    <Option key="doctor charges" disabled={true}>Doctor Charges</Option>
                   </Select>
                 </Form.Item>
 
 
                 <Form.Item name="itemname"
-                  label="Item Name">
+                  label="Item Name" rules={[{ required: true }]}>
                   <Select
                     showSearch
                     placeholder="Select a Item"
@@ -296,9 +295,9 @@ const Home = () => {
 
                 </Form.Item>
                 <Form.Item name="qty"
-                  label="Item Quantity"
+                  label="Item Quantity" rules={[{ required: true }]}
                 >
-                  <InputNumber />
+                  <InputNumber min={0}/>
 
                 </Form.Item>
 

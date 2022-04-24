@@ -54,10 +54,6 @@ const Home = () => {
 	];
 
 
-	const [patientLoading, setPatientLoading] = useState(true);
-	const [patientError, setPatientError] = useState(false);
-	const [patientData, setPatientData] = useState();
-
 	const [billsLoading, setBillsLoading] = useState(true);
 	const [billsError, setBillsError] = useState(false);
 	const [billsData, setBillData] = useState();
@@ -80,54 +76,19 @@ const Home = () => {
 
 
 	useEffect(() => {
-		billingService.getAllPatients().then((resp) => {
-			setPatientData(resp.payload);
-			setPatientLoading(false);
+		billingService.getAllBills().then((resp) => {
+			setBillData(resp.payload);
+			setBillsLoading(false);
 
 		}).catch((err) => {
-			setPatientLoading(false);
-			setPatientError(true);
-			setPatientData();
+			setBillsLoading(false);
+			setBillsError(true);
+			setBillData();
 		});
 	}, []);
 
-	if (!patientLoading && billsLoading) {
 
-		const optionList = patientData.map((patient) => {
-			return (
-				<Option value={patient.patientId}>{patient.patientId} - {patient.fullName}</Option>
-			)
-		})
-
-		return (
-			<>
-				<label>Patient ID : </label>
-				<Select
-					showSearch
-					style={{ width: 350 }}
-					placeholder="Select a Patient"
-					optionFilterProp="children"
-					onChange={onChange}
-				
-				>
-
-					{optionList}
-				</Select>
-				<Divider />
-				<Result
-					title="No Patieent ID Selected. Please search with Patient ID"
-				/>
-			</>
-		)
-
-	}
-	else if (!patientLoading && !billsLoading) {
-
-		const optionList = patientData.map((patient) => {
-			return (
-				<Option value={patient.patientId}>{patient.patientId} - {patient.fullName}</Option>
-			)
-		})
+	if (!billsLoading) {
 
 		const dataList = billsData.map( (item)=> {
 
@@ -146,18 +107,6 @@ const Home = () => {
 		return (
 
 			<>
-				Patient ID :
-				<Select
-					showSearch
-					style={{ width: 350 }}
-					placeholder="Select a Patient"
-					optionFilterProp="children"
-					onChange={onChange}
-					
-				>
-
-					{optionList}
-				</Select>
 				<Divider />
 				<Table columns={columns} dataSource={dataList} />
 			</>
@@ -168,7 +117,7 @@ const Home = () => {
 		return (
 			<>
 				<center>
-					<Spin size="large" tip="Loading..." delay={500} spinning={patientLoading} />
+					<Spin size="large" tip="Loading..." delay={500} spinning={billsLoading} />
 				</center>
 
 			</>
