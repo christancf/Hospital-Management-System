@@ -194,7 +194,7 @@ const PatientAdmittance = () => {
 	else{
 	return (
 
-		<Form {...layout} name="Admittance" form={form} onFinish={onFinish} validateMessages={validateMessages}>
+		<Form {...layout} name="Admittance" form={form} onFinish={onFinish} >
 			<label>Admit New Patient</label>
 			<Form.Item name="id" label="Patient ID" initialValue={data} rules={[{ required: true }]} placeholder="Patient ID">
 				<Input disabled />
@@ -223,7 +223,7 @@ const PatientAdmittance = () => {
 			</Select>
 				   
 			</Form.Item> 
-			<Form.Item name="mobile" label="Contact No" rules={[{ required: true }]} placeholder="Contact Number">
+			<Form.Item name="mobile" label="Contact No" rules={[{ required: true, pattern:'^([0-9]{10}|)$',message: 'Enter valid Number' }]} placeholder="Contact Number">
 				<Input />
 			</Form.Item>
 			<Form.Item name="address" label="Address" rules={[{ required: true }]} placeholder="Address">
