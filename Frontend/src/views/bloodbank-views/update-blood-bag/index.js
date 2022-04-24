@@ -187,7 +187,7 @@ const UpdateBloodBag = () => {
 
 		return (
 			<Form {...layout} name="BloodBagUpdate" onFinish={onFinish} validateMessages={validateMessages}>
-				<Title>Edit Blood Bag Details</Title><br></br>
+				<Title>Edit Blood Bag</Title><br></br>
 				<Form.Item name="bagId" label="Bag Id" initialValue={bagId} placeholder="Bag Id" >
 					<Input disabled />
 				</Form.Item>
