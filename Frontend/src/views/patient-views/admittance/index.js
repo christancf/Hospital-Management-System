@@ -69,6 +69,8 @@ const bloodGroup =[
 
 
 
+
+
 const PatientAdmittance = () => {
 	const [form] = Form.useForm();
 
@@ -87,12 +89,16 @@ const PatientAdmittance = () => {
 		});
 	}, []);
 
+	function handleModalOK(){
+		window.location.reload(false);
+	}
 	function ShowModel(title, delay, innercontent, isSuccess) {
 
 		if (isSuccess) {
 			const modal = Modal.success({
 				title: title,
 				content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+				onOk:() =>{window.location.reload(false)}
 			});
 			const timer = setInterval(() => {
 				delay -= 1;

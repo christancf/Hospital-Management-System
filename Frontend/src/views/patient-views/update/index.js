@@ -130,6 +130,7 @@ const PatientAdmittance = () => {
       const modal = Modal.success({
         title: title,
         content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+        onOk:() => {window.location.href = `../patient/update?patient`}
       });
       const timer = setInterval(() => {
         delay -= 1;
@@ -140,7 +141,7 @@ const PatientAdmittance = () => {
       setTimeout(() => {
         clearInterval(timer);
         modal.destroy();
-		window.location.href = `../patient/update?patient`
+		    window.location.href = `../patient/update?patient`
         
       }, delay * 1000);
     } else {
