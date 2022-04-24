@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Form, Input, Button, Checkbox, Card, Select, DatePicker, message, Spin,Modal } from 'antd';
+import { Form, Input, Button, Checkbox, Card, Select, DatePicker, message, Spin,Modal,Typography } from 'antd';
 import { fromPairs } from 'lodash';
 import bloodBankService from 'services/BloodBankService';
 import moment from 'moment';
 
+const { Title } = Typography
 const { TextArea } = Input;
 const { Search } = Input
 const { Option } = Select
@@ -193,6 +194,7 @@ const AddBloodTransfusion = () => {
 		const resData = data
 		return (
 			<Form {...layout} name="add blood transfusion" form={form} onFinish={onFinish} initialValues={{ remember: true }}>
+				<Title>Add Blood Transfusion</Title><br></br>
 				<Form.Item name="bagId" label="Bag Id" initialValue={bagId} placeholder="Bag Id" >
 					<Input disabled />
 				</Form.Item>
