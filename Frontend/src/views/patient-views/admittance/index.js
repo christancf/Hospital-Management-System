@@ -18,7 +18,7 @@ const layout = {
 const validateMessages = {
 	required: 'This field is required!',
 	types: {
-		email: 'Not a valid email!',
+		number: 'This field can only have numbers',
 	},
 };
 
@@ -158,6 +158,11 @@ const PatientAdmittance = () => {
 		//console.log(res);
 	};
 
+	function disabledDate2(current) {
+		// Can not select days before today and today
+		return current && current > moment().endOf('day');
+	  }
+
 	if (loading) {
 		return (
 			<>
@@ -196,7 +201,7 @@ const PatientAdmittance = () => {
 			</Form.Item>
 
 			<Form.Item name="dateOfBirth" label="Birthday" rules={[{ required: true }]} placeholder=" Birthday">
-				<DatePicker />
+				<DatePicker disabledDate={disabledDate2} />
 			</Form.Item>
 			<Form.Item name="sex" label="Sex" rules={[{required:true}]}>
 			<Select
