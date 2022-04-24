@@ -136,7 +136,7 @@ const columns = [
     key: 'action',
     render: (text, record) => (
       <span>
-        <a href=''>View</a>
+        <a href=''>View More</a>
         <Divider type="vertical" />
         <a href='http://localhost:8080/staff/update-staff-details'>Edit</a>
       </span>

@@ -64,6 +64,7 @@ const tailLayout = {
 			initialValues={{ remember: true }}
 			onFinish={onFinish}
 			onFinishFailed={onFinishFailed}
+			form={form}
 			>
 				<Form.Item
 				label="Staff ID"
