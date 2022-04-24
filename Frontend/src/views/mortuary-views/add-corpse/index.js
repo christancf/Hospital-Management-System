@@ -199,7 +199,7 @@ const Demo = () => {
 				<Form.Item
 					label="NIC"
 					name="nic"
-					rules={[{ required: true, message: 'Please input the NIC!' }]}
+					rules={[{ required: true, pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' , message: 'Enter valid NIC' }]}
 				>
 					<Input />
 				</Form.Item>
