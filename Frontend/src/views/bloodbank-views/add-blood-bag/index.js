@@ -6,8 +6,6 @@ import { useState, useEffect } from 'react';
 const { Title } = Typography
 const { Option } = Select;
 
-
-
 function toTimestamp(strDate) {
   var datum = Date.parse(strDate);
   return datum / 1000;
