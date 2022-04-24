@@ -300,7 +300,7 @@ const PatientAdmittance = () => {
           name="nic"
           initialValue={data.nic}
           label=" NIC"
-          rules={[{ required: true }]}
+          rules={[{ required: true, pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' , message: 'Enter valid NIC' }]}
           placeholder="NIC"
         >
           <Input />

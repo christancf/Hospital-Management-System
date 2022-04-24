@@ -165,7 +165,7 @@ const PatientAdmittance = () => {
 	};
 
 	function disabledDate2(current) {
-		// Can not select days before today and today
+		// Can not select days after today and today
 		return current && current > moment().endOf('day');
 	  }
 
@@ -202,7 +202,7 @@ const PatientAdmittance = () => {
 			<Form.Item name="fullName" label="Full  Name" rules={[{ required: true }]} placeholder="Full Name">
 				<Input />
 			</Form.Item>
-			<Form.Item name="nic" label=" NIC" rules={[{ required: true }]} placeholder="NIC">
+			<Form.Item name="nic" label=" NIC" rules={[{ required: true, pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' , message: 'Enter valid NIC' }]} placeholder="NIC">
 				<Input />
 			</Form.Item>
 
