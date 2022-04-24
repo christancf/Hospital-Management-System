@@ -29,11 +29,11 @@ const dataSchema = new mongoose.Schema({
         required:false,
         type: String
     },
-    volume:{
-        volume:'1ml',
-        required:true,
-        type: String
-    }
+    //      volume:'1ml',
+    //     required:true,
+    //     type: String
+    // }volume:{
+   
     // status:{
     //     required:true,
     //     type:String
