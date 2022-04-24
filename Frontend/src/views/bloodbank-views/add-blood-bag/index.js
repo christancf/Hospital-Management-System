@@ -202,9 +202,7 @@ const AddBloodBag = () => {
         <Form.Item name="place" label="Place" placeholder="Place" >
           <Input />
         </Form.Item>
-        {/* <Form.Item label="Place" name="place" initialValue={json.place}>
-        <Input />
-      </Form.Item> */}
+
         <Form.Item name="bloodGroup" label="bloodGroup" rules={[{ required: true }]}>
           <Select
             labelInValue
