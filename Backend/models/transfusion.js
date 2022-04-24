@@ -5,11 +5,11 @@ const dataSchema = new mongoose.Schema({
         required:true,
         type:Number
     },
-    patientId: {
+    id: {
         required:true,
         type:Number
     },
-    patientName: {
+    name: {
         required:true,
         type:String
     },

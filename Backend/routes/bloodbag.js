@@ -186,7 +186,7 @@ router.post('/add-transfusion-details', function (req, res, next) {
 
   const transfusion = new transfusionModel({
     bagId:req.body.bagId,
-    id: req.body.patientId,
+    id: req.body.id,
    name: req.body.name,
     reason: req.body.reason,
     issueDate: req.body.issueDate,

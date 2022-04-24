@@ -186,7 +186,7 @@ const AddBloodTransfusion = () => {
 		}
 		function disabledDate2(current) {
 			// Can not select days before today and today
-			return current && current > moment().startOf('day');
+			return current && current > moment().endOf('day');
 		}
 
 
