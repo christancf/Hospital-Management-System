@@ -165,22 +165,12 @@ const BloodBags = () => {
 				key: 'action',
 				render: (text, record) => (
 					<span>
-						<a href={`../bloodbank/add-transfusion?bagId=${record.bagId}`}>View More {record.name}</a>
+						<a href={`../bloodbank/add-transfusion?bagId=${record.bagId}`}>Add Bag {record.name}</a>
 						<a href={`../bloodbank/update-details?bagId=${record.bagId}`}>Edit</a>
 						<Divider type="vertical" />
 						
 					</span>
 				),
-
-				// title: 'Action',
-				// dataIndex: '',
-				// render: (text, record) => (
-				// 	<span>
-				// 		<a>View More {record.name}</a>
-				// 		<Divider type="vertical" />
-				// 		<a href={`../frontchannelling/edit?appointmentId=${record._id}`}>Edit</a>
-				// 	</span>
-				// ),
 			},
 		];
 
