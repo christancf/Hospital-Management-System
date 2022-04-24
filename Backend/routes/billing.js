@@ -157,7 +157,7 @@ router.get('/patient', async (req, res, next) => {
 
 
   try {
-    const response = await patientModel.find({}).then((response) => {
+    const response = await patientModel.find({status:"true"}).then((response) => {
 
       res.status(200).json(
         {
@@ -298,6 +298,48 @@ router.get('/bills', async (req, res, next) => {
   try {
     const response = await billModel.find({
       patient_id: req.query.patient
+    }).then((response) => {
+
+      res.status(200).json(
+        {
+          succuss: true,
+          message: 'Retirval succussfull',
+          payload: response
+        }
+      );
+
+    }).catch((error) => {
+      res.status(400).json(
+        {
+          succuss: false,
+          message: error.message,
+          payload: {}
+        }
+      );
+
+    });
+
+
+  }
+  catch (error) {
+    res.status(400).json(
+      {
+        succuss: false,
+        message: error.message,
+        payload: {}
+      }
+    );
+  }
+
+});
+
+router.get('/all-bills', async (req, res, next) => {
+
+
+
+  try {
+    const response = await billModel.find({
+      status: 'pending'
     }).then((response) => {
 
       res.status(200).json(

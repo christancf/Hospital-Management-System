@@ -11,6 +11,14 @@ billingService.getBills = function (patientId){
   })
 }
 
+billingService.getAllBills = function (){
+
+  return fetch({
+    url: `/billing/all-bills`,
+    method: 'get'
+  })
+}
+
 billingService.getAllPatients = function (){
 
   return fetch({

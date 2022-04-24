@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, DatePicker, Cascader, Radio, Modal } from 'antd';
+import { Form, Input, Button, DatePicker, Cascader, Radio, Modal, Select } from 'antd';
 import moment from 'moment';
 import mortuaryService from 'services/MortuaryService';
+const { Option } = Select;
 
 const queryParams = new URLSearchParams(window.location.search);
 const id = queryParams.get('id');
@@ -10,6 +11,7 @@ const Home = () => {
     return (
         <div>
             <h1>Update Corpse Details</h1>
+            {/* <h2>Cabinet Number: {cabinet_number}</h2> */}
             <Demo />
         </div>
     )
@@ -48,7 +50,7 @@ function ShowModel(title, delay, innercontent, isSuccess) {
         const modal = Modal.success({
             title: title,
             content: `${innercontent}.This popup will be destroyed after ${delay} seconds.`,
-            onOk: () => { window.location = '.../home' }
+            onOk: () => { window.location = '../mortuary/info' }
         });
         const timer = setInterval(() => {
             delay -= 1;
@@ -62,7 +64,7 @@ function ShowModel(title, delay, innercontent, isSuccess) {
             clearInterval(timer);
 
             modal.destroy();
-            window.location = '.../home'
+            window.location = '../mortuary/info'
         }, delay * 1000);
     }
 
@@ -83,30 +85,80 @@ function ShowModel(title, delay, innercontent, isSuccess) {
         }, delay * 1000);
     }
 }
-
+// let cabinet_number;
 const Demo = () => {
+    const [form] = Form.useForm();
+
     const onFinish = values => {
+
+        
+        const payload = {
+            NIC: values.NIC,
+            name: values.name,
+            sex: values.sex,
+            address: values.address,
+            date_of_birth: moment(values.dob).valueOf(),
+            date_time_of_death: moment(values.dod).valueOf(),
+            cause_of_death: values.cod,
+            specifics_of_death: values.sod
+        }
+
+        mortuaryService.updateCorpse(id, payload).then((res) => {
+
+            if (res.succuss) {
+                ShowModel(
+                    "Successful !",
+                    3,
+                    "Your corpse modification successful",
+                    true
+                );
+                form.resetFields();
+
+            }
+            else {
+                ShowModel(
+                    "Unsuccessful !",
+                    3,
+                    "Your corpse modification failed",
+                    false
+                );
+            }
+
+
+
+
+        }).catch((error) => {
+
+            ShowModel(
+                "Unsuccessful !",
+                3,
+                "Your corpse modification failed",
+                false
+            );
+
+        })
+
 
     }
     const onFinishFailed = errorInfo => {
-        console.log('Failed:', errorInfo);
+        ShowModel(
+            "Unsuccessfull !",
+            3,
+            "Your corpse modification faild",
+            false
+        );
     };
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [data, setData] = useState();
 
     useEffect(() => {
-        mortuaryService.readForUpdate({id:id}).then((res) => {
-            const mydata = res.payload;
-            for (var i = 0; i < mydata.length; i++) {
-                mydata[i].date_of_birth = new Date(mydata[i].date_of_birth).toLocaleDateString()
-                mydata[i].date_time_of_death = new Date(mydata[i].date_time_of_death).toLocaleString()
-            }
+        mortuaryService.readForUpdate({ id: id }).then((res) => {
+            const mydata = res.payload[0];
             setData(mydata);
             setLoading(false);
-            console.log(data)
+
         }).catch((err) => {
-            console.log(err)
             setLoading(false);
             setError(true);
             setData();
@@ -115,7 +167,6 @@ const Demo = () => {
     if (loading) {
         return (
             <>
-                {/* <h2>Cabinet Number: {data.cabinet_number}</h2> */}
                 <p>Data Loading</p>
             </>
         )
@@ -123,127 +174,141 @@ const Demo = () => {
     else if (error) {
         return (
             <>
-                {/* <h2>Cabinet Number: {data.cabinet_number}</h2> */}
                 <p>Error</p>
             </>
         )
     }
     else {
+        console.log(data)
+        const speci_death = (data.specifics_of_death == undefined) ? "" : data.specifics_of_death;
+        form.setFieldsValue({
+            id: id,
+            nic: data.NIC,
+            name: data.name,
+            sex: data.sex,
+            address: data.address,
+            dob: moment(new Date(data.date_of_birth)),
+            dod: moment(new Date(data.date_time_of_death)),
+            cod: data.cause_of_death,
+            sod: speci_death
+        })
+        // console.log(data.date_of_birth)
+
+
         return (
             <Form
-				{...layout}
-				name="basic"
-				initialValues={{ remember: true }}
-				onFinish={onFinish}
-				onFinishFailed={onFinishFailed}
-			>
-				<Form.Item
-					label="CorpseID"
-					name="id"
-					initialValue={data}				
-				>
-					<Input placeholder={data} disabled/>
-				</Form.Item>
-				<Form.Item
-					label="NIC"
-					name="nic"
-					rules={[{ required: true, message: 'Please input the NIC!' }]}
-				>
-					<Input />
-				</Form.Item>
+                {...layout}
+                form={form}
+                name="basic"
+                initialValues={{ remember: true }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+            >
+                <Form.Item
+                    label="CorpseID"
+                    name="id"
+                    initialValue={data}
+                >
+                    <Input placeholder={data} disabled />
+                </Form.Item>
+                <Form.Item
+                    label="NIC"
+                    name="nic"
+                    rules={[{ required: true, message: 'Please input the NIC!' }]}
+                >
+                    <Input />
+                </Form.Item>
 
-				<Form.Item
-					label="Name"
-					name="name"
-					rules={[{ required: true, message: 'Please input the name!' }]}
-				>
-					<Input />
-				</Form.Item>
+                <Form.Item
+                    label="Name"
+                    name="name"
+                    rules={[{ required: true, message: 'Please input the name!' }]}
+                >
+                    <Input />
+                </Form.Item>
 
-				<Form.Item
-					label="Sex"
-					name="sex"
-					rules={[{ required: true, message: 'Please choose the Sex!' }]}
-				>
-					<Radio.Group>
-						<Radio value="male">Male</Radio>
-						<Radio value="female">Female</Radio>
-					</Radio.Group>
-				</Form.Item>
+                <Form.Item
+                    label="Sex"
+                    name="sex"
+                    rules={[{ required: true, message: 'Please choose the Sex!' }]}
+                >
+                    <Radio.Group>
+                        <Radio value="male">Male</Radio>
+                        <Radio value="female">Female</Radio>
+                    </Radio.Group>
+                </Form.Item>
 
-				<Form.Item
-					label="Address"
-					name="address"
-					rules={[{ required: true, message: 'Please input the Address!' }]}
-				>
-					<Input.TextArea />
-				</Form.Item>
+                <Form.Item
+                    label="Address"
+                    name="address"
+                    rules={[{ required: true, message: 'Please input the Address!' }]}
+                >
+                    <Input.TextArea />
+                </Form.Item>
 
-				<Form.Item
-					label="Date of Birth"
-					name="dob"
-					rules={[{ required: true, message: 'Please input the Date of Birth!' }]}
-				>
-					<DatePicker
-						placeholder='Select Date'
-						format="YYYY-MM-DD"
-						disabledDate={disabledDate}
-					/>
-				</Form.Item>
+                <Form.Item
+                    label="Date of Birth"
+                    name="dob"
+                    rules={[{ required: true, message: 'Please input the Date of Birth!' }]}
+                >
+                    <DatePicker
+                        // defaultValue={moment('2015/01/01', dateFormat)}
+                        placeholder='Select Date'
+                        format="YYYY-MM-DD"
+                        disabledDate={disabledDate}
+                    />
+                </Form.Item>
 
-				<Form.Item
-					label="Date & Time of Death"
-					name="dod"
-					rules={[{ required: true, message: 'Please input the Date & Time of Death!' }]}
-				>
-					<DatePicker
-						placeholder='Select Date & Time'
-						format="YYYY-MM-DD HH:mm:ss"
-						disabledDate={disabledDate}
-						disabledTime={disabledDateTime}
-						showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
-					/>
-				</Form.Item>
+                <Form.Item
+                    label="Date & Time of Death"
+                    name="dod"
+                    rules={[{ required: true, message: 'Please input the Date & Time of Death!' }]}
+                >
+                    <DatePicker
+                        placeholder='Select Date & Time'
+                        format="YYYY-MM-DD HH:mm:ss"
+                        disabledDate={disabledDate}
+                        disabledTime={disabledDateTime}
+                        showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
+                    />
+                </Form.Item>
 
-				<Form.Item
-					label="Cause of Death"
-					name="cod"
-					rules={[{ required: false }]}
-				>
-					<Cascader options={causeOfDeath} placeholder="Select Cause of Death" />
-				</Form.Item>
+                <Form.Item
+                    label="Cause of Death"
+                    name="cod"
+                    rules={[{ required: false }]}
+                >
+                    <Select
 
-				<Form.Item
-					label="Specifics about Death"
-					name="sod"
-					rules={[{ required: false }]}
-				>
-					<Input.TextArea />
-				</Form.Item>
+                        placeholder="Select Cause of Death"
+                        filterOption={false}
+                        style={{ width: '100%' }}
+                    >
+                        {causeOfDeath}
+                    </Select>
+                </Form.Item>
 
-				<Form.Item {...tailLayout}>
-					<Button type="primary" htmlType="submit">
-						Submit
-					</Button>
-				</Form.Item>
-			</Form>
+                <Form.Item
+                    label="Specifics about Death"
+                    name="sod"
+                    rules={[{ required: false }]}
+                >
+                    <Input.TextArea />
+                </Form.Item>
+
+                <Form.Item {...tailLayout}>
+                    <Button type="primary" htmlType="submit">
+                        Submit
+                    </Button>
+                </Form.Item>
+            </Form>
         )
     }
 }
-const causeOfDeath = [{
-	value: 'Natural',
-	label: 'Natural'
-},
-{
-	value: 'Accident',
-	label: 'Accident'
-},
-{
-	value: 'Homicide',
-	label: 'Homicide'
-},
-{
-	value: 'Suicide',
-	label: 'Suicide'
-}]
+const causeOfDeath = [
+    <Option key="Natural">Natural</Option>,
+    <Option key="Accident">Accident</Option>,
+    <Option key="Homicide">Homicide</Option>,
+    <Option key="Suicide">Suicide</Option>
+]
 export default Home

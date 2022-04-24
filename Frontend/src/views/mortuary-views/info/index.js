@@ -48,9 +48,11 @@ const columns = [
     render: (text, record) => (
       
       <span>
-        <Button type='primary' href={`/mortuary/update?id=${record.id}`}>Edit</Button>
+        <Button type='link' href={`/mortuary/update?id=${record.id}`}>Edit</Button>
         <Divider type="vertical" />
         <a>Release</a>
+        <Divider type="vertical" />
+        <Button type='link'>More Info</Button>
       </span>
     ),
   }

@@ -1,6 +1,7 @@
 import { Form, Input, InputNumber, Button, Select, DatePicker, Card, Spin, Modal } from 'antd';
 import { useState, useEffect } from 'react';
 import channellingService from 'services/FrontlineChannellingService';
+import moment from 'moment';
 const { Option } = Select;
 
 
@@ -162,6 +163,14 @@ const AddAppointment = () => {
 				value: item.staffID
 			}
 		});
+		function disabledDate(current) {
+			// Can not select days before today and today
+			return current && current < moment().endOf('day');
+		  }
+		  function disabledDate2(current) {
+			// Can not select days before today and today
+			return current && current > moment().endOf('day');
+		  }
 		console.log(options)
 		return (
 			<>
@@ -171,14 +180,14 @@ const AddAppointment = () => {
 
 					<Form {...layout} name="Add Appointment" form={form} onFinish={onFinish} validateMessages={validateMessages}>
 
-						<Form.Item name="NIC" label="Patient NIC" rules={[{ required: true }]} placeholder="Patient NIC">
+						<Form.Item name="NIC" label="Patient NIC" rules={[{ required: true, pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' , message: 'Enter valid NIC'}]} placeholder="Patient NIC">
 							<Input />
 						</Form.Item>
 						<Form.Item name="name" label="Patient Name" rules={[{ required: true }]} placeholder="Patient Name">
 							<Input />
 						</Form.Item>
 						<Form.Item name="birthday" label="Birthday" rules={[{ required: true }]} placeholder="Patient Birthday">
-							<DatePicker />
+							<DatePicker  disabledDate={disabledDate2}/>
 						</Form.Item>
 						<Form.Item name="contact_no" label="Contact No" rules={[{ required: true }]} placeholder="Contact Number">
 							<Input />
@@ -200,7 +209,7 @@ const AddAppointment = () => {
 							</Select>
 						</Form.Item>
 						<Form.Item name="date" label="Appointment Date" rules={[{ required: true }]}>
-							<DatePicker />
+							<DatePicker  disabledDate={disabledDate}  />
 						</Form.Item>
 						<Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
 							<Button type="primary" htmlType="submit">

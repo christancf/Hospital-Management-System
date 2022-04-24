@@ -2,6 +2,9 @@ var express = require('express');
 const bloodbagModel = require('../models/bloodbag');
 var router = express.Router();
 const auth = require("../middleware/auth");
+const patientModel = require('../models/patient');
+const transfusionModel = require('../models/transfusion');
+var router = express.Router();
 
 
 //add blood bag details
@@ -52,7 +55,7 @@ router.get('/details/read', async (req, res, next) => {
         payload: response
       })
 
-    }).catch((errr)=> {
+    }).catch((error)=> {
       res.status(400).json({
         succuss: true,
         message: error.message
@@ -90,7 +93,7 @@ router.put('/update-details', (req, res, next) => {
       "donationNumber":req.body.bloodbag.donationNumber, 
       "donateDate":req.body.bloodbag.donateDate,
       "place":req.body.bloodbag.place,
-      "bloodGroup":req.body.bloodbag.bloodGroup.value}})
+      "bloodGroup":req.body.bloodbag.bloodGroup}})
     .then((result) => {
       res.json({
           success:true,
@@ -120,7 +123,7 @@ router.delete('/bag-delete/:id', (req, res) => {
 
 });
 
-//get ID
+//get bagID
 router.get('/bagId', function(req,res,next){
   bloodbagModel.find().sort({bagId : -1}).limit(1)
   .then((id) => {
@@ -135,5 +138,84 @@ router.get('/bagId', function(req,res,next){
 
 });
 
+
+//get patient ID
+router.get('/patient?:id', async (req, res, next) => {
+  // patientModel.findOne({patientId: req.query.patientId, designation: "patient"})
+  // .then((data) => res.json(data))
+  // .catch((e) => console.log(`Error: ${ e }`))
+
+  try {
+    patientModel.findOne({patientId: req.query.id, designation: "patient",status:'true'}).then((data) => {
+
+      res.status(200).json(
+        {
+          succuss: true,
+          message: 'Retirval succussfull',
+          payload: data
+        }
+      );
+
+    }).catch((e) => {console.log(`Error: ${ e }`)
+      // res.status(400).json(
+      //   {
+      //     succuss: false,
+      //     message: error.message,
+      //     payload: {}
+      //   }
+      // );
+
+    });
+
+
+  }
+  catch (e) {
+    res.status(400).json(
+      {
+        succuss: false,
+        message: error.message,
+        payload: {}
+      }
+    );
+  }
+
+});
+
+//add fransfusion
+router.post('/add-transfusion-details', function (req, res, next) {
+
+  const transfusion = new transfusionModel({
+    bagId:req.body.bagId,
+    id: req.body.patientId,
+   name: req.body.name,
+    reason: req.body.reason,
+    issueDate: req.body.issueDate,
+    bloodGroup: req.body.bloodGroup,
+    pbloodGroup: req.body.pbloodGroup,
+    // valume:1,
+    // status: req.body.status
+  });
+
+  try {
+
+    transfusion.save();
+    res.status(200).json(
+      {
+        succuss: true,
+        message: 'Insertion succussfull',
+        payload:{}
+      }
+    );
+
+  }
+  catch (error) {
+    res.status(400).json(
+      {
+        message: 'Cannot add data right now!'
+      }
+    );
+  }
+
+});
 
 module.exports = router;
