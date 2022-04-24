@@ -333,6 +333,48 @@ router.get('/bills', async (req, res, next) => {
 
 });
 
+router.get('/all-bills', async (req, res, next) => {
+
+
+
+  try {
+    const response = await billModel.find({
+      status: 'pending'
+    }).then((response) => {
+
+      res.status(200).json(
+        {
+          succuss: true,
+          message: 'Retirval succussfull',
+          payload: response
+        }
+      );
+
+    }).catch((error) => {
+      res.status(400).json(
+        {
+          succuss: false,
+          message: error.message,
+          payload: {}
+        }
+      );
+
+    });
+
+
+  }
+  catch (error) {
+    res.status(400).json(
+      {
+        succuss: false,
+        message: error.message,
+        payload: {}
+      }
+    );
+  }
+
+});
+
 router.post('/transaction/add', async (req, res, next) => {
 
 
