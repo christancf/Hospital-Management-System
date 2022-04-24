@@ -80,6 +80,7 @@ const Home = () => {
       setTimeout(() => {
         clearInterval(timer);
         modal.destroy();
+        window.location.reload(false)
       }, delay * 1000);
     }
 
