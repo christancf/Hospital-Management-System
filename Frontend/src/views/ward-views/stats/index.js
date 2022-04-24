@@ -1,9 +1,10 @@
 import React from 'react'
+import wardService from 'services/WardService';
 
 const Home = () => {
 	return (
 		<div>
-			Staff Management : Home Component
+			Stats!
 		</div>
 	)
 }

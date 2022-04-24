@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const dataSchema = new mongoose.Schema({
     staffID: {
         required: true,
-        type: String
+        type: Number
     },
     checkIn: {
         required: false,

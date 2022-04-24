@@ -7,7 +7,6 @@ export const StaffViews = () => {
   return (
     <Suspense fallback={<Loading cover="content"/>}>
       <Switch>
-        <Route path={`${STAFF_PREFIX_PATH}/home`} component={lazy(() => import(`./home`))} />
         <Route path={`${STAFF_PREFIX_PATH}/add-staff-member`} component={lazy(() => import(`./add-staff-member`))} />
         <Route path={`${STAFF_PREFIX_PATH}/update-staff-details`} component={lazy(() => import(`./update-staff-details`))} />
         <Route path={`${STAFF_PREFIX_PATH}/display-staff-details`} component={lazy(() => import(`./display-staff-details`))} />
@@ -15,7 +14,8 @@ export const StaffViews = () => {
         <Route path={`${STAFF_PREFIX_PATH}/staff-resignation`} component={lazy(() => import(`./staff-resignation`))} />
         <Route path={`${STAFF_PREFIX_PATH}/staff-salary-bonuses`} component={lazy(() => import(`./staff-salary-bonuses`))} />
         <Route path={`${STAFF_PREFIX_PATH}/calculate-total-salary`} component={lazy(() => import(`./calculate-total-salary`))} />
-        <Redirect from={`${STAFF_PREFIX_PATH}`} to={`${STAFF_PREFIX_PATH}/home`} />
+        <Route path={`${STAFF_PREFIX_PATH}/staff-reports`} component={lazy(() => import(`./staff-reports`))} />
+        <Redirect from={`${STAFF_PREFIX_PATH}`} to={`${STAFF_PREFIX_PATH}/display-staff-details`} />
       </Switch>
     </Suspense>
   )

@@ -18,7 +18,7 @@ router.get('/id', function(req,res,next){
         payload:id[0].patientId+1
     })
 }).catch((e) => {
-    res.status(400).json({success:false,message:error.message,payload:{}})
+    res.status(400).json({success:false,message:e.message,payload:{}})
 })
 
 });
@@ -52,20 +52,20 @@ router.post('/admittance' , function(req,res,next){
 });
 
 router.get('/read', function(req,res,next){
-    patientModel.find({id:req.query.id})
+    patientModel.find({patientId:req.query.id})
     .then((patientDetails) => {
         res.status(200).json({
             success:true,
             message:'inserted sucessful',
             payload:patientDetails[0]
         })
-    }).catch((e) => {
+    }).catch((error) => {
         res.status(400).json({success:false,message:error.message,payload:{}})
     })
 });
 
 router.delete('/checkout', (req,res,next) => {
-    patientModel.updateOne({id:req.query.id},{$set:{"status":false}})
+    patientModel.updateOne({patientId:req.query.id},{$set:{"status":false}})
     .then((result) => {
         res.json({
             success:true,
@@ -105,12 +105,12 @@ router.put('/update', (req, res, next) => {
 
 
     try {
-      const response = await patientModel.find({}).then((response) => {
-  
+      const response = await patientModel.find({status:"true"},).then((response) => {
+        
         res.status(200).json(
           {
             succuss: true,
-            message: 'Retirval succussfull',
+            message: 'Retrival succussfull',
             payload: response
           }
         );

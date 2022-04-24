@@ -13,6 +13,13 @@ patientManagementService.admittance = function (jsonbody){
   })
 }
 
+patientManagementService.id = function (){
+  return fetch({
+    url:'/patient/id',
+    method:'get'
+  })
+}
+
 patientManagementService.update = function (jsonbody){
 
   return fetch({

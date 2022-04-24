@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, DatePicker, Cascader, Radio, Modal } from 'antd';
 import moment from 'moment';
 import mortuaryService from 'services/MortuaryService';
@@ -52,7 +52,7 @@ function ShowModel(title, delay, innercontent, isSuccess) {
 		const modal = Modal.success({
 			title: title,
 			content: `${innercontent}.This popup will be destroyed after ${delay} seconds.`,
-			onOk: () => {window.location = '.../home'}
+			onOk: () => { window.location = '../mortuary/home' }
 		});
 		const timer = setInterval(() => {
 			delay -= 1;
@@ -61,13 +61,13 @@ function ShowModel(title, delay, innercontent, isSuccess) {
 			});
 
 		}, 1000);
-		
+
 		setTimeout(() => {
 			clearInterval(timer);
-			
+
 			modal.destroy();
-			window.location = '.../home'
-		}, delay * 1000);
+			window.location = '../mortuary/home'
+		}, delay * 1000)
 	}
 
 	else {
@@ -90,7 +90,7 @@ function ShowModel(title, delay, innercontent, isSuccess) {
 const Demo = () => {
 
 	const onFinish = values => {
-		console.log(values.cod);
+
 		if (values.cod == undefined) {
 			values.cod = null;
 		}
@@ -98,6 +98,7 @@ const Demo = () => {
 			values.sod = null;
 		}
 		const corpseData = {
+			id: parseInt(values.id),
 			cabinet_number: cabinetNo,
 			NIC: values.nic,
 			name: values.name,
@@ -105,7 +106,7 @@ const Demo = () => {
 			address: values.address,
 			date_of_birth: moment(values.dob).valueOf(),
 			date_time_of_death: moment(values.dod).valueOf(),
-			cause_of_death: (values.cod == null) ?  values.cod : values.cod[0],
+			cause_of_death: (values.cod == null) ? values.cod : values.cod[0],
 			specifics_of_death: values.sod
 		}
 		mortuaryService.addCorpse(corpseData).then((value) => {
@@ -143,98 +144,140 @@ const Demo = () => {
 		console.log('Failed:', errorInfo);
 	};
 
-	return (
-		<Form
-			{...layout}
-			name="basic"
-			initialValues={{ remember: true }}
-			onFinish={onFinish}
-			onFinishFailed={onFinishFailed}
-		>
-			<Form.Item
-				label="NIC"
-				name="nic"
-				rules={[{ required: true, message: 'Please input the NIC!' }]}
-			>
-				<Input />
-			</Form.Item>
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false);
+	const [data, setData] = useState();
 
-			<Form.Item
-				label="Name"
-				name="name"
-				rules={[{ required: true, message: 'Please input the name!' }]}
-			>
-				<Input />
-			</Form.Item>
+	useEffect(() => {
+		mortuaryService.getId().then((res) => {
 
-			<Form.Item
-				label="Sex"
-				name="sex"
-				rules={[{ required: true, message: 'Please choose the Sex!' }]}
-			>
-				<Radio.Group>
-					<Radio value="male">Male</Radio>
-					<Radio value="female">Female</Radio>
-				</Radio.Group>
-			</Form.Item>
+			setData(res.payload);
+			setLoading(false);
 
-			<Form.Item
-				label="Address"
-				name="address"
-				rules={[{ required: true, message: 'Please input the Address!' }]}
-			>
-				<Input.TextArea />
-			</Form.Item>
+		}).catch((err) => {
+			console.log(error)
+			setLoading(false);
+			setError(true);
+			setData();
+		});
+	}, []);
+	if (loading) {
+		return (
+			<>
+				<p>Form Loading</p>
+			</>
+		)
+	}
+	else if (error) {
+		return (
+			<>
+				<p>Error</p>
+			</>
+		)
+	}
+	else {
 
-			<Form.Item
-				label="Date of Birth"
-				name="dob"
-				rules={[{ required: true, message: 'Please input the Date of Birth!' }]}
+		return (
+			<Form
+				{...layout}
+				name="basic"
+				initialValues={{ remember: true }}
+				onFinish={onFinish}
+				onFinishFailed={onFinishFailed}
 			>
-				<DatePicker
-					placeholder='Select Date'
-					format="YYYY-MM-DD"
-					disabledDate={disabledDate}
-				/>
-			</Form.Item>
+				<Form.Item
+					// label="CorpseID"
+					name="id"
+					initialValue={data}				
+				>
+					{/* <Input placeholder={data} disabled/> */}
+				</Form.Item>
+				<Form.Item
+					label="NIC"
+					name="nic"
+					rules={[{ required: true, message: 'Please input the NIC!' }]}
+				>
+					<Input />
+				</Form.Item>
 
-			<Form.Item
-				label="Date & Time of Death"
-				name="dod"
-				rules={[{ required: true, message: 'Please input the Date & Time of Death!' }]}
-			>
-				<DatePicker
-					placeholder='Select Date & Time'
-					format="YYYY-MM-DD HH:mm:ss"
-					disabledDate={disabledDate}
-					disabledTime={disabledDateTime}
-					showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
-				/>
-			</Form.Item>
+				<Form.Item
+					label="Name"
+					name="name"
+					rules={[{ required: true, message: 'Please input the name!' }]}
+				>
+					<Input />
+				</Form.Item>
 
-			<Form.Item
-				label="Cause of Death"
-				name="cod"
-				rules={[{ required: false }]}
-			>
-				<Cascader options={causeOfDeath} placeholder="Select Cause of Death" />
-			</Form.Item>
+				<Form.Item
+					label="Sex"
+					name="sex"
+					rules={[{ required: true, message: 'Please choose the Sex!' }]}
+				>
+					<Radio.Group>
+						<Radio value="male">Male</Radio>
+						<Radio value="female">Female</Radio>
+					</Radio.Group>
+				</Form.Item>
 
-			<Form.Item
-				label="Specifics about Death"
-				name="sod"
-				rules={[{ required: false }]}
-			>
-				<Input.TextArea />
-			</Form.Item>
+				<Form.Item
+					label="Address"
+					name="address"
+					rules={[{ required: true, message: 'Please input the Address!' }]}
+				>
+					<Input.TextArea />
+				</Form.Item>
 
-			<Form.Item {...tailLayout}>
-				<Button type="primary" htmlType="submit">
-					Submit
-				</Button>
-			</Form.Item>
-		</Form>
-	);
+				<Form.Item
+					label="Date of Birth"
+					name="dob"
+					rules={[{ required: true, message: 'Please input the Date of Birth!' }]}
+				>
+					<DatePicker
+						placeholder='Select Date'
+						format="YYYY-MM-DD"
+						disabledDate={disabledDate}
+					/>
+				</Form.Item>
+
+				<Form.Item
+					label="Date & Time of Death"
+					name="dod"
+					rules={[{ required: true, message: 'Please input the Date & Time of Death!' }]}
+				>
+					<DatePicker
+						placeholder='Select Date & Time'
+						format="YYYY-MM-DD HH:mm:ss"
+						disabledDate={disabledDate}
+						disabledTime={disabledDateTime}
+						showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
+					/>
+				</Form.Item>
+
+				<Form.Item
+					label="Cause of Death"
+					name="cod"
+					rules={[{ required: false }]}
+				>
+					<Cascader options={causeOfDeath} placeholder="Select Cause of Death" />
+				</Form.Item>
+
+				<Form.Item
+					label="Specifics about Death"
+					name="sod"
+					rules={[{ required: false }]}
+				>
+					<Input.TextArea />
+				</Form.Item>
+
+				<Form.Item {...tailLayout}>
+					<Button type="primary" htmlType="submit">
+						Submit
+					</Button>
+				</Form.Item>
+			</Form>
+		);
+	}
+
 }
 const causeOfDeath = [{
 	value: 'Natural',
@@ -253,3 +296,5 @@ const causeOfDeath = [{
 	label: 'Suicide'
 }]
 export default Home
+
+

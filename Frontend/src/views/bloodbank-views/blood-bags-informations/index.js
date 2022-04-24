@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import { Table, Typography, Spin, Tag,Divider } from 'antd';
+import { Table, Typography, Spin, Button, Divider, Tag } from 'antd';
 import bloodBankService from 'services/BloodBankService'
+import moment from 'moment';
 
 const { Title } = Typography
 
 const BloodBags = () => {
+
+	function toTimestamp(strDate) {
+		var datum = Date.parse(strDate);
+		return datum / 1000;
+	}
 
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
@@ -45,21 +51,30 @@ const BloodBags = () => {
 
 	}
 	else {
+		console.log(data);
+		for (var i = 0; i < data.length; i++) {
+			data[i].donateDate = new Date(data[i].donateDate * 1000).toLocaleDateString()
+
+		}
+
 		const bloodBags = data.map((response) => {
+
+			console.log(response)
 			return {
+				bagId: response.bagId,
 				donorName: response.donorName,
-				// donorNIC: response.donorNIC,
+				donorNIC: response.donorNIC,
 				donationNumber: response.donationNumber,
 				donateDate: response.donateDate,
 				place: response.place,
-				bloodGroup: response.bloodGroup
+				tags: response.bloodGroup
 			}
 		})
 
 		const columns = [
 			{
 				title: 'Bag ID',
-				dataIndex: 'bagID',
+				dataIndex: 'bagId',
 			},
 			{
 				title: 'Donors Name',
@@ -84,8 +99,8 @@ const BloodBags = () => {
 			},
 			{
 				title: 'Blood Group',
-				dataIndex: 'bloodGroup',
-				key:'bloodGroup',
+				dataIndex: 'tags',
+				key: 'tags',
 				filters: [{ text: 'A positive(A+)', value: 'A+' },
 				{ text: 'A negative(A-)', value: 'A-' },
 				{ text: 'B positive(B+)', value: 'B+' },
@@ -94,26 +109,61 @@ const BloodBags = () => {
 				{ text: 'O negative(O-)', value: 'O-' },
 				{ text: 'AB positive(AB+)', value: 'AB+' },
 				{ text: 'AB-">AB negative(AB-)', value: 'AB-' },],
-				onFilter: (value, record) => record.bloodGroup.includes(value),
+				onFilter: (value, record) => record.tags.includes(value),
 
+				render: tags => (
+					<span>
+						{tags == "A+" &&
+							<Tag color='volcano' key={tags}>
+								{tags.toUpperCase()}
+							</Tag>
+						}
+						{tags == "O+" &&
+							<Tag color='green' key={tags}>
+								{tags.toUpperCase()}
+							</Tag>
+
+						}
+						{['A-', 'B+', 'B-', 'O-', 'AB+', 'AB-'].includes(tags) &&
+							<Tag color='geekblue' key={tags}>
+								{tags.toUpperCase()}
+							</Tag>
+
+						}
+					</span>
+				),
 			},
 			{
 				title: 'Action',
-				dataIndex: '',
+				key: 'action',
 				render: (text, record) => (
 					<span>
-					  <a>View More {record.name}</a>
-					  <Divider type="vertical" />
-					  <a>Edit</a>
+						<a>View More {record.name}</a>
+						<a href={`../bloodbank/update-details?bagId=${record.bagId}`}>Edit</a>
+						<Divider type="vertical" />
+						
 					</span>
-				  ),
+				),
+
+				// title: 'Action',
+				// dataIndex: '',
+				// render: (text, record) => (
+				// 	<span>
+				// 		<a>View More {record.name}</a>
+				// 		<Divider type="vertical" />
+				// 		<a href={`../frontchannelling/edit?appointmentId=${record._id}`}>Edit</a>
+				// 	</span>
+				// ),
 			},
 		];
 
 		return (
 			<div>
 				<Title>Blood Bags Details</Title>
+				<Button type="primary" href='/bloodbank/add-details'>Add Blood Bag</Button>
+				<br></br>
 				<Table columns={columns} dataSource={bloodBags} />
+
 			</div>
 		)
 
@@ -123,47 +173,4 @@ const BloodBags = () => {
 }
 
 export default BloodBags
-
-
-/*this.state={
-	bags:[]
-};
-
-export default function BloodBags(){
-
-	const[bloodbags,setBloodBags] = useState([]);
-
-	useEffect(()=>{
-		function getBloodBags(){
-			bloodBankService.readBloodDetails().then(function (res){
-				console.log(res)
-				bloodbags = setBloodBags(res.details);
-
-
-					<div>
-						<p>p</p>
-					</div>
-
-			}).catch(function (error){
-				console.log(error)
-			});
-
-
-		}
-		getBloodBags();
-	},[])
-
-	return(
-		<div>
-
-				<div>
-					<p>{}</p>
-				</div>
-
-		</div>
-	)
-}
-*/
-
-// axios.get
 
