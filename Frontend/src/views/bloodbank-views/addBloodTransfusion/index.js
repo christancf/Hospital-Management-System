@@ -144,7 +144,6 @@ const AddBloodTransfusion = () => {
 
 		bloodBankService.getPatientDetails(patientId)
 			.then((data) => {
-				// console.log(patientId)
 				console.log(data)
 				if (data.payload != null) {
 					form.setFieldsValue({
