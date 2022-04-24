@@ -175,9 +175,14 @@ const AddBloodBag = () => {
 
   }
   else {
+
+    function disabledDate2(current) {
+			// Can not select days before today and today
+			return current && current > moment().endOf('day');
+		  }
     return (
 
-      <Form {...layout} name="addBloodBag" onFinish={onFinish} form={form} validateMessages={validateMessages}>
+      <Form {...layout} name="addBloodBag" onFinish={onFinish} form={form} >
         <Title>Add Blood Bag</Title><br></br>
         <Form.Item name="bagId" label="Bag Id" initialValue={data} placeholder="Bag Id" >
           <Input disabled />
@@ -185,14 +190,14 @@ const AddBloodBag = () => {
         <Form.Item name="donorName" label="Donor's Name" placeholder="Donor's Name" >
           <Input />
         </Form.Item>
-        <Form.Item name="donorNIC" label=" Donor's NIC" rules={[{ required: true }]} placeholder="Donor's NIC">
+        <Form.Item name="donorNIC" label=" Donor's NIC" rules={[{ required: true,pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' , message: 'Enter valid NIC' }]} placeholder="Donor's NIC">
           <Input />
         </Form.Item>
-        <Form.Item label="Donation Number " name="donationNumber" rules={[{ required: true }]} placeholder="Please input Donation Number!">
+        <Form.Item label="Donation Number " name="donationNumber" rules={[{ required: true,message:'Enter the donation number' }]} placeholder="Please input Donation Number!">
           <Input />
         </Form.Item>
         <Form.Item label="Donated Date & Time" name="donateDate">
-          <DatePicker />
+          <DatePicker disabledDate={disabledDate2}/>
         </Form.Item>
         <Form.Item name="place" label="Place" placeholder="Place" >
           <Input />
@@ -222,8 +227,6 @@ const AddBloodBag = () => {
           <Button type="primary" htmlType="submit">
             Add Blood Bag
           </Button>
-
-
         </Form.Item>
       </Form>
     );

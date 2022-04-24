@@ -11,6 +11,7 @@ export const BloodBankView = () => {
         <Route path={`${BLOODBANK_PREFIX_PATH}/add-details`} component={lazy(() => import(`./add-blood-bag`))} />
         <Route path={`${BLOODBANK_PREFIX_PATH}/update-details`} component={lazy(() => import(`./update-blood-bag`))} />
         <Route path={`${BLOODBANK_PREFIX_PATH}/bags-informations`} component={lazy(() => import(`./blood-bags-informations`))} />
+        <Route path={`${BLOODBANK_PREFIX_PATH}/add-transfusion`} component={lazy(() => import(`./addBloodTransfusion`))} />
         
         <Redirect from={`${BLOODBANK_PREFIX_PATH}`} to={`${BLOODBANK_PREFIX_PATH}/home`} />
         

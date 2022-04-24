@@ -108,24 +108,51 @@ const BloodBags = () => {
 				{ text: 'O positive(O+)', value: 'O+' },
 				{ text: 'O negative(O-)', value: 'O-' },
 				{ text: 'AB positive(AB+)', value: 'AB+' },
-				{ text: 'AB-">AB negative(AB-)', value: 'AB-' },],
-				onFilter: (value, record) => record.tags.includes(value),
+				{ text: 'AB negative(AB-)', value: 'AB-' },],
+				onFilter: (value, record) => record.tags==value,
 
 				render: tags => (
 					<span>
 						{tags == "A+" &&
-							<Tag color='volcano' key={tags}>
+							<Tag color='purple' key={tags}>
+								{tags.toUpperCase()}
+							</Tag>
+						}
+						{tags == "A-" &&
+							<Tag color='pink' key={tags}>
+								{tags.toUpperCase()}
+							</Tag>
+						}
+						{tags == "B+" &&
+							<Tag color='gold' key={tags}>
+								{tags.toUpperCase()}
+							</Tag>
+						}
+						{tags == "B-" &&
+							<Tag color='orange' key={tags}>
 								{tags.toUpperCase()}
 							</Tag>
 						}
 						{tags == "O+" &&
+							<Tag color='blue' key={tags}>
+								{tags.toUpperCase()}
+							</Tag>
+
+						}
+						{tags == "O-" &&
+							<Tag color='geekblue' key={tags}>
+								{tags.toUpperCase()}
+							</Tag>
+
+						}
+						{tags == "AB+" &&
 							<Tag color='green' key={tags}>
 								{tags.toUpperCase()}
 							</Tag>
 
 						}
-						{['A-', 'B+', 'B-', 'O-', 'AB+', 'AB-'].includes(tags) &&
-							<Tag color='geekblue' key={tags}>
+						{tags == "AB-" &&
+							<Tag color='lime' key={tags}>
 								{tags.toUpperCase()}
 							</Tag>
 
@@ -138,7 +165,7 @@ const BloodBags = () => {
 				key: 'action',
 				render: (text, record) => (
 					<span>
-						<a>View More {record.name}</a>
+						<a href={`../bloodbank/add-transfusion?bagId=${record.bagId}`}>View More {record.name}</a>
 						<a href={`../bloodbank/update-details?bagId=${record.bagId}`}>Edit</a>
 						<Divider type="vertical" />
 						

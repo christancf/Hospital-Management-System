@@ -54,4 +54,22 @@ bloodBankService.bagId = function (){
   })
 }
 
+bloodBankService.getPatientDetails= function (patientId){
+
+  return fetch({
+    url: `/bloodbag/patient?id=`+patientId,
+    method: 'get'
+  })
+}
+
+bloodBankService.addTransfusion = function (jsonbody){
+
+  return fetch({
+    url: '/bloodbag/add-transfusion-details',
+    method: 'post',
+    data: jsonbody
+    
+  })
+}
+
 export default bloodBankService
