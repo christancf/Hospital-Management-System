@@ -157,7 +157,7 @@ router.get('/patient', async (req, res, next) => {
 
 
   try {
-    const response = await patientModel.find({}).then((response) => {
+    const response = await patientModel.find({status:"true"}).then((response) => {
 
       res.status(200).json(
         {
