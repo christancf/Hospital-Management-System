@@ -55,29 +55,30 @@ function ShowModel(title, delay, innercontent, isSuccess) {
 	}
 }
 
-const Additem = () => {
+const addInvenotryItem = () => {
 	const [form] = Form.useForm();
 
 
 
 	const onFinish = values => {
-		const id= values.id;
+		const batch_id= values.batch_id;
+		const item_id = values.item_id;
 		const item_name = values.item_name;
-		const description = values.description;
-		const manufacturer = values.manufacturer;
-		const category = values.category;
-		const unit_price = values.unit_price;
-		const total_quantity = values.total_quantity;
+		const quantity = values.quantity;
+		const manufacture_date = values.manufacture_date;
+		const expire_date = values.expire_date;
+		const status = values.status;
 
-		inventoryService.additem(
+		inventoryService.addInvenotryItem(
 			{
-				id: id,
+				batch_id:batch_id,
+				item_id:item_id,
 				item_name: item_name,
-				description: description,
-				manufacturer: manufacturer,
-				category: category,
+				quantity: quantity,
+				manufacture_date: manufacture_date,
+				expire_date: expire_date,
 				unit_price: unit_price,
-				total_quantity: total_quantity
+				status: status,
 			}).then((value) => {
 
 
@@ -85,14 +86,14 @@ const Additem = () => {
 					ShowModel(
 						"Successful !",
 						4,
-						"A new item was added",
+						"A new batch was added",
 						true
 					);
 				} else {
 					ShowModel(
 						"Unsuccessful !",
 						4,
-						"New item was not added, please try again",
+						"New batch was not added, please try again",
 						false
 					);
 				}
@@ -101,7 +102,7 @@ const Additem = () => {
 				ShowModel(
 					"Unsccessfull !",
 					4,
-					"New item was not added, please try again",
+					"New batch was not added, please try again",
 					false
 				);
 
@@ -157,7 +158,7 @@ const Additem = () => {
 
 					//label="id"
 
-					name="id"
+					name="batch_id"
 
 					initialValue={data}
 
