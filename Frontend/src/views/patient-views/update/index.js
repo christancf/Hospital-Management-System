@@ -130,6 +130,7 @@ const PatientAdmittance = () => {
       const modal = Modal.success({
         title: title,
         content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+        onOk:() => {window.location.href = `../patient/update?patient`}
       });
       const timer = setInterval(() => {
         delay -= 1;
@@ -140,7 +141,7 @@ const PatientAdmittance = () => {
       setTimeout(() => {
         clearInterval(timer);
         modal.destroy();
-		window.location.href = `../patient/update?patient`
+		    window.location.href = `../patient/update?patient`
         
       }, delay * 1000);
     } else {
@@ -299,7 +300,7 @@ const PatientAdmittance = () => {
           name="nic"
           initialValue={data.nic}
           label=" NIC"
-          rules={[{ required: true }]}
+          rules={[{ required: true, pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' , message: 'Enter valid NIC' }]}
           placeholder="NIC"
         >
           <Input />
