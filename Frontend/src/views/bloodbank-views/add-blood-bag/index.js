@@ -6,8 +6,6 @@ import { useState, useEffect } from 'react';
 const { Title } = Typography
 const { Option } = Select;
 
-
-
 function toTimestamp(strDate) {
   var datum = Date.parse(strDate);
   return datum / 1000;
@@ -202,9 +200,7 @@ const AddBloodBag = () => {
         <Form.Item name="place" label="Place" placeholder="Place" >
           <Input />
         </Form.Item>
-        {/* <Form.Item label="Place" name="place" initialValue={json.place}>
-        <Input />
-      </Form.Item> */}
+
         <Form.Item name="bloodGroup" label="bloodGroup" rules={[{ required: true }]}>
           <Select
             labelInValue
