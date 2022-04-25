@@ -28,18 +28,12 @@ const Demo = () => {
   let staffDetails
 
   const onFinish = values => {
-    values.staffName = staffDetails.staffName
-    values.NIC = staffDetails.NIC
-    values.email = staffDetails.email
-    values.designation = staffDetails.designation
-    values.values.qualification = staffDetails.qualification
-    if(values.dateOfBirth === undefined) values.dateOfBirth = staffDetails.dateOfBirthvalues.dateOfBirth['_d'].getTime()
-    values.gender = staffDetails.gender
-    values.address = staffDetails.address
-    values.basicSalary = staffDetails.basicSalary
-    values.mobile = staffDetails.mobile
-    values.home = staffDetails.home
+    console.log(values)
+    console.log(staffDetails)
+    if(values.dateOfBirth === undefined) values.dateOfBirth = staffDetails.dateOfBirth
+    
 
+    console.log(values.dateOfBirth)
     staffService.updateStaffDetails(values)
     .then(() => message.success({content: 'Successfully Updated', update, duration: 2}))
     .catch((e) => message.error({content: 'Please try again!', update, duration: 2}))
@@ -105,7 +99,8 @@ const Demo = () => {
 
       <Form.Item
           label="NIC"
-          name="NIC"        
+          name="NIC" 
+          rules={[{pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$', message: 'Please input a valid NIC!' }]}       
         >
           <Input id="NIC" />
         </Form.Item>

@@ -1,9 +1,11 @@
 import React from 'react'
-import { Form, Input, Button, message, Card } from 'antd';
+import { Form, Input, Button, message, Card, Modal } from 'antd';
+import { ExclamationCircleOutlined} from '@ant-design/icons';
 import staffService from 'services/StaffService';
 
 const { Search } = Input;
 const resign = 'resign'
+const { confirm } = Modal
 
 const StaffResignation = () => {
 	return (
@@ -12,6 +14,26 @@ const StaffResignation = () => {
 		</div>
 	)
 }
+
+const showResignationConfirm = (id, name) => {
+    confirm({
+      title: 'Are you sure you want to mark ' + name + ' as Resigned?',
+      icon: <ExclamationCircleOutlined />,
+      content: 'ID: ' + id + ' Staff Name: ' + name,
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        staffService.updateStatus(id)
+		.then(() => message.success({content: 'Marked as Resigned!', resign, duration: 2}))
+		.catch((e) => message.error({content: 'Please try again!', resign, duration: 2}))
+
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  }
 
 const layout = {
 	labelCol: { span: 8 },
@@ -31,10 +53,8 @@ const tailLayout = {
 		if(values.NIC === undefined) values.NIC = staffDetails.NIC
 		if(values.designation === undefined) values.designation = staffDetails.designation
 		if(values.qualification === undefined) values.qualification = staffDetails.qualification
-
-		staffService.updateStatus(values)
-		.then(() => message.success({content: 'Marked as Resigned!', resign, duration: 2}))
-		.catch((e) => message.error({content: 'Please try again!', resign, duration: 2}))
+		console.log(values.staffName)
+		showResignationConfirm(values.staffID, values.staffName)
 		form.resetFields();
 	};
   
@@ -64,6 +84,7 @@ const tailLayout = {
 			initialValues={{ remember: true }}
 			onFinish={onFinish}
 			onFinishFailed={onFinishFailed}
+			form={form}
 			>
 				<Form.Item
 				label="Staff ID"
