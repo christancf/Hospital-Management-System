@@ -35,7 +35,7 @@ const AssignedNurseDetails= () => {
       setFullData()
       console.log(`Error: ${e}`)
     })
-  }, [data])
+  }, [])
 
   const showDeleteConfirm = (id, name) => {
     confirm({
