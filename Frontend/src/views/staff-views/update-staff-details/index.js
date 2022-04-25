@@ -99,7 +99,8 @@ const Demo = () => {
 
       <Form.Item
           label="NIC"
-          name="NIC"        
+          name="NIC" 
+          rules={[{pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$', message: 'Please input a valid NIC!' }]}       
         >
           <Input id="NIC" />
         </Form.Item>
