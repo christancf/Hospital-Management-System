@@ -11,6 +11,7 @@ const layout = {
 const tailLayout = {
   wrapperCol: { offset: 15, span: 16 },
 }
+const key = 'assign'
 
 const validateMessages = {
 	required: 'This field is required!',
@@ -27,7 +28,7 @@ const AssignNurses = () => {
   return (
     <>
 			<Card style={{ width: 800 }}>
-				<h1 className='text-left' style={{ marginLeft: 230 }}>Assign Nurses</h1>
+				<h1 className='text-left' style={{ marginLeft: 20, marginBottom: 30 }}>Assign Nurse</h1>
 				<AssignNursesForm />
 			</Card>
 		</>
@@ -39,13 +40,14 @@ const AssignNursesForm = () => {
 	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState(false)
 	const [data, setData] = useState()
-	const [iloading, setIloading] = useState(true)
-	const [ierror, setIerror] = useState(false)
+	const [category, setCategory] = useState()
 	const [options, setOptions] = useState()
 
 	useEffect(() => {
 		wardService.readWardCategory()
 		.then((res) => {
+			console.log('Category')
+			console.log(res)
 			setData(res)
 			setLoading(false)
 
@@ -54,24 +56,30 @@ const AssignNursesForm = () => {
 			setError(true)
 			setData()
 		})
-		if(form.getFieldValue['category'] !== undefined){
-			wardService.readWardCategoryIDs(form.getFieldValue['category'])
-			.then((res) => {
-				setOptions(res)
-				setLoading(false)
-			})
-			.catch((e) => {
-				setIloading(false)
-				setIerror(true)
-				setOptions()
-				console.log(`Error: ${ e }`)
-			})
-		}
-	}, [])
+		console.log('Use Effect')
+		wardService.readWardCategoryIDs(category)
+		.then((res) => {
+			console.log('Options')
+			console.log(res)
+			setOptions(res)
+		})
+		.catch((e) => {
+			setOptions()
+			console.log(`Error: ${ e }`)
+		})
+	}, [category])
   const onFinish = values => {
+		message.loading({content: 'Please wait...', key})
+		delete values.name
+		delete values.qualification
+		values.assignedDate = (new Date()).getTime()
+		values.reassignDate = values.reassignDate._d.getTime()
     console.log(values)
-    /*console.log(`${values}`)
-    wardService.assignNurse(values.id)*/
+    wardService.assignNurse(values)
+		.then(() => message.success({content: `Nurse ${values.id} has been successfully assigned`, key, duration:2}))
+		.catch(() => message.error({content: `Nurse ${values.id} could not be assigned`, key, duration:2}))
+
+		form.resetFields()
   };
 
   const onFinishFailed = errorInfo => {
@@ -83,15 +91,29 @@ const AssignNursesForm = () => {
     .then((details) => { 
 			console.log(details)
 			if(details != null){
-				form.setFieldsValue({
-					name: details.staffName,
-					qualification: details.qualification
-				})         
+				checkIfAssigned(details.staffID)
+				.then(res => {
+					if(res){
+						form.setFieldsValue({
+							name: details.staffName,
+							qualification: details.qualification
+						})
+						return
+					}
+					message.error('Nurse of this ID has already been assigned')
+				})
 			}else message.error('ID doesn\'t belong to nurse')
     }).catch((e)=>{
       console.log(`Error @ update-ward-details: ${e}`)
     })    
   }
+
+	const checkIfAssigned = id => {
+		return wardService.checkAssignedNurse(id)
+		.then(res => {
+			if(res === null)return true
+		}).catch(e => console.log(`Error: ${e}`))
+	}
 
 	if (loading) {
 		return (
@@ -116,30 +138,35 @@ const AssignNursesForm = () => {
 
 	}
 	else {
-		const resData = data
 		return (
 			<Form {...layout} name="Assign Nurses" form={form} onFinish={onFinish} initialValues={{ remember: true }}>
 				<Form.Item label="Nurse ID" name="id" rules={[{ required: true, message: 'Please input ward ID!' }]}>
 					<Search placeholder="Nurse ID" id="id" onSearch={id => searchById(id)} enterButton />
 				</Form.Item>
-				<Form.Item label="Name" name="name">
+				<Form.Item label="Name" name="name" rules={[{ required: true }]}>
 					<Input disabled={true} id="name" />
 				</Form.Item>
-				<Form.Item label="Qualification" name="qualification">
+				<Form.Item label="Qualification" name="qualification" rules={[{ required: true }]}>
 					<Input disabled={true} id="qualification" />
 				</Form.Item>
 				<Form.Item label="Reassign Date" name="reassignDate" rules={[{ required: true, message: 'Please select reassign date' }]}>
 					<DatePicker/>
 				</Form.Item>
 				<Form.Item label="Category" name="category" rules={[{ required: true, message: 'Please select ward category' }]}>
-					<Select allowClear>
-						{resData.map(d => (
+					<Select id="category" onChange={c => setCategory(c)} allowClear>
+						{data.map(d => (
 							<Option value={d._id}>{(d._id === 'icu')? d._id.toUpperCase() : d._id[0].toUpperCase()+d._id.substring(1)}</Option>
 						))}
 					</Select>
 				</Form.Item>
 				<Form.Item label="Ward ID" name="wardID" rules={[{ required: true, message: 'Please select ward id' }]}>
 					<Select placeholder='Ward ID' id="wardId" >
+						{/*options.map(d => (
+							<Option value={d.id}>{d.id}</Option>
+						))*/
+							console.log('Options inside select')}{
+							options? options.map(d => (<Option value={d.id}>{d.id}</Option>)): console.log('undefined')
+						}
 					</Select>
 				</Form.Item>
 				<Form.Item label="Role" name="role">
