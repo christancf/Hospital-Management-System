@@ -73,4 +73,11 @@ wardService.unassignNurse = id => {
   })
 }
 
+wardService.checkAssignedNurse = id => {
+  return fetch({
+    url: 'ward/nurse/assign/check?id='+id,
+    method: 'get'
+  })
+}
+
 export default wardService
