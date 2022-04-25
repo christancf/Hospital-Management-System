@@ -221,7 +221,7 @@ const AddAppointment = () => {
 
                         <Form {...layout} name="Update Appointment" form={form} onFinish={onFinish} validateMessages={validateMessages}>
 
-                            <Form.Item name="NIC" label="Patient NIC" rules={[{ required: true }]} placeholder="Patient NIC" initialValue={appointmentData.NIC}>
+                            <Form.Item name="NIC" label="Patient NIC" rules={[{ required: true, pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' , message: 'Enter valid NIC' }]} placeholder="Patient NIC" initialValue={appointmentData.NIC}>
                                 <Input />
                             </Form.Item>
                             <Form.Item name="name" label="Patient Name" rules={[{ required: true }]} placeholder="Patient Name" initialValue={appointmentData.name}>

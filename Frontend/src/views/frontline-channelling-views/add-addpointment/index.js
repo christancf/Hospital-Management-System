@@ -69,6 +69,7 @@ const AddAppointment = () => {
 			setTimeout(() => {
 				clearInterval(timer);
 				modal.destroy();
+				window.location = '../frontchannelling/list';
 			}, delay * 1000);
 		}
 
@@ -116,6 +117,7 @@ const AddAppointment = () => {
 				true
 			);
 			form.resetFields();
+			
 
 		}).catch((error)=> {
 
