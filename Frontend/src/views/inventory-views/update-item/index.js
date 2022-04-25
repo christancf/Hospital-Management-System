@@ -1,12 +1,13 @@
 import { Form, Input, InputNumber, Button, Cascader, DatePicker, Select, Modal, Spin, Typography } from 'antd';
 import moment from 'moment';
 import { useState, useEffect } from 'react';
-import bloodBankService from 'services/BloodBankService';
+import inventoryService from 'services/inventoryService';
+
 const { Title } = Typography
 const { Option } = Select;
 
 const queryParams = new URLSearchParams(window.location.search);
-const bagId = queryParams.get('bagId');
+const id = queryParams.get('id');
 
 function toTimestamp(strDate) {
 	var datum = Date.parse(strDate);
@@ -25,43 +26,24 @@ const validateMessages = {
 	},
 };
 
-const bloodGroup = [
+const category = [
 	{
-		label: "A positive(A+)",
-		value: "A+"
+		label: "medicines",
+		value: "medicines"
 	},
 	{
-		label: "A negative(A-)",
-		value: "A-"
+		label: "surgicalitems",
+		value: "surgicalitems"
 	},
 	{
-		label: "B positive(B+)",
-		value: "B+",
+		label: "tools",
+		value: "tools",
 	},
-	{
-		label: "B negative(B-)",
-		value: "B-",
-	},
-	{
-		label: "AB positive(AB+)",
-		value: "AB+",
-	},
-	{
-		label: "AB negative(AB-)",
-		value: "AB-",
-	},
-	{
-		label: "O positive(O+)",
-		value: "O+",
-	},
-	{
-		label: "O negative(O-)",
-		value: "O-",
-	},
+	
 ]
 
 
-const UpdateBloodBag = () => {
+const UpdateItem = () => {
 	// const onReset = () => {
 	// 	form.resetFields();
 	// };
@@ -73,7 +55,7 @@ const UpdateBloodBag = () => {
 	const [data, setData] = useState();
 
 	useEffect(() => {
-		bloodBankService.bloodBagDetails(bagId).then((resp) => {
+		inventoryService.itemDetails(id).then((resp) => {
 			setData(resp.payload);
 			setLoading(false);
 		}).catch((err) => {
@@ -99,7 +81,6 @@ const UpdateBloodBag = () => {
 			setTimeout(() => {
 				clearInterval(timer);
 				modal.destroy();
-				window.location.href="../bloodbank/bags-informations";
 			}, delay * 1000);
 		}
 
@@ -128,23 +109,23 @@ const UpdateBloodBag = () => {
 
 	const onFinish = values => {
 
-		const bloodbag = {
-			bagId: bagId,
-			donorName: values.donorName,
-			donorNIC: values.donorNIC,
-			donationNumber: values.donationNumber,
-			donateDate: moment(values.donateDate).format("X"),
-			place: values.place,
-			bloodGroup: values.bloodGroup,
+		const item = {
+			id: id,
+			item_name: values.item_name,
+			description: values.description,
+			manufacturer: values.manufacturer,
+			category: values.category,			
+			unit_price: values.unit_price,
+			total_quantity: values.total_quantity,
 		}
 
-		const payload = { bloodbag: bloodbag }
+		const payload = { item: item }
 
-		bloodBankService.updateBloodDetails(payload).then((res) => {
-			ShowModel("Successful!", 5, "Blood Bag details updated Sucessfully", true)
+		inventoryService.updateItemDetails(payload).then((res) => {
+			ShowModel("Successful!", 5, "item details updated Sucessfully", true)
 			form.resetFields();
 		}).catch((error) => {
-			ShowModel("Failed!", 5, "Blood Bag details update Failed", false)
+			ShowModel("Failed!", 5, "item details update Failed", false)
 		})
 
 		console.log(payload)
@@ -178,42 +159,41 @@ const UpdateBloodBag = () => {
 
 	else {
 
-		function disabledDate2(current) {
-			// Can not select days before today and today
-			return current && current > moment().endOf('day');
-		  }
 		// var myDate = new Date(data.dateOfBirth);
 		// myDate.toLocaleString();
 
 		return (
-			<Form {...layout} name="BloodBagUpdate" onFinish={onFinish} validateMessages={validateMessages}>
-				<Title>Edit Blood Bag Details</Title><br></br>
-				<Form.Item name="bagId" label="Bag Id" initialValue={bagId} placeholder="Bag Id" >
+
+
+
+			<Form {...layout} name="ItemUpdate" onFinish={onFinish} validateMessages={validateMessages}>
+				<Title>Edit item Details</Title><br></br>
+				<Form.Item name="id" label="item Id" initialValue={id} placeholder="item Id" >
 					<Input disabled />
 				</Form.Item>
-				<Form.Item name="donorName" initialValue={data.donorName} label="Donor's  Name" rules={[{ required: true }]} placeholder="Donor's  Name" >
+				<Form.Item name="item_name" initialValue={data.item_name} label="item's  Name" rules={[{ required: true }]} placeholder="item's  Name" >
 					<Input />
 				</Form.Item>
-				<Form.Item name="donorNIC" initialValue={data.donorNIC} label=" Donor's NIC" rules={[{ required: true,pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' , message: 'Enter valid NIC' }]} placeholder="Donor's NIC">
+				<Form.Item name="description" initialValue={data.description} label=" Description" rules={[{ required: true }]} placeholder="Description">
 					<Input />
 				</Form.Item>
-				<Form.Item name="donationNumber" initialValue={data.donationNumber} label=" Donation Number" rules={[{ required: true }]} placeholder="Donation Number">
+				<Form.Item name="manufacturer" initialValue={data.manufacturer} label=" manufacturer" rules={[{ required: true }]} placeholder="manufacturer">
 					<Input />
 				</Form.Item>
-				<Form.Item name="donateDate" initialValue={moment(new Date(data.donateDate * 1000))} label="Donate Date" rules={[{ required: true }]} placeholder=" Donate Date">
-					<DatePicker disabledDate={disabledDate2} />
-				</Form.Item>
-				<Form.Item name="place" initialValue={data.place} label="Place" rules={[{ required: true }]} placeholder="Place">
+				<Form.Item name="total_quantity" initialValue={data.total_quantity} label=" total_quantity" rules={[{ required: true }]} placeholder="total_quantity">
 					<Input />
 				</Form.Item>
-				<Form.Item name="bloodGroup" initialValue={data.bloodGroup} label="bloodGroup" rules={[{ required: true }]}>
+				<Form.Item name="unit_price" initialValue={data.unit_price} label="unit_price" rules={[{ required: true }]} placeholder="unit_price">
+					<Input />
+				</Form.Item>
+				<Form.Item name="category" initialValue={data.category} label="category" rules={[{ required: true }]}>
 					<Select
-						placeholder="Select Blood Group"
+						placeholder="Select category"
 						filterOption={false}
 						showSearch={{ filter }}
 						style={{ width: '100%' }}
 					>
-						{bloodGroup.map(d => (
+						{category.map(d => (
 							<Option key={d.value}>{d.label}</Option>
 						))}
 					</Select>
@@ -233,4 +213,4 @@ const UpdateBloodBag = () => {
 	}
 };
 
-export default UpdateBloodBag;
+export default UpdateItem;

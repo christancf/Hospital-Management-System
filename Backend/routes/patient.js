@@ -82,10 +82,10 @@ router.put('/update', (req, res, next) => {
       {$set: {"fullName":req.body.patient.fullName,
         "nic":req.body.patient.nic,
         "dateOfBirth":req.body.patient.dateOfBirth, 
-        "sex":req.body.patient.sex.value,
+        "sex":req.body.patient.sex,
         "mobile":req.body.patient.mobile,
         "address":req.body.patient.address,
-        "bloodGroup":req.body.patient.bloodGroup.value,
+        "bloodGroup":req.body.patient.bloodGroup,
         "status":true}})
       .then((result) => {
         res.json({
