@@ -56,7 +56,7 @@ const AddWardForm = () => {
           <Option value="icu">ICU</Option>
         </Select>
       </Form.Item>
-      <Form.Item label="Ward Capacity" name="capacity" rules={[{ required: true, message: 'Please input the ward capacity', type: 'number' }]}>
+      <Form.Item label="Ward Capacity" name="capacity" rules={[{ required: true, message: 'Please input the ward capacity'}]}>
 		    <Input placeholder='Capacity' />
       </Form.Item>
 	    <Form.Item label="Status" name="status" rules={[{ required: true, message: 'Please select status' }]}>
