@@ -178,7 +178,7 @@ const Additem = () => {
 				<Form.Item name="category" label="category" rules={[{ required: true }]}>
 					<Select
 						placeholder="Select the category"
-						// onChange={this.onGenderChange}
+					
 						allowClear
 					>
 						<Select.Option value="medicines">Medicine</Select.Option>

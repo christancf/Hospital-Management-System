@@ -186,6 +186,33 @@ router.post('/update/corpse', function (req, res, next) {
 
 
 });
-
+// READ for home page popover
+router.post('/home/read', async function (req, res, next) {
+    try {
+      let response = await corpseModel.find({cabinet_number:req.query.cabinet_number}, { NIC: 1, name: 1, sex: 1, address: 1, date_of_birth:1, date_time_of_death:1, cause_of_death: 1, date_time_of_death: 1, cabinet_number: 1, specifics_of_death: 1, _id: 0 }).then((response)=> {
+  
+        console.log(response)
+        res.status(200).json({
+          success: true,
+          message: "Successful Retrieval",
+          payload: response
+        })
+  
+  
+      }).catch((err)=> {
+  
+        res.status(400).json({
+          success: false,
+          message: error.message
+        })
+      })
+    } catch (error) {
+      res.status(400).json({
+        success: false,
+        message: error.message
+      })
+    }
+  
+  })
 
 module.exports = router;

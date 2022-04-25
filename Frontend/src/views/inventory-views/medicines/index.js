@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, Divider, Tag, Spin,notification,Modal } from 'antd';
+import { Table, Divider, Tag, Spin,notification,Modal,Button } from 'antd';
 import { useState, useEffect } from 'react';
 import inventoryService from 'services/inventoryService';
 const { confirm } = Modal;
@@ -58,7 +58,7 @@ const Home = () => {
 			title: 'ID',
 			dataIndex: 'id',
 			key: 'id',
-			render: text => <a>{text}</a>,
+			
 		},
 		{
 			title: 'Item Name',
@@ -97,7 +97,10 @@ const Home = () => {
                 </span>
             ),
         },
+
+		
 	];
+	
 
 	useEffect(() => {
 		inventoryService.getItems("medicines").then((resp) => {
@@ -148,7 +151,12 @@ const Home = () => {
 
 		return (
 			<>
+			<div>
+			
             <h1 className='text-left' >View Medicines</h1>
+			<Button type='primary' href={`/inventory/itemlist/additem/`}>Add New Item</Button>
+			</div>
+			
             <Table columns={columns} dataSource={dataList} />
             </>
 		)

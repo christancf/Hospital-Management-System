@@ -11,7 +11,52 @@ import mortuaryService from 'services/MortuaryService';
 //   });
 
 // }
+// function ShowModel(cabinetNo) {
 
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(false);
+//   const [data, setData] = useState();
+
+//   useEffect(() => {
+//     mortuaryService.readForPopover(cabinetNo).then((res) => {
+//       const mydata = res.payload;
+//       mydata.date_of_birth = new Date(mydata.date_of_birth).toLocaleDateString()
+//       setData(mydata);
+//       setLoading(false);
+//     }).catch((err) => {
+//       console.log(err)
+//       setLoading(false);
+//       setError(true);
+//       setData();
+//     });
+//   }, []);
+//   if (loading) {
+//     return (
+//       <>
+//         <p>Data Loading</p>
+//       </>
+//     )
+//   }
+//   else if (error) {
+//     return (
+//       <>
+//         <p>Error</p>
+//       </>
+//     )
+//   }
+//   else {
+//     const modal = Modal.success({
+//     content: `NIC: ${data.NIC}`,
+//     // onOk: () => { window.location = '../mortuary/home' }
+//   });
+//     // return (
+//     //   <div>
+//     //     <p>NIC: {data.NIC}</p>
+//     //   </div>
+//     // )
+//   }
+  
+// }
 const content = (props) => {
   const cabinet_no = props.letter + props.number
   if (props.isOccupied == true) {
@@ -20,7 +65,8 @@ const content = (props) => {
       <div>
         <p>OCCUPIED</p>
         <p>{props.letter}{props.number}</p>
-        {/* <Button type='primary' onClick={() => { ShowModel(cabinet_no) }}>More Info</Button> */}
+        {/* onClick={() => { ShowModel(cabinet_no) }} */}
+        <Button type='primary'>More Info</Button>
 
 
       </div>
