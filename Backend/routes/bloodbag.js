@@ -45,7 +45,7 @@ router.post('/add-details', function (req, res, next) {
 });
 
 
-//read blood bank details
+//read blood bag details
 router.get('/details/read', async (req, res, next) => {
   try {
     let bloodbagDetail = await bloodbagModel.find({}).then((response)=> {
@@ -80,7 +80,7 @@ router.get('/read', function(req,res,next){
           payload:bloodBag[0]
       })
   }).catch((e) => {
-      res.status(400).json({success:false,message:error.message,payload:{}})
+      res.status(400).json({success:false,message:e.message,payload:{}})
   })
 });
 
@@ -133,7 +133,7 @@ router.get('/bagId', function(req,res,next){
         payload:id[0].bagId+1
     })
 }).catch((e) => {
-    res.status(400).json({success:false,message:error.message,payload:{}})
+    res.status(400).json({success:false,message:e.message,payload:{}})
 })
 
 });
@@ -216,6 +216,30 @@ router.post('/add-transfusion-details', function (req, res, next) {
     );
   }
 
+});
+
+router.get('/details/readTransfusion', async (req, res, next) => {
+  try {
+    let bloodTransfusionDetail = await transfusionModel.find({}).then((response)=> {
+      res.status(200).json({
+        succuss: true,
+        message: 'read succussfull',
+        payload: response
+      })
+
+    }).catch((error)=> {
+      res.status(400).json({
+        succuss: true,
+        message: error.message
+      });
+    })
+
+  } catch (error) {
+    res.status(400).json({
+      succuss: true,
+      message: error.message
+    });
+  }
 });
 
 module.exports = router;

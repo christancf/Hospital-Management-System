@@ -72,4 +72,11 @@ bloodBankService.addTransfusion = function (jsonbody){
   })
 }
 
+bloodBankService.readTransfusionDetails = async function () {
+  return await fetch({
+    url: '/bloodbag/details/readTransfusion',
+    method: 'get'
+  })
+}
+
 export default bloodBankService
