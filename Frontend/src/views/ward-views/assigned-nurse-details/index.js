@@ -12,6 +12,7 @@ const AssignedNurseDetails= () => {
   const [error, setError] = useState(false)
   const [data, setData] = useState()
   const [fullData, setFullData] = useState()
+  const [deleted, setDeleted] = useState(false)
   let status
   //const []
   
@@ -35,7 +36,7 @@ const AssignedNurseDetails= () => {
       setFullData()
       console.log(`Error: ${e}`)
     })
-  }, [])
+  }, [deleted])
 
   const showDeleteConfirm = (id, name) => {
     confirm({
@@ -59,6 +60,7 @@ const AssignedNurseDetails= () => {
     wardService.unassignNurse(id)
     .then((res) => {
       console.log(res)
+      setDeleted(true)
       message.success({content: "Unassigned Successfully", key, duration:2})})
     .catch((e) => message.error({content:"Could not unassign right now. Try again later.", key, duration:2}))
   }
