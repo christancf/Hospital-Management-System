@@ -132,11 +132,11 @@ const Home = () => {
     console.log(values);
 
     const sendingObj = {
-      patientId: values.patientid,
+      patientId: values.patientid[0],
       type: values.type.value,
       itemId: values.itemname,
       qty: values.qty,
-      patientName: values.patientid,
+      patientName: values.patientid[1],
       roomCharges: 100,
       itemCharges: 100,
       doctorCharges: 100,
@@ -188,7 +188,7 @@ const Home = () => {
 
     setPatientname(true);
 
-    billingService.getAllTransactionToPatient(value).then((resp) => {
+    billingService.getAllTransactionToPatient(value[0]).then((resp) => {
 
       TransactionList = resp.payload.map((transaction) => {
         return {
@@ -225,7 +225,7 @@ const Home = () => {
 
     const optionList = patientData.map((patient) => {
       return (
-        <Option value={patient.patientId}>{patient.patientId} - {patient.fullName}</Option>
+        <Option value={[patient.patientId,patient.fullName ]}>{patient.patientId} - {patient.fullName}</Option>
       )
     })
 
