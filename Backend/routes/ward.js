@@ -73,7 +73,7 @@ router.get('/nurse/read?:id', (req, res, next) => {
 
 //assign nurse
 router.post('/nurse/assign', (req, res, next) => {
-  if(req.body.role !== undefined){
+  if(req.body?.role){
     const assign = new assignNurseModel({
       nurseID: req.body.id,
       assignedDate: req.body.assignedDate,
@@ -101,12 +101,6 @@ router.post('/nurse/assign', (req, res, next) => {
 })
 
 //read all assigned nurses
-router.get('/nurse/assigned-details', (req, res, next) => {
-  assignNurseModel.find({})
-  .then((data) => res.json(data))
-  .catch((e) => console.log(`Error: ${ e }`))
-})
-
 router.get('/nurse/details', (req, res, next) => {
   assignNurseModel.aggregate([{
     $lookup: {
@@ -120,9 +114,17 @@ router.get('/nurse/details', (req, res, next) => {
   .catch((e) => res.json(e))
 })
 
+//check whether a nurse assigned
+router.get('/nurse/assign/check?:id', (req, res, next) => {
+  assignNurseModel.findOne({nurseID: Number(req.query.id)})
+  .then(data => {
+    res.json(data)
+  }).catch(e => res.json(e))
+})
+
 //check status
 router.get('/nurse/status?:id', (req, res, next) => {
-    attendanceModel.find({staffID: req.query.id})
+    attendanceModel.findOne({staffID: req.query.id})
     .then(data => res.json(data))
     .catch(e => res.json(e))
   
