@@ -76,4 +76,13 @@ mortuaryService.updateCorpse = function (id,params) {
     }
   )
 }
+//read for homepage popover
+mortuaryService.readForPopover = function (cabinetNo) {
+  return fetch(
+    {
+      url: `/mortuary/home/read?id=${cabinetNo}`,
+      method: 'post',
+    }
+  )
+}
 export default mortuaryService
