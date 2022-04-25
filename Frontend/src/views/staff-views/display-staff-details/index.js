@@ -4,7 +4,6 @@ import staffService from 'services/StaffService';
 
 const { Title } = Typography
 const { Search } = Input
-
 const DisplayStaffDetails = () => {
   
 	const [loading, setLoading] = useState(true);
@@ -136,6 +135,7 @@ const columns = [
     title: '',
     key: 'action',
     render: (text, record) => (
+      
       <span>
         <a href=''>View More</a>
         <Divider type="vertical" />
