@@ -4,7 +4,6 @@ import staffService from 'services/StaffService';
 
 const { Title } = Typography
 const { Search } = Input
-
 const DisplayStaffDetails = () => {
   
 	const [loading, setLoading] = useState(true);
@@ -116,27 +115,29 @@ const columns = [
     title: 'Status',
     key: 'status',
     dataIndex: 'status',
-    // render: tags => (
-    //   <span>
-    //     {tags.map (tag => {
-    //       let color = 'red'
-    //       if(tag === 'Employed') color = 'green'
-    //       return (
-          
-    //         <Tag color={color} key={tag}>
-    //           {tag.toUpperCase()}
-    //         </Tag>
-    //       );
-    //     })}
-    //   </span>
-    // ),
+    render: tags => (
+      <span>
+      {tags === "Resigned" &&
+          <Tag color='volcano' key={tags}>
+              {tags.toUpperCase()}
+          </Tag>
+      }
+      {tags === "Employed" &&
+          <Tag color='geekblue' key={tags}>
+              {tags.toUpperCase()}
+          </Tag>
+
+      }
+  </span>
+    ),
   },
   {
     title: '',
     key: 'action',
     render: (text, record) => (
+      
       <span>
-        <a href=''>View</a>
+        <a href=''>View More</a>
         <Divider type="vertical" />
         <a href='http://localhost:8080/staff/update-staff-details'>Edit</a>
       </span>
