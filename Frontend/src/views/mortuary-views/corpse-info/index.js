@@ -3,12 +3,11 @@ import { List } from "antd";
 import mortuaryService from "services/MortuaryService";
 
 const queryParams = new URLSearchParams(window.location.search);
-const cabinetNo = queryParams.get("cabinetNo");
+const userID = queryParams.get("id");
 
 const Home = () => {
   return (
     <div>
-      <h1>Data of Corpse in Cabinet Number {cabinetNo}</h1>
       <Demo />
     </div>
   );
@@ -21,7 +20,7 @@ const Demo = () => {
 
   useEffect(() => {
     mortuaryService
-      .readForOccupiedCorpsePage(cabinetNo)
+      .readForOccupiedCorpsePage(userID)
       .then((res) => {
         const mydata = res.payload[0];
         mydata.date_of_birth = new Date(
@@ -61,16 +60,19 @@ const Demo = () => {
     dataset[5][0] = 'Date & Time of Death'
     dataset[6][0] = 'Cause of Death'
     dataset[7][0] = 'Specifics of Death'
-    dataset.pop() //remove cabinet number 
-    for(var i = 0; i < 8; i++) {
-      if(dataset[i][1] == "") {
-        dataset.pop(i); //remove blank fields
-      }
-    }
+    dataset[8][0] = 'Cabinet Number'
+    // dataset.pop() //remove cabinet number 
+
+    // for(var i = 0; i < 9; i++) {
+    //   if(dataset[i][1] == "") {
+    //     dataset.pop(i); //remove blank fields
+    //   }
+    // }
     
 
     return (
       <div>
+        <h1>Data of Corpse {dataset[1][1]}</h1>
         <List
           itemLayout="horizontal"
           dataSource={dataset}

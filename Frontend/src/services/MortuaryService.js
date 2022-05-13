@@ -77,10 +77,10 @@ mortuaryService.updateCorpse = function (id,params) {
   )
 }
 //read for occupied corpse page
-mortuaryService.readForOccupiedCorpsePage = function (cabinetNo) {
+mortuaryService.readForOccupiedCorpsePage = function (id) {
   return fetch(
     {
-      url: `/mortuary/home/read?id=${cabinetNo}`,
+      url: `/mortuary/home/read?id=${id}`,
       method: 'post',
     }
   )

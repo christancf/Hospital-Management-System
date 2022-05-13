@@ -4,9 +4,10 @@ import mortuaryService from 'services/MortuaryService';
 
 const content = (props) => {
   const cabinet_no = props.letter + props.number
+  const userID = props.userID
   if (props.isOccupied == true) {
 
-    const passCabinetNo = `/mortuary/corpse-info?cabinetNo=${props.letter}${props.number}`;
+    const passCabinetNo = `/mortuary/corpse-info?id=${userID}`;
     return (
       <div>
         <p>OCCUPIED</p>
@@ -111,13 +112,13 @@ const Home = () => {
         if (isFound == undefined) {
 
           cabinetArray.push(
-            <Cabinet letter={letters[i]} number={numbers[j]} isOccupied={false}></Cabinet>
+            <Cabinet letter={letters[i]} number={numbers[j]} isOccupied={false} userID={null}></Cabinet>
           );
         }
         else {
 
           cabinetArray.push(
-            <Cabinet letter={letters[i]} number={numbers[j]} isOccupied={true}></Cabinet>
+            <Cabinet letter={letters[i]} number={numbers[j]} isOccupied={true} userID={isFound.id}></Cabinet>
           );
 
         }
@@ -138,9 +139,10 @@ const Home = () => {
 
 const Cabinet = (props) => {
   const isOccupied = props.isOccupied
+  const userID = props.userID
   if (isOccupied) {
     return (
-      <Popover placement="bottomRight" content={content({ letter: props.letter, number: props.number, isOccupied: props.isOccupied })} arrowPointAtCenter>
+      <Popover placement="bottomRight" content={content({ letter: props.letter, number: props.number, isOccupied: props.isOccupied, userID : userID })} arrowPointAtCenter>
         <Card style={{ width: 100, borderColor: '#ff6b72', borderWidth: '3px' }} hoverable>
           <h1 className='text-center'>{props.letter}{props.number}</h1>
         </Card>
@@ -148,7 +150,7 @@ const Cabinet = (props) => {
     )
   } else {
     return (
-      <Popover placement="bottomRight" content={content({ letter: props.letter, number: props.number, isOccupied: props.isOccupied })} arrowPointAtCenter>
+      <Popover placement="bottomRight" content={content({ letter: props.letter, number: props.number, isOccupied: props.isOccupied, userID : null })} arrowPointAtCenter>
         <Card style={{ width: 100, borderColor: 'green', borderWidth: '3px' }} hoverable>
           <h1 className='text-center'>{props.letter}{props.number}</h1>
         </Card>
