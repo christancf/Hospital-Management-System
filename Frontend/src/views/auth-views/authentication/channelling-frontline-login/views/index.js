@@ -1,7 +1,7 @@
 import React from 'react'
-import RegisterForm from '../../components/RegisterForm'
+import LoginForm from '../../../authentication/channelling-frontline-login/components/LoginForm'
 import { Card, Row, Col } from "antd";
-import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux';
 
 const backgroundStyle = {
 	backgroundImage: 'url(/img/others/img-17.jpg)',
@@ -9,7 +9,7 @@ const backgroundStyle = {
 	backgroundSize: 'cover'
 }
 
-const RegisterOne = props => {
+const LoginOne = props => {
 	const theme = useSelector(state => state.theme.currentTheme)
 	return (
 		<div className="h-100" style={backgroundStyle}>
@@ -17,14 +17,14 @@ const RegisterOne = props => {
 				<Row justify="center">
 					<Col xs={20} sm={20} md={20} lg={7}>
 						<Card>
-							<div className="my-2">
+							<div className="my-4">
 								<div className="text-center">
-								<img className="img-fluid" src={`/img/${theme === 'light' ? 'logo.png': 'logo-white.png'}`} alt="" />
-									<p className="text-muted">Create a new account:</p>
+									<img className="img-fluid" src={`/img/${theme === 'light' ? 'logo.png': 'logo-white.png'}`} alt="" />
+									<p>Channelling Management - Frontline</p>
 								</div>
 								<Row justify="center">
 									<Col xs={24} sm={24} md={20} lg={20}>
-										<RegisterForm {...props}/>
+										<LoginForm {...props} />
 									</Col>
 								</Row>
 							</div>
@@ -36,4 +36,4 @@ const RegisterOne = props => {
 	)
 }
 
-export default RegisterOne
+export default LoginOne
