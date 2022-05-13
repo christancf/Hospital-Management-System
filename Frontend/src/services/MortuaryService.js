@@ -76,11 +76,11 @@ mortuaryService.updateCorpse = function (id,params) {
     }
   )
 }
-//read for homepage popover
-mortuaryService.readForPopover = function (cabinetNo) {
+//read for occupied corpse page
+mortuaryService.readForOccupiedCorpsePage = function (id) {
   return fetch(
     {
-      url: `/mortuary/home/read?id=${cabinetNo}`,
+      url: `/mortuary/home/read?id=${id}`,
       method: 'post',
     }
   )

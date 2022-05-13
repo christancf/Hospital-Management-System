@@ -52,7 +52,7 @@ const columns = [
         <Divider type="vertical" />
         <a>Release</a>
         <Divider type="vertical" />
-        <Button type='link'>More Info</Button>
+        <Button type='link' href={`/mortuary/corpse-info?id=${record.id}`}>More Info</Button>
       </span>
     ),
   }
