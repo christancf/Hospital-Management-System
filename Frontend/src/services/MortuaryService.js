@@ -84,4 +84,14 @@ mortuaryService.release = function (id, params) {
     data: params
   });
 };
+
+//search
+mortuaryService.search = function (params) {
+  return fetch({
+    url: `/mortuary/search`,
+    method: "post",
+    data: params
+  });
+};
+
 export default mortuaryService;
