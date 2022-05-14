@@ -1,9 +1,9 @@
 var express = require('express');
-const userModel = require('../models/user');
 const appointmentModel = require('../models/appointment')
 const staffModel = require('../models/staff')
 var router = express.Router();
 const auth = require("../middleware/auth");
+
 
 
 

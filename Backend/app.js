@@ -16,6 +16,7 @@ var bloodbagRouter = require('./routes/bloodbag');
 // var transfusionRouter = require('./routes/bloodtranfusion');
 var staffRouter = require('./routes/staff');
 var patientRouter = require('./routes/patient');
+var authRouter = require('./routes/auth');
 
 dotenv.config();
 db.connect();
@@ -30,6 +31,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 
+
+app.use('/auth', authRouter);
 app.use('/ward', wardRouter);
 app.use('/channelling', channellingRouter);
 app.use('/inventory',inventoryRouter);
