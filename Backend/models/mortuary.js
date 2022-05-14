@@ -53,6 +53,10 @@ const dataSchema = new mongoose.Schema({
         required: false,
         type: String
     },
+    receiver_description: {
+        required: false,
+        type: String
+    },
     date_of_release: {
         required: false,
         type: Number
