@@ -50,9 +50,9 @@ const columns = [
       <span>
         <Button type='link' href={`/mortuary/update?id=${record.id}`}>Edit</Button>
         <Divider type="vertical" />
-        <a>Release</a>
+        <Button type='link' href={`/mortuary/release?id=${record.id}`}>Release</Button>
         <Divider type="vertical" />
-        <Button type='link'>More Info</Button>
+        <Button type='link' href={`/mortuary/corpse-info?id=${record.id}`}>More Info</Button>
       </span>
     ),
   }

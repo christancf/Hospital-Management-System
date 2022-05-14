@@ -69,6 +69,8 @@ const bloodGroup =[
 
 
 
+
+
 const PatientAdmittance = () => {
 	const [form] = Form.useForm();
 
@@ -87,12 +89,16 @@ const PatientAdmittance = () => {
 		});
 	}, []);
 
+	function handleModalOK(){
+		window.location.reload(false);
+	}
 	function ShowModel(title, delay, innercontent, isSuccess) {
 
 		if (isSuccess) {
 			const modal = Modal.success({
 				title: title,
 				content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+				onOk:() =>{window.location.reload(false)}
 			});
 			const timer = setInterval(() => {
 				delay -= 1;
@@ -159,7 +165,7 @@ const PatientAdmittance = () => {
 	};
 
 	function disabledDate2(current) {
-		// Can not select days before today and today
+		// Can not select days after today and today
 		return current && current > moment().endOf('day');
 	  }
 
@@ -188,7 +194,7 @@ const PatientAdmittance = () => {
 	else{
 	return (
 
-		<Form {...layout} name="Admittance" form={form} onFinish={onFinish} validateMessages={validateMessages}>
+		<Form {...layout} name="Admittance" form={form} onFinish={onFinish} >
 			<label>Admit New Patient</label>
 			<Form.Item name="id" label="Patient ID" initialValue={data} rules={[{ required: true }]} placeholder="Patient ID">
 				<Input disabled />
@@ -196,7 +202,7 @@ const PatientAdmittance = () => {
 			<Form.Item name="fullName" label="Full  Name" rules={[{ required: true }]} placeholder="Full Name">
 				<Input />
 			</Form.Item>
-			<Form.Item name="nic" label=" NIC" rules={[{ required: true }]} placeholder="NIC">
+			<Form.Item name="nic" label=" NIC" rules={[{ required: true, pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' , message: 'Enter valid NIC' }]} placeholder="NIC">
 				<Input />
 			</Form.Item>
 
@@ -217,7 +223,7 @@ const PatientAdmittance = () => {
 			</Select>
 				   
 			</Form.Item> 
-			<Form.Item name="mobile" label="Contact No" rules={[{ required: true }]} placeholder="Contact Number">
+			<Form.Item name="mobile" label="Contact No" rules={[{ required: true, pattern:'^([0-9]{10}|)$',message: 'Enter valid Number' }]} placeholder="Contact Number">
 				<Input />
 			</Form.Item>
 			<Form.Item name="address" label="Address" rules={[{ required: true }]} placeholder="Address">

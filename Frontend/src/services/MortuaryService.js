@@ -1,6 +1,7 @@
-import fetch from 'auth/FetchInterceptor'
+import fetch from "auth/FetchInterceptor";
+import { method } from "lodash";
 
-const mortuaryService = {}
+const mortuaryService = {};
 
 // exampleService.getPost = function (params) {
 //   return fetch({
@@ -21,68 +22,66 @@ const mortuaryService = {}
 //add corpse
 mortuaryService.addCorpse = function (params) {
   return fetch({
-    url: '/mortuary/add',
-    method: 'post',
-    data: params
-  })
-}
+    url: "/mortuary/add",
+    method: "post",
+    data: params,
+  });
+};
 
 //read for info page
 mortuaryService.getData = function () {
-    return fetch({
-      url: '/mortuary/info',
-      method: 'get'
-    })
-  }
+  return fetch({
+    url: "/mortuary/info",
+    method: "get",
+  });
+};
 
 //read for homepage
 mortuaryService.getOccupiedData = function () {
-  return fetch(
-    {
-      url: '/mortuary/home',
-      method: 'get'
-    }
-  )
-}
+  return fetch({
+    url: "/mortuary/home",
+    method: "get",
+  });
+};
 
 //get auto incremented id
 mortuaryService.getId = function () {
-  return fetch(
-    {
-      url: '/mortuary/id',
-      method: 'get'
-    }
-  )
-}
+  return fetch({
+    url: "/mortuary/id",
+    method: "get",
+  });
+};
 //read for update function
 mortuaryService.readForUpdate = function (params) {
-  return fetch(
-    {
-      // url: `/mortuary/update/read?id:${params}`,
-      url: '/mortuary/update/read',
+  return fetch({
+    // url: `/mortuary/update/read?id:${params}`,
+    url: "/mortuary/update/read",
 
-      method: 'post',
-      data: params
-    }
-  )
-}
+    method: "post",
+    data: params,
+  });
+};
 //update function
-mortuaryService.updateCorpse = function (id,params) {
-  return fetch(
-    {
-      url: `/mortuary/update/corpse?id=${id}`,
-      method: 'post',
-      data: params
-    }
-  )
-}
-//read for homepage popover
-mortuaryService.readForPopover = function (cabinetNo) {
-  return fetch(
-    {
-      url: `/mortuary/home/read?id=${cabinetNo}`,
-      method: 'post',
-    }
-  )
-}
-export default mortuaryService
+mortuaryService.updateCorpse = function (id, params) {
+  return fetch({
+    url: `/mortuary/update/corpse?id=${id}`,
+    method: "post",
+    data: params,
+  });
+};
+//read for occupied corpse page
+mortuaryService.readForOccupiedCorpsePage = function (id) {
+  return fetch({
+    url: `/mortuary/home/read?id=${id}`,
+    method: "post",
+  });
+};
+//corpse release
+mortuaryService.release = function (id, params) {
+  return fetch({
+    url: `/mortuary/release?id=${id}`,
+    method: "post",
+    data: params
+  });
+};
+export default mortuaryService;

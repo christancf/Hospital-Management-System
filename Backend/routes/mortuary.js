@@ -39,6 +39,7 @@ router.post('/add', function (req, res, next) {
     status: true,
     receiver_name: null,
     receiver_type: null,
+    receiver_description: null,
     date_of_release: null
   });
 
@@ -186,10 +187,10 @@ router.post('/update/corpse', function (req, res, next) {
 
 
 });
-// READ for home page popover
+// READ for occupied corpse page
 router.post('/home/read', async function (req, res, next) {
     try {
-      let response = await corpseModel.find({cabinet_number:req.query.cabinet_number}, { NIC: 1, name: 1, sex: 1, address: 1, date_of_birth:1, date_time_of_death:1, cause_of_death: 1, date_time_of_death: 1, cabinet_number: 1, specifics_of_death: 1, _id: 0 }).then((response)=> {
+      let response = await corpseModel.find({id:req.query.id}, { NIC: 1, name: 1, sex: 1, address: 1, date_of_birth:1, date_time_of_death:1, cause_of_death: 1, date_time_of_death: 1, cabinet_number: 1, specifics_of_death: 1, _id: 0 }).then((response)=> {
   
         console.log(response)
         res.status(200).json({
@@ -215,4 +216,51 @@ router.post('/home/read', async function (req, res, next) {
   
   })
 
+//Release corpse (update)
+router.post('/release', function (req, res, next) {
+  const id = req.query.id
+  try {
+
+    corpseModel.findOneAndUpdate({ id: id }, {
+      $set: {
+        receiver_name: req.body.receiver_name,
+        receiver_type: req.body.receiver_type,
+        date_of_release: req.body.date_of_release,
+        receiver_description: req.body.receiver_description,
+        status: false,
+        cabinet_number: null
+      }
+    }).then((response) => {
+      res.status(200).json(
+        {
+          succuss: true,
+          message: 'Release process successful',
+          payload: {}
+        }
+      );
+
+    }).catch((err) => {
+      console.log(err)
+      res.status(400).json(
+        {
+          succuss: false,
+          message: err.message,
+          payload: {}
+        }
+      );
+
+    });
+
+
+  }
+  catch (error) {
+    res.status(400).json(
+      {
+        succuss: false,
+        message: error.message,
+        payload: {}
+      }
+    );
+  }
+});
 module.exports = router;
