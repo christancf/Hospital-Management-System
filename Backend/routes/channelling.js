@@ -142,7 +142,7 @@ router.post('/appointment/delete', function (req, res, next) {
 });
 
 
-router.get('/appointments', async function (req, res, next) {
+router.get('/appointments', auth, async function (req, res, next) {
 
 
   try {
@@ -182,7 +182,7 @@ router.get('/appointments', async function (req, res, next) {
 
 });
 
-router.get('/search/appointment', async function (req, res, next) {
+router.get('/search/appointment', auth, async function (req, res, next) {
 
   const appointmentNo = req.query.id;
 
@@ -214,7 +214,7 @@ router.get('/search/appointment', async function (req, res, next) {
 });
 
 
-router.get('/doctors/', async function (req, res, next) {
+router.get('/doctors/', auth, async function (req, res, next) {
 
 
   try {
