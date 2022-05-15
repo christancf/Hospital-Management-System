@@ -82,10 +82,10 @@ const Channeling = () => {
 	return(
 		<div>
 			<Card title="Channeling Management" style={{ width: 300, height: 300 }}>
-				<Button type="link" htmlType="button" href={'/auth/channeling'}>
+				<Button type="link" htmlType="button" href={'/auth/frontlinechanneling'}>
 					Front Line Channelling -Login
 				</Button>
-				<Button type="link" htmlType="button" href={'/auth/channeling'}>
+				<Button type="link" htmlType="button" href={'/auth/doctorchanneling'}>
 					Doctor Channelling -Login
 				</Button>
 			</Card>
