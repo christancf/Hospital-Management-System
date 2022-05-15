@@ -151,9 +151,9 @@ const AddBloodTransfusion = () => {
 						name: data.payload.fullName,
 						pbloodGroup: data.payload.bloodGroup,
 					})
-				} else message.error('ID doesn\'t belong to patient')
+				} else message.error('ID doesn\'t belong to blood bag')
 			}).catch((e) => {
-				console.log(`Error @ update-ward-details: ${e}`)
+				console.log(`Error @ update-details: ${e}`)
 			})
 	}
 
@@ -230,7 +230,7 @@ const AddBloodTransfusion = () => {
 						Discard
 					</Button>
 
-					<Button type="primary" htmlType="submit">
+					<Button type="primary" htmlType="submit" >
 						Confirm
 					</Button>
 				</Form.Item>

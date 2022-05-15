@@ -106,21 +106,42 @@ router.put('/update-details', (req, res, next) => {
 });
 
 //delete blood bag
-router.delete('/bag-delete/:id', (req, res) => {
+router.delete('/deleteBagList', function (req, res, next) {
+
+  const id = req.query.bagId;
+
   try {
-    bloodbagModel.findByIdAndRemove(req.params.id).exec((err, deleteBag) => {
-      if (err) return res.status(400).json({
-        message: "Delete unsuccesful", err
-      });
-
-      return res.json({
-        massege: "succesful"
-      })
-    })
-  } catch (error) {
-    console.log(error);
+    bloodbagModel.updateOne(id, {
+      $set: {
+        status: 'deleted'
+      }
+    }).then((response) => {
+      res.status(200).json(
+        {
+          succuss: true,
+          message: 'Delete process succussfull',
+          payload: {}
+        }
+      );
+    }).catch((err) => {
+      res.status(400).json(
+        {
+          succuss: false,
+          message: err.message,
+          payload: {}
+        }
+      );
+    });
   }
-
+  catch (error) {
+    res.status(400).json(
+      {
+        succuss: false,
+        message: error.message,
+        payload: {}
+      }
+    );
+  }
 });
 
 //get bagID

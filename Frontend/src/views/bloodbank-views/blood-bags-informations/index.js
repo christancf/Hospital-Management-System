@@ -238,7 +238,7 @@ const BloodBags = () => {
 					<span>
 						<a href={`../bloodbank/add-transfusion?bagId=${record.bagId}`}>Transfusion </a>
 						<a href={`../bloodbank/update-details?bagId=${record.bagId}`}>Edit</a>
-						<a onClick={showModal}>View More</a>
+						{/* <a onClick={showModal}>View More</a> */}
 						<Divider type="vertical" />
 						
 					</span>
@@ -421,10 +421,10 @@ const BloodBags = () => {
 
 				<Title>Blood Transfusion Details</Title>
 				<Table columns={column} dataSource={bloodTransfusion} />
-				<Modal
+				{/* <Modal
           title="Basic Modal"
           visible={state.visible}
-        ></Modal>
+        ></Modal> */}
 			</div>
 		)
 
