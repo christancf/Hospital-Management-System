@@ -18,7 +18,8 @@ router.post('/add-details', function (req, res, next) {
     donationNumber: req.body.donationNumber,
     donateDate: req.body.donateDate,
     bloodGroup: req.body.bloodGroup.value,
-    // valume:1,
+    status:'',
+    valume:'450ml',
     // status: req.body.status
   });
 
@@ -261,6 +262,22 @@ router.get('/details/readTransfusion', async (req, res, next) => {
       message: error.message
     });
   }
+});
+
+//update status
+router.put('/update-status', (req, res, next) => {
+
+  bloodbagModel.updateOne({"bagId":req.body.bloodbag.bagId,},
+    {$set: {"status":req.body.bloodbag.status}})
+    .then((result) => {
+      res.json({
+          success:true,
+          message:'update sucessful',
+          payload:{}
+      })
+    }).catch((e) => {
+      res.status(400).json({success:false,message:e.message,payload:{}})
+    })
 });
 
 module.exports = router;

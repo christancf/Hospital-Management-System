@@ -87,4 +87,12 @@ bloodBankService.deleteBagList = function (id){
   })
 }
 
+bloodBankService.updateStatus = function (id){
+
+  return fetch({
+    url: `/bloodbag/update-status`,
+    method: 'put'
+  })
+}
+
 export default bloodBankService

@@ -139,6 +139,24 @@ const AddBloodTransfusion = () => {
 	
 		console.log(payload)
 
+		
+
+		const bloodbag = {
+			bagId: bagId,
+			status:values.status,
+		}
+
+		const payload2 = { bloodbag: bloodbag }
+
+		bloodBankService.updateBloodDetails(payload).then((res) => {
+			ShowModel("Successful!", 5, "Blood Bag details updated Sucessfully", true)
+			form.resetFields();
+		}).catch((error) => {
+			ShowModel("Failed!", 5, "Blood Bag details update Failed", false)
+		})
+
+		console.log(payload2)
+
 	  };
 
 	const searchById = (patientId) => {
