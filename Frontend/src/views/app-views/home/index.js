@@ -4,13 +4,13 @@ import { BILLING_PREFIX_PATH, BLOODBANK_PREFIX_PATH, CHANNELLING_PREFIX_PATH, IN
 const Home = () => {
 	return (
 		<div>
-			<Row>
+			<Row style={{paddingLeft:50, marginTop:50}}>
 				<Col span={6}><Ward /></Col>
 				<Col span={6}><Mortuary /></Col>
 				<Col span={6}><Staff /></Col>
 				<Col span={6}><Patient /></Col>	
 			</Row>
-			<Row>
+			<Row style={{paddingLeft:50}}>
 				<Col span={6}><Inventory /></Col>
 				<Col span={6}><Channeling /></Col>
 				<Col span={6}><BloodBank /></Col>
@@ -23,8 +23,8 @@ const Home = () => {
 const Ward = () => {
 	return(
 		<div>
-			<Card title="Ward Management" style={{ width: 300, height: 300 }}>
-				<Button type="link" htmlType="button" href={WARD_PREFIX_PATH + '/home'}>
+			<Card title="Ward Management" style={{ width: 300, height: 200, textAlign:'center' }}>
+				<Button type="primary" htmlType="button" href={WARD_PREFIX_PATH + '/home'} style={{borderRadius:30}}>
 					Login
 				</Button>
 			</Card>
@@ -36,8 +36,8 @@ const Ward = () => {
 const Mortuary = () => {
 	return(
 		<div>
-			<Card title="Mortuary Management" style={{ width: 300, height: 300 }}>
-				<Button type="link" htmlType="button" href={MORTUARY_PREFIX_PATH + '/home'}>
+			<Card title="Mortuary Management" style={{ width: 300, height: 200, textAlign:'center'}}>
+				<Button type="primary" htmlType="button" href={MORTUARY_PREFIX_PATH + '/home'} style={{borderRadius:30}}>
 					Login
 				</Button>
 			</Card>
@@ -48,8 +48,8 @@ const Mortuary = () => {
 const Patient = () => {
 	return(
 		<div>
-			<Card title="Patient Management" style={{ width: 300, height: 300 }}>
-				<Button type="link" htmlType="button" href={PATIENT_PREFIX_PATH + '/home'}>
+			<Card title="Patient Management" style={{ width: 300, height: 200, textAlign:'center' }}>
+				<Button type="primary" htmlType="button" href={PATIENT_PREFIX_PATH + '/home'} style={{borderRadius:30}}>
 					Login
 				</Button>
 			</Card>
@@ -59,8 +59,8 @@ const Patient = () => {
 const Staff = () => {
 	return(
 		<div>
-			<Card title="Staff Management" style={{ width: 300, height: 300 }}>
-				<Button type="link" htmlType="button" href={STAFF_PREFIX_PATH + '/home'}>
+			<Card title="Staff Management" style={{ width: 300, height: 200, textAlign:'center' }}>
+				<Button type="primary" htmlType="button" href={STAFF_PREFIX_PATH + '/home'} style={{borderRadius:30}}>
 					Login
 				</Button>
 			</Card>
@@ -70,8 +70,8 @@ const Staff = () => {
 const Inventory = () => {
 	return(
 		<div>
-			<Card title="Inventory Management" style={{ width: 300, height: 300 }}>
-				<Button type="link" htmlType="button" href={INVENTORY_PREFIX_PATH + '/itemlist/medicines'}>
+			<Card title="Inventory Management" style={{ width: 300, height: 200, textAlign:'center' }}>
+				<Button type="primary" htmlType="button" href={INVENTORY_PREFIX_PATH + '/itemlist/medicines'} style={{borderRadius:30}}>
 					Login
 				</Button>
 			</Card>
@@ -81,11 +81,12 @@ const Inventory = () => {
 const Channeling = () => {
 	return(
 		<div>
-			<Card title="Channeling Management" style={{ width: 300, height: 300 }}>
-				<Button type="link" htmlType="button" href={'/auth/frontlinechanneling'}>
+			<Card title="Channeling Management" style={{ width: 300, height: 200, textAlign:'center' }}>
+
+				<Button type="primary" htmlType="button" href={'/auth/frontlinechanneling'} style={{borderRadius:30}}>
 					Front Line Channelling -Login
 				</Button>
-				<Button type="link" htmlType="button" href={'/auth/doctorchanneling'}>
+				<Button type="primary" htmlType="button" href={'/auth/doctorchanneling'}style={{marginTop:20, borderRadius:30}}>
 					Doctor Channelling -Login
 				</Button>
 			</Card>
@@ -95,8 +96,8 @@ const Channeling = () => {
 const BloodBank = () => {
 	return(
 		<div>
-			<Card title="Blood Bank Management" style={{ width: 300, height: 300 }}>
-				<Button type="link" htmlType="button" href={BLOODBANK_PREFIX_PATH+ '/home'}>
+			<Card title="Blood Bank Management" style={{ width: 300, height: 200, textAlign:'center' }}>
+				<Button type="primary" htmlType="button" href={BLOODBANK_PREFIX_PATH+ '/home'}style={{borderRadius:30}}>
 					Login
 				</Button>
 			</Card>
@@ -106,8 +107,8 @@ const BloodBank = () => {
 const Billing = () => {
 	return(
 		<div>
-			<Card title="Billing Management" style={{ width: 300, height: 300 }}>
-				<Button type="link" htmlType="button" href={BILLING_PREFIX_PATH + '/home'}>
+			<Card title="Billing Management" style={{ width: 300, height: 200, textAlign:'center' }}>
+				<Button type="primary" htmlType="button" href={BILLING_PREFIX_PATH + '/home'}style={{borderRadius:30}}>
 					Login
 				</Button>
 			</Card>
