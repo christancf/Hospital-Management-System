@@ -1,5 +1,6 @@
 import React from 'react'
 import { Form, Input, Button, DatePicker, message, Card, Select } from 'antd';
+import moment from 'moment';
 import staffService from 'services/StaffService';
 
 const { Search } = Input;
@@ -12,6 +13,11 @@ const UpdateStaffDetails = () => {
 			<Demo />
 		</div>
 	)
+}
+
+//disable current date and dates before current date
+function disabledDate(current) {
+	return current && current > moment().endOf('day');
 }
 
 const layout = {
@@ -28,12 +34,9 @@ const Demo = () => {
   let staffDetails
 
   const onFinish = values => {
-    console.log(values)
-    console.log(staffDetails)
-    if(values.dateOfBirth === undefined) values.dateOfBirth = staffDetails.dateOfBirth
-    
-
-    console.log(values.dateOfBirth)
+ 
+    values.dateOfBirth = moment(staffDetails.dateOfBirth).valueOf()
+  
     staffService.updateStaffDetails(values)
     .then(() => message.success({content: 'Successfully Updated', update, duration: 2}))
     .catch((e) => message.error({content: 'Please try again!', update, duration: 2}))
@@ -50,18 +53,13 @@ const Demo = () => {
     .then((details) => {
       staffDetails = details[0]
         
-      let d  = new Date(staffDetails.dateOfBirth)
-      // let d = moment(staffDetails.dateOfBirth)
-      // let s = d.format("YYYY-MM-DD")
-      //console.log(d)
-      document.getElementById('dateOfBirth').value = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()
       form.setFieldsValue({
         staffName: staffDetails.staffName,
         NIC: staffDetails.NIC,
         email: staffDetails.email,
         designation: staffDetails.designation,
         qualification: staffDetails.qualification,
-        //dateOfBirth: 
+        dateOfBirth: moment(staffDetails.dateOfBirth),
         gender: staffDetails.gender,
         address: staffDetails.address,
         basicSalary: staffDetails.basicSalary,
@@ -92,7 +90,8 @@ const Demo = () => {
 
         <Form.Item
           label="Name"
-          name="staffName"        
+          name="staffName" 
+          rules={[{ required: true, message: 'Please input the name!' }]}       
         >
           <Input id="staffName" />
         </Form.Item>
@@ -100,7 +99,7 @@ const Demo = () => {
       <Form.Item
           label="NIC"
           name="NIC" 
-          rules={[{pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$', message: 'Please input a valid NIC!' }]}       
+          rules={[{ required: true, pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$', message: 'Please input a valid NIC!' }]}
         >
           <Input id="NIC" />
         </Form.Item>
@@ -108,12 +107,12 @@ const Demo = () => {
       <Form.Item
           label="E-mail"
           name="email"
-          rules={[{ pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$", message: 'Please enter a valid email!' }]}
+          rules={[{ required: true, pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$", message: 'Please enter a valid email!' }]}
         >
           <Input id="email" />
         </Form.Item>
 
-        <Form.Item name="designation" label="Designation" >
+        <Form.Item name="designation" label="Designation" rules={[{ required: true, message: 'Please select the designation!'}]}>
           <Select allowClear>
             <Option value="doctor">Doctor</Option>
             <Option value="nurse">Nurse</Option>
@@ -123,7 +122,8 @@ const Demo = () => {
 
         <Form.Item
           label="Qualification"
-          name="qualification"        
+          name="qualification"     
+          rules={[{ required: true, message: 'Please input the qualification!' }]}   
         >
           <Input id="qualification" />
         </Form.Item>
@@ -131,11 +131,16 @@ const Demo = () => {
         <Form.Item 
           label="Date Of Birth"
           name="dateOfBirth"
+          rules={[{ required: true, message: 'Please input the date of birth!'}]}
         >
-          <DatePicker id="dateOfBirth" format={"YYYY-MM-DD"} />
+          <DatePicker 
+            id="dateOfBirth"  
+            placeholder='Select Date'
+            format="YYYY-MM-DD"
+            disabledDate={disabledDate}/>
         </Form.Item>
 
-        <Form.Item name="gender" label="Gender" >
+        <Form.Item name="gender" label="Gender" rules={[{ required: true, message: 'Please select the gender' }]}>
           <Select allowClear>
             <Option value="male">Male</Option>
             <Option value="female">Female</Option>
@@ -146,6 +151,7 @@ const Demo = () => {
         <Form.Item
           label="Address"
           name="address"
+          rules={[{ required: true, message: 'Please input the address!' }]}
         >
           <Input id="address" />
         </Form.Item>
@@ -153,6 +159,7 @@ const Demo = () => {
         <Form.Item
           label="Basic Salary"
           name="basicSalary"
+          rules={[{ required: true, message: 'Please input the base salary!' }]}
         >
           <Input id="basicSalary" />
         </Form.Item>
@@ -160,6 +167,7 @@ const Demo = () => {
         <Form.Item
           label="Mobile"
           name="mobile"
+          rules={[{ required: true, pattern:'^([0-9]{10}|)$', message: 'Please input valid mobile number!' }]}
         >
           <Input id="mobile" />
         </Form.Item>
@@ -167,6 +175,7 @@ const Demo = () => {
         <Form.Item
           label="Home"
           name="home"
+          rules={[{ required: true, pattern:'^([0-9]{10}|)$', message: 'Please input valid home number!' }]}
         >
           <Input id="home" />
         </Form.Item>
