@@ -16,7 +16,7 @@ import JwtAuthService from 'services/JwtAuthService'
 import { useHistory } from "react-router-dom";
 import { motion } from "framer-motion"
 import jwt_decode from "jwt-decode";
-import { FRONTLINE_CHANNELLING_PREFIX_PATH } from 'configs/AppConfig'
+import { DOCTOR_CHANNELLING_PREFIX_PATH } from 'configs/AppConfig'
 
 const ValidateUser = () => {
 
@@ -26,7 +26,7 @@ const ValidateUser = () => {
 		var decoded = jwt_decode(mytoken)
 
 		if(decoded.role == 'doctor'){
-			window.location = FRONTLINE_CHANNELLING_PREFIX_PATH;
+			window.location = DOCTOR_CHANNELLING_PREFIX_PATH;
 		}
 
 	}
@@ -62,7 +62,7 @@ export const LoginForm = (props) => {
 			console.log(resp.payload.token)
 			authenticated(resp.payload.token)
 			localStorage.setItem(AUTH_TOKEN, resp.payload.token);
-			window.location = FRONTLINE_CHANNELLING_PREFIX_PATH;
+			window.location = DOCTOR_CHANNELLING_PREFIX_PATH;
 		}).then(e => {
 			//showAuthMessage(e)
 		})

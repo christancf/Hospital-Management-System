@@ -82,8 +82,11 @@ const Channeling = () => {
 	return(
 		<div>
 			<Card title="Channeling Management" style={{ width: 300, height: 300 }}>
-				<Button type="link" htmlType="button" href={CHANNELLING_PREFIX_PATH + '/home'}>
-					Login
+				<Button type="link" htmlType="button" href={'/auth/channeling'}>
+					Front Line Channelling -Login
+				</Button>
+				<Button type="link" htmlType="button" href={'/auth/channeling'}>
+					Doctor Channelling -Login
 				</Button>
 			</Card>
 		</div>
