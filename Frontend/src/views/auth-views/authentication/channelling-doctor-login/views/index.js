@@ -1,16 +1,16 @@
 import React from 'react'
-import RegisterForm from '../../components/RegisterForm'
-import { Row, Col } from "antd";
-import { useSelector } from 'react-redux'
+import LoginForm from '../components/LoginForm'
+import { Card, Row, Col } from "antd";
+import { useSelector } from 'react-redux';
 
-const backgroundURL = '/img/others/img-17.jpg'
 const backgroundStyle = {
-	backgroundImage: `url(${backgroundURL})`,
+	backgroundImage: 'url(/img/others/img-17.jpg)',
 	backgroundRepeat: 'no-repeat',
 	backgroundSize: 'cover'
 }
 
-const RegisterTwo = props => {
+
+const LoginTwo = props => {
 	const theme = useSelector(state => state.theme.currentTheme)
 
 	return (
@@ -20,10 +20,10 @@ const RegisterTwo = props => {
 					<div className="container d-flex flex-column justify-content-center h-100">
 						<Row justify="center">
 							<Col xs={24} sm={24} md={20} lg={12} xl={8}>
-								<h1>Sign Up</h1>
-								<p>Already have an account? <a href="/auth/login-2">Sign In</a></p>
+								<h1>Sign In</h1>
+								<p>Channelling Management - Doctor</p>
 								<div className="mt-4">
-									<RegisterForm {...props} />
+									<LoginForm  allowRedirect={false}/>
 								</div>
 							</Col>
 						</Row>
@@ -36,7 +36,7 @@ const RegisterTwo = props => {
 						</div>
 						<Row justify="center">
 							<Col xs={0} sm={0} md={0} lg={20}>
-								<img className="img-fluid mb-5" src="/img/others/img-19.png" alt=""/>
+								<img className="img-fluid mb-5" src="/img/others/img-18.png" alt=""/>
 								<h1 className="text-white">Welcome to emilus</h1>
 								<p className="text-white">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ullamcorper nisl erat, vel convallis elit fermentum pellentesque.</p>
 							</Col>
@@ -55,4 +55,4 @@ const RegisterTwo = props => {
 	)
 }
 
-export default RegisterTwo
+export default LoginTwo
