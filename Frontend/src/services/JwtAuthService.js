@@ -4,7 +4,7 @@ const JwtAuthService = {}
 
 JwtAuthService.login = function (data) {
 	return fetch({
-		url: '/posts',
+		url: '/auth/login',
 		method: 'post',
 		headers: {
       'public-request': 'true'
@@ -15,7 +15,7 @@ JwtAuthService.login = function (data) {
 
 JwtAuthService.signUp = function (data) {
 	return fetch({
-		url: '/auth/signup',
+		url: '/auth/register',
 		method: 'post',
 		headers: {
       'public-request': 'true'

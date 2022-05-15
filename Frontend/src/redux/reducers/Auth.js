@@ -24,7 +24,7 @@ const auth = (state = initState, action) => {
 			return {
 				...state,
 				loading: false,
-				redirect: '/',
+				redirect: '/frontchannelling',
 				token: action.token
 			}
 		case SHOW_AUTH_MESSAGE: 
