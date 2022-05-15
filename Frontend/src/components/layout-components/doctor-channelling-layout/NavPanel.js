@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { SettingOutlined } from '@ant-design/icons';
-import { Drawer, Menu } from 'antd';
+import { Button, Drawer, Menu } from 'antd';
 import ThemeConfigurator from './ThemeConfigurator';
 import { connect } from "react-redux";
 import { DIR_RTL } from 'constants/ThemeConstant';
@@ -23,7 +23,8 @@ export class NavPanel extends Component {
 	render() {
 		return (
       <>
-        <Menu mode="horizontal">
+      <Button></Button>
+        {/* <Menu mode="horizontal">
           <Menu.Item key="panel" onClick={this.showDrawer}>
             <a href><SettingOutlined className="nav-icon mr-0" /></a>
           </Menu.Item>
@@ -36,7 +37,7 @@ export class NavPanel extends Component {
           visible={this.state.visible}
         >
           <ThemeConfigurator/>
-        </Drawer>
+        </Drawer> */}
       </>
     );
 	}
