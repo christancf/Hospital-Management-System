@@ -87,6 +87,7 @@ router.put('/update', (req, res, next) => {
         "mobile":req.body.patient.mobile,
         "address":req.body.patient.address,
         "bloodGroup":req.body.patient.bloodGroup,
+        "category":req.body.patient.category,
         "status":true}})
       .then((result) => {
         res.json({
