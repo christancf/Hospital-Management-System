@@ -1,8 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { Table, Divider, Button, Input, Select, Row, Col, Form } from "antd";
+import {
+  Table,
+  Tag,
+  Divider,
+  Button,
+  Input,
+  Select,
+  Row,
+  Col,
+  Form,
+  DatePicker,
+} from "antd";
+import moment from "moment";
 import mortuaryService from "services/MortuaryService";
+import { filter } from "lodash";
 const { Search } = Input;
 const { Option } = Select;
+
+function disabledDate(current) {
+  // Can not select days after today
+  return current && current > moment().endOf("day");
+}
 
 const Home = () => {
   const [form] = Form.useForm();
@@ -25,8 +43,16 @@ const Home = () => {
             form={form}
             layout="inline"
             onFinish={(values) => {
-              filter(values);
+              if(values.dod == undefined) {
+                filter(values);
               form.resetFields();
+              } else {
+                values.dod = moment(values.dod).valueOf();
+                filter(values);
+              form.resetFields();
+              }
+              
+              
             }}
             onFinishFailed={(errorInfo) => {
               console.log("Failed:", errorInfo);
@@ -54,7 +80,7 @@ const Home = () => {
               <Select
                 showSearch
                 style={{ width: 200, marginRight: 10 }}
-                placeholder="Select an age range"
+                placeholder="Age range"
                 filterOption={(input, option) =>
                   option.props.children
                     .toLowerCase()
@@ -74,7 +100,13 @@ const Home = () => {
                 <Option value="10">101 - 110</Option>
               </Select>
             </Form.Item>
-
+            <Form.Item name="dod">
+              <DatePicker
+                placeholder="Date of Death"
+                format="YYYY-MM-DD"
+                disabledDate={disabledDate}
+              />
+            </Form.Item>
             <Button
               type="primary"
               htmlType="submit"
@@ -85,7 +117,7 @@ const Home = () => {
           </Form>
           {/* <Filter onFilter={filter}/> */}
         </Col>
-        <Col>
+        <Col >
           <Search
             placeholder="Search Name..."
             value={selectedVal}
@@ -93,7 +125,7 @@ const Home = () => {
               search(value);
               setSelectedVal();
             }}
-            style={{ width: 300 }}
+            style={{ width: 300,  }}
             enterButton
           />
         </Col>
@@ -120,6 +152,30 @@ const columns = [
   {
     title: "Cause of Death",
     dataIndex: "cause_of_death",
+    render: tag => (
+      <span>
+        {tag=='Natural' && 
+            <Tag color="green" key={tag}>
+              {tag.toUpperCase()}
+            </Tag>
+          }
+          {tag=='Suicide' && 
+            <Tag color="gold" key={tag}>
+              {tag.toUpperCase()}
+            </Tag>
+          }
+          {tag=='Homicide' && 
+            <Tag color="purple" key={tag}>
+              {tag.toUpperCase()}
+            </Tag>
+          }
+          {tag=='Accident' && 
+            <Tag color="volcano" key={tag}>
+              {tag.toUpperCase()}
+            </Tag>
+          }
+      </span>
+    ),
   },
   {
     title: "Date of Death",
@@ -136,6 +192,20 @@ const columns = [
   {
     title: "Status",
     dataIndex: "status",
+    render: tag => (
+      <span>
+        {tag=='Released' && 
+            <Tag color="green" key={tag}>
+              {tag.toUpperCase()}
+            </Tag>
+          }
+          {tag=='In Mortuary' && 
+            <Tag color="volcano" key={tag}>
+              {tag.toUpperCase()}
+            </Tag>
+          }
+      </span>
+    ),
   },
   {
     title: "Action",
@@ -165,10 +235,11 @@ const SearchCorpse = ({ value, filterDataset }) => {
 
   useEffect(() => {
     if (filterDataset != null) {
-      var low,
-        high = undefined;
+      // console.log(filterDataset)
+      var low = undefined;
+      var high = undefined;
       var cod = filterDataset.cod;
-
+      var dod = filterDataset.dod;
       function agecheck(index) {
         if (index == 0) {
           var myDate = new Date();
@@ -191,6 +262,7 @@ const SearchCorpse = ({ value, filterDataset }) => {
           low: low,
           high: high,
           cod: cod,
+          dod: dod,
         })
         .then((res) => {
           const mydata = res.payload;
@@ -285,23 +357,10 @@ const SearchCorpse = ({ value, filterDataset }) => {
   } else {
     return (
       <div>
-        <Table columns={columns} dataSource={data} style={{ marginTop: 30 }} />
+        <Table columns={columns} dataSource={data} style={{ marginTop: 30}} />
       </div>
     );
   }
-
-  // return (
-  //   <div>
-  //     <Search
-  //       placeholder="Search Name..."
-  //       onSearch={(value) => {
-  //         SearchCorpse(value);
-  //       }}
-  //       style={{ width: 300 }}
-  //       enterButton
-  //     />
-  //   </div>
-  // );
 };
 
 export default Home;

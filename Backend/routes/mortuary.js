@@ -305,6 +305,7 @@ router.post("/filter", async function (req, res, next) {
   const lowerYear = req.body.high;
   const  upperYear = req.body.low;
   const cod = req.body.cod;
+  const dod = req.body.dod;
 
   let query = {}
   if(lowerYear != undefined && upperYear != undefined){
@@ -312,6 +313,11 @@ router.post("/filter", async function (req, res, next) {
   }
   if(cod != undefined){
     query.cause_of_death = cod;
+  }
+  if(dod != undefined) {
+    const greaterThan = new Date(dod).setHours(0,0,0,0)
+    const lessThan = new Date(dod).setHours(24,0,0,0) 
+    query.date_time_of_death = {$lt: lessThan, $gt: greaterThan}
   }
   try {
     let corpseDetails = await corpseModel.find(
