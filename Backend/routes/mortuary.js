@@ -299,4 +299,35 @@ router.post("/search", async function (req, res, next) {
     });
   }
 });
+
+//read data according to age
+router.post("/filter", async function (req, res, next) {
+  const lowerYear = req.body.low;
+  const  upperYear = req.body.high;
+  const cod = req.body.cod;
+
+  let query = {}
+  if(lowerYear != undefined && upperYear != undefined){
+    query.date_of_birth = {$lt: upperYear, $gt: lowerYear}
+  }
+  if(cod != undefined){
+    query.cause_of_death = cod;
+  }
+  try {
+    let corpseDetails = await corpseModel.find(
+     // {date_of_birth: {$lt: upperYear, $gt: lowerYear}}
+     query
+    );
+    res.status(200).json({
+      success: true,
+      message: "Successful Retrieval",
+      payload: corpseDetails,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
 module.exports = router;

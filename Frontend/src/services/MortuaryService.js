@@ -94,4 +94,12 @@ mortuaryService.search = function (params) {
   });
 };
 
+//filter
+mortuaryService.filter = function (params) {
+  return fetch({
+    url: `/mortuary/filter`,
+    method: "post",
+    data: params
+  });
+};
 export default mortuaryService;
