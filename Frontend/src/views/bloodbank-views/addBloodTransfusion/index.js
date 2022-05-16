@@ -127,6 +127,7 @@ const AddBloodTransfusion = () => {
 		  issueDate: moment(values.issueDate).format("X"),
 		  bloodGroup: values.bloodGroup,
 		  pbloodGroup:values.pbloodGroup,
+			// status:values.status,
 		}
 		console.log(payload)
 	
@@ -136,8 +137,34 @@ const AddBloodTransfusion = () => {
 		}).catch((error) => {
 		  ShowModel("Failed!", 5, "Blood Bag Added Failed", false)
 		})
+
+		
+		bloodBankService.updateStatus(bagId,payload).then((res) => {
+			ShowModel("Successful!", 5, "Bloody", true)
+			form.resetFields();
+		}).catch((error) => {
+			ShowModel("Failed!", 5, "Blood", false)
+		})
 	
 		console.log(payload)
+
+
+
+		// const bloodbag = {
+		// 	bagId: bagId,
+		// 	status:values.status,
+		// }
+
+		// const payload2 = { bloodbag: bloodbag }
+
+		// bloodBankService.updateStatus(payload2).then((res) => {
+		// 	ShowModel("Successful!", 5, "Bloody", true)
+		// 	form.resetFields();
+		// }).catch((error) => {
+		// 	ShowModel("Failed!", 5, "Blood", false)
+		// })
+
+		// console.log(payload2)
 
 	  };
 
@@ -151,9 +178,9 @@ const AddBloodTransfusion = () => {
 						name: data.payload.fullName,
 						pbloodGroup: data.payload.bloodGroup,
 					})
-				} else message.error('ID doesn\'t belong to patient')
+				} else message.error('ID doesn\'t belong to blood bag')
 			}).catch((e) => {
-				console.log(`Error @ update-ward-details: ${e}`)
+				console.log(`Error @ update-details: ${e}`)
 			})
 	}
 
@@ -230,7 +257,7 @@ const AddBloodTransfusion = () => {
 						Discard
 					</Button>
 
-					<Button type="primary" htmlType="submit">
+					<Button type="primary" htmlType="submit" >
 						Confirm
 					</Button>
 				</Form.Item>
