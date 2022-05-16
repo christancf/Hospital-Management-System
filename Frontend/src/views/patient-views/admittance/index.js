@@ -67,6 +67,20 @@ const bloodGroup =[
 	},
 ]
 
+const category =[
+	{
+		label:"General",
+		value:"General"
+	},
+	{
+		label:"Accident",
+		value:"Accident"
+	},
+	{
+		label:"ICU",
+		value:"ICU"
+	},
+]
 
 
 
@@ -147,6 +161,7 @@ const PatientAdmittance = () => {
 			mobile:values.mobile,
 			address:values.address,
 			bloodGroup:values.bloodGroup,
+			category:values.category
 		}
 
 		const payload={patient:patient}
@@ -213,7 +228,7 @@ const PatientAdmittance = () => {
 			<Select
 				labelInValue
 				placeholder="Select users"
-				filterOption={false}
+				filterOption={true}
 				showSearch={{ filter }}
 				style={{ width: '100%' }}
 			>
@@ -233,11 +248,23 @@ const PatientAdmittance = () => {
 			<Select
 				labelInValue
 				placeholder="Select Blood Group"
-				filterOption={false}
+				filterOption={true}
 				showSearch={{ filter }}
 				style={{ width: '100%' }}
 			>
 				{bloodGroup.map(d => (
+					<Option key={d.value}>{d.label}</Option>
+				))}
+			</Select>
+			</Form.Item>
+			<Form.Item name="category" label="category" rules={[{required:true}]}>
+			<Select
+				labelInValue
+				placeholder="Select Category"
+				filterOption={true}
+				style={{ width: '100%' }}
+			>
+				{category.map(d => (
 					<Option key={d.value}>{d.label}</Option>
 				))}
 			</Select>
