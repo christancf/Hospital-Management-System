@@ -33,6 +33,10 @@ const patientSchema = new mongoose.Schema({
         required:false,
         type:String
     },
+    category:{
+        required:false,
+        type:String
+    },
     status:{
         required:true,
         type:Boolean
