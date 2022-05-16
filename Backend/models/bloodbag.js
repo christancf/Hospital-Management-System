@@ -37,6 +37,10 @@ const dataSchema = new mongoose.Schema({
         required:true,
         type:String
     },
+    expireDate:{
+        required:true,
+        type:Number
+    },
 })
 
 module.exports = mongoose.model('bloodbag', dataSchema)

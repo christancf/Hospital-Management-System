@@ -127,6 +127,7 @@ const AddBloodTransfusion = () => {
 		  issueDate: moment(values.issueDate).format("X"),
 		  bloodGroup: values.bloodGroup,
 		  pbloodGroup:values.pbloodGroup,
+			// status:values.status,
 		}
 		console.log(payload)
 	
@@ -136,26 +137,34 @@ const AddBloodTransfusion = () => {
 		}).catch((error) => {
 		  ShowModel("Failed!", 5, "Blood Bag Added Failed", false)
 		})
+
+		
+		bloodBankService.updateStatus(bagId,payload).then((res) => {
+			ShowModel("Successful!", 5, "Bloody", true)
+			form.resetFields();
+		}).catch((error) => {
+			ShowModel("Failed!", 5, "Blood", false)
+		})
 	
 		console.log(payload)
 
-		
 
-		const bloodbag = {
-			bagId: bagId,
-			status:values.status,
-		}
 
-		const payload2 = { bloodbag: bloodbag }
+		// const bloodbag = {
+		// 	bagId: bagId,
+		// 	status:values.status,
+		// }
 
-		bloodBankService.updateBloodDetails(payload).then((res) => {
-			ShowModel("Successful!", 5, "Blood Bag details updated Sucessfully", true)
-			form.resetFields();
-		}).catch((error) => {
-			ShowModel("Failed!", 5, "Blood Bag details update Failed", false)
-		})
+		// const payload2 = { bloodbag: bloodbag }
 
-		console.log(payload2)
+		// bloodBankService.updateStatus(payload2).then((res) => {
+		// 	ShowModel("Successful!", 5, "Bloody", true)
+		// 	form.resetFields();
+		// }).catch((error) => {
+		// 	ShowModel("Failed!", 5, "Blood", false)
+		// })
+
+		// console.log(payload2)
 
 	  };
 

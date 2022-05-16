@@ -10,6 +10,14 @@ var router = express.Router();
 //add blood bag details
 router.post('/add-details', function (req, res, next) {
 
+  function getExpiretime(timestamp){
+    var mydate = new Date(timestamp)
+    return mydate.setMonth( mydate.getMonth() + 1 )
+    }
+
+    const expDate=getExpiretime(parseInt(req.body.donateDate))
+    console.log(expDate);
+
   const bloodbag = new bloodbagModel({
     bagId:req.body.bagId,
     donorName: req.body.donorName,
@@ -18,8 +26,9 @@ router.post('/add-details', function (req, res, next) {
     donationNumber: req.body.donationNumber,
     donateDate: req.body.donateDate,
     bloodGroup: req.body.bloodGroup.value,
-    status:'',
-    valume:'450ml',
+    expireDate:expDate,
+    status:'AA',
+    volume:'450ml',
     // status: req.body.status
   });
 
@@ -267,8 +276,10 @@ router.get('/details/readTransfusion', async (req, res, next) => {
 //update status
 router.put('/update-status', (req, res, next) => {
 
-  bloodbagModel.updateOne({"bagId":req.body.bloodbag.bagId,},
-    {$set: {"status":req.body.bloodbag.status}})
+  const bagId = req.query.id;
+
+  bloodbagModel.updateOne({bagId:bagId},
+    {$set: {status: 'pending'}})
     .then((result) => {
       res.json({
           success:true,
