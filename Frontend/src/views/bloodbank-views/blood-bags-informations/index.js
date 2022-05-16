@@ -98,7 +98,7 @@ const BloodBags = () => {
 		console.log(data);
 		for (var i = 0; i < data.length; i++) {
 			data[i].donateDate = new Date(data[i].donateDate * 1000).toLocaleDateString()
-
+			data[i].expireDate = new Date(data[i].expireDate * 1000).toLocaleDateString()
 		}
 
 		for (var i = 0; i < t_data.length; i++) {
@@ -114,6 +114,7 @@ const BloodBags = () => {
 				donorName: response.donorName,
 				donorNIC: response.donorNIC,
 				donationNumber: response.donationNumber,
+				expireDate:response.expireDate,
 				donateDate: response.donateDate,
 				place: response.place,
 				tags: response.bloodGroup
@@ -155,6 +156,10 @@ const BloodBags = () => {
 			{
 				title: 'Donate Date',
 				dataIndex: 'donateDate'
+			},
+			{
+				title: 'Expire Date',
+				dataIndex: 'expireDate'
 			},
 			{
 				title: 'Place',
