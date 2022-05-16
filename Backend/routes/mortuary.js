@@ -302,8 +302,8 @@ router.post("/search", async function (req, res, next) {
 
 //read data according to age
 router.post("/filter", async function (req, res, next) {
-  const lowerYear = req.body.low;
-  const  upperYear = req.body.high;
+  const lowerYear = req.body.high;
+  const  upperYear = req.body.low;
   const cod = req.body.cod;
 
   let query = {}

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Table, Divider, Button, Input, Select, Row, Col, Form } from "antd";
 import mortuaryService from "services/MortuaryService";
-import { values } from "lodash";
 const { Search } = Input;
 const { Option } = Select;
 
@@ -9,11 +8,13 @@ const Home = () => {
   const [form] = Form.useForm();
   const [searchValue, setSearchValue] = useState(null);
   const [filterData, setFilterData] = useState(null);
+  const [selectedVal, setSelectedVal] = useState();
   const search = (value) => {
+    setFilterData(null);
     setSearchValue(value);
   };
   const filter = (value) => {
-    // console.log(value)
+    setSearchValue(null);
     setFilterData(value);
   };
   return (
@@ -25,6 +26,7 @@ const Home = () => {
             layout="inline"
             onFinish={(values) => {
               filter(values);
+              form.resetFields();
             }}
             onFinishFailed={(errorInfo) => {
               console.log("Failed:", errorInfo);
@@ -86,8 +88,10 @@ const Home = () => {
         <Col>
           <Search
             placeholder="Search Name..."
+            value={selectedVal}
             onSearch={(value) => {
               search(value);
+              setSelectedVal();
             }}
             style={{ width: 300 }}
             enterButton
@@ -159,11 +163,55 @@ const SearchCorpse = ({ value, filterDataset }) => {
   const [error, setError] = useState(false);
   const [data, setData] = useState();
 
-  filterDataset = JSON.stringify(filterDataset); //convert to JSON string
-  filterDataset = JSON.parse(filterDataset); //convert to JSON
-
   useEffect(() => {
-    if (value == null || value == "") {
+    if (filterDataset != null) {
+      var low,
+        high = undefined;
+      var cod = filterDataset.cod;
+
+      function agecheck(index) {
+        if (index == 0) {
+          var myDate = new Date();
+          low = myDate.setFullYear(myDate.getFullYear() - 0);
+          var myDate = new Date();
+          high = myDate.setFullYear(myDate.getFullYear() - 10);
+        } else {
+          var myDate = new Date();
+
+          low = myDate.setFullYear(myDate.getFullYear() - (index * 10 + 1));
+          var myDate = new Date();
+
+          high = myDate.setFullYear(myDate.getFullYear() - (index + 1) * 10);
+        }
+      }
+
+      agecheck(parseInt(filterDataset.age));
+      mortuaryService
+        .filter({
+          low: low,
+          high: high,
+          cod: cod,
+        })
+        .then((res) => {
+          const mydata = res.payload;
+          for (var i = 0; i < mydata.length; i++) {
+            if (mydata[i].status == true) mydata[i].status = "In Mortuary";
+            else {
+              mydata[i].status = "Released";
+              mydata[i].date_of_release = new Date(
+                mydata[i].date_of_release
+              ).toLocaleDateString();
+            }
+            mydata[i].date_time_of_death = new Date(
+              mydata[i].date_time_of_death
+            ).toLocaleDateString();
+          }
+
+          setData(mydata);
+
+          setLoading(false);
+        });
+    } else if (value == null || value == "") {
       mortuaryService
         .getData()
         .then((res) => {
@@ -190,7 +238,7 @@ const SearchCorpse = ({ value, filterDataset }) => {
           setError(true);
           setData();
         });
-    } else {
+    } else if (value != null) {
       mortuaryService
         .search({ name: value })
         .then((res) => {
@@ -216,85 +264,6 @@ const SearchCorpse = ({ value, filterDataset }) => {
           setLoading(false);
           setError(true);
           setData();
-        });
-    }
-    if (filterDataset != null) {
-      var low, high;
-      var cod = filterDataset.cod;
-      var myDate = new Date();
-
-      switch (filterDataset.age) {
-        case 0:
-          low = myDate.getFullYear() - 0;
-          high = myDate.getFullYear - 10;
-          break;
-        case 1:
-          low = myDate.getFullYear() - 11;
-          high = myDate.getFullYear - 20;
-          break;
-        case 2:
-          low = myDate.getFullYear() - 21;
-          high = myDate.getFullYear - 30;
-          break;
-        case 3:
-          low = myDate.getFullYear() - 31;
-          high = myDate.getFullYear - 40;
-          break;
-        case 4:
-          low = myDate.getFullYear() - 41;
-          high = myDate.getFullYear - 50;
-          break;
-        case 5:
-          low = myDate.getFullYear() - 51;
-          high = myDate.getFullYear - 60;
-          break;
-        case 6:
-          low = myDate.getFullYear() - 61;
-          high = myDate.getFullYear - 70;
-          break;
-        case 7:
-          low = myDate.getFullYear() - 71;
-          high = myDate.getFullYear - 80;
-          break;
-        case 8:
-          low = myDate.getFullYear() - 81;
-          high = myDate.getFullYear - 90;
-          break;
-        case 9:
-          low = myDate.getFullYear() - 91;
-          high = myDate.getFullYear - 100;
-          break;
-        case 10:
-          low = myDate.getFullYear() - 101;
-          high = myDate.getFullYear - 110;
-          break;
-        default:
-          low = undefined;
-          high = undefined;
-      }
-      mortuaryService
-        .filter({
-          low: low,
-          high: high,
-          cod: cod,
-        })
-        .then((res) => {
-          const mydata = res.payload;
-          for (var i = 0; i < mydata.length; i++) {
-            if (mydata[i].status == true) mydata[i].status = "In Mortuary";
-            else {
-              mydata[i].status = "Released";
-              mydata[i].date_of_release = new Date(
-                mydata[i].date_of_release
-              ).toLocaleDateString();
-            }
-            mydata[i].date_time_of_death = new Date(
-              mydata[i].date_time_of_death
-            ).toLocaleDateString();
-          }
-
-          setData(mydata);
-          setLoading(false);
         });
     }
   }, [value, filterDataset]);
