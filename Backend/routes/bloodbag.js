@@ -291,4 +291,18 @@ router.put('/update-status', (req, res, next) => {
     })
 });
 
+//Find expire bags
+router.get('/readExpireBag', function(req,res,next){
+  bloodbagModel.find({})
+  .then((bloodBag) => {
+      res.status(200).json({
+          success:true,
+          message:'find sucessful',
+          payload:bloodBag[0]
+      })
+  }).catch((e) => {
+      res.status(400).json({success:false,message:e.message,payload:{}})
+  })
+});
+
 module.exports = router;
