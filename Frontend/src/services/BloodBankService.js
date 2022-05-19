@@ -28,13 +28,13 @@ bloodBankService.readBloodDetails = async function () {
   })
 }
 
-bloodBankService.deleteBloodDetails = function(data) {
-  return fetch({
-    url: '/bloodbag/bag-delete/:id',
-    method: 'delete',
-    data: data
-  })
-}
+// bloodBankService.deleteBloodDetails = function(data) {
+//   return fetch({
+//     url: '/bloodbag/bag-delete/:id',
+//     method: 'delete',
+//     data: data
+//   })
+// }
 
 bloodBankService.bloodBagDetails = function (data){
   
@@ -76,6 +76,23 @@ bloodBankService.readTransfusionDetails = async function () {
   return await fetch({
     url: '/bloodbag/details/readTransfusion',
     method: 'get'
+  })
+}
+
+bloodBankService.deleteBagList = function (id){
+
+  return fetch({
+    url: `/bloodbag/deleteBagList?id=${id}`,
+    method: 'delete'
+  })
+}
+
+bloodBankService.updateStatus = function (id,data){
+
+  return fetch({
+    url: `/bloodbag/update-status?id=${id}`,
+    method: 'put',
+    data: data
   })
 }
 

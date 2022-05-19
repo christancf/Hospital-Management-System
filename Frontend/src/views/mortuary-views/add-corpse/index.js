@@ -24,7 +24,7 @@ const tailLayout = {
 };
 
 function disabledDate(current) {
-	// Can not select days before today and today
+	// Can not select days after today
 	return current && current > moment().endOf('day');
 }
 function range(start, end) {
