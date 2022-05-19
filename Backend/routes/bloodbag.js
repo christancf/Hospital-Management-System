@@ -292,17 +292,28 @@ router.put('/update-status', (req, res, next) => {
 });
 
 //Find expire bags
-router.get('/readExpireBag', function(req,res,next){
-  bloodbagModel.find({})
-  .then((bloodBag) => {
+router.get('/details/readExpireBag', async (req, res, next) => {
+  try {
+    let bloodbagDetail = await bloodbagModel.find({}).then((response)=> {
       res.status(200).json({
-          success:true,
-          message:'find sucessful',
-          payload:bloodBag[0]
+        succuss: true,
+        message: 'read succussfull',
+        payload: response
       })
-  }).catch((e) => {
-      res.status(400).json({success:false,message:e.message,payload:{}})
-  })
+
+    }).catch((error)=> {
+      res.status(400).json({
+        succuss: true,
+        message: error.message
+      });
+    })
+
+  } catch (error) {
+    res.status(400).json({
+      succuss: true,
+      message: error.message
+    });
+  }
 });
 
 module.exports = router;

@@ -96,4 +96,13 @@ bloodBankService.updateStatus = function (id,data){
   })
 }
 
+bloodBankService.expireBagDetails = function (id,data){
+
+  return fetch({
+    url: `/bloodbag/details/readExpireBag`,
+    method: 'get',
+    data: data
+  })
+}
+
 export default bloodBankService
