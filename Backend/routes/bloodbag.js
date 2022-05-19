@@ -10,6 +10,14 @@ var router = express.Router();
 //add blood bag details
 router.post('/add-details', function (req, res, next) {
 
+  function getExpiretime(timestamp){
+    var mydate = new Date(timestamp)
+    return mydate.setMonth( mydate.getMonth() + 1 )
+    }
+
+    const expDate=getExpiretime(parseInt(req.body.donateDate))
+    console.log(expDate);
+
   const bloodbag = new bloodbagModel({
     bagId:req.body.bagId,
     donorName: req.body.donorName,
@@ -18,7 +26,9 @@ router.post('/add-details', function (req, res, next) {
     donationNumber: req.body.donationNumber,
     donateDate: req.body.donateDate,
     bloodGroup: req.body.bloodGroup.value,
-    // valume:1,
+    expireDate:expDate,
+    status:'AA',
+    volume:'450ml',
     // status: req.body.status
   });
 
@@ -45,7 +55,7 @@ router.post('/add-details', function (req, res, next) {
 });
 
 
-//read blood bank details
+//read blood bag details
 router.get('/details/read', async (req, res, next) => {
   try {
     let bloodbagDetail = await bloodbagModel.find({}).then((response)=> {
@@ -80,7 +90,7 @@ router.get('/read', function(req,res,next){
           payload:bloodBag[0]
       })
   }).catch((e) => {
-      res.status(400).json({success:false,message:error.message,payload:{}})
+      res.status(400).json({success:false,message:e.message,payload:{}})
   })
 });
 
@@ -106,21 +116,42 @@ router.put('/update-details', (req, res, next) => {
 });
 
 //delete blood bag
-router.delete('/bag-delete/:id', (req, res) => {
+router.delete('/deleteBagList', function (req, res, next) {
+
+  const id = req.query.bagId;
+
   try {
-    bloodbagModel.findByIdAndRemove(req.params.id).exec((err, deleteBag) => {
-      if (err) return res.status(400).json({
-        message: "Delete unsuccesful", err
-      });
-
-      return res.json({
-        massege: "succesful"
-      })
-    })
-  } catch (error) {
-    console.log(error);
+    bloodbagModel.updateOne(id, {
+      $set: {
+        status: 'deleted'
+      }
+    }).then((response) => {
+      res.status(200).json(
+        {
+          succuss: true,
+          message: 'Delete process succussfull',
+          payload: {}
+        }
+      );
+    }).catch((err) => {
+      res.status(400).json(
+        {
+          succuss: false,
+          message: err.message,
+          payload: {}
+        }
+      );
+    });
   }
-
+  catch (error) {
+    res.status(400).json(
+      {
+        succuss: false,
+        message: error.message,
+        payload: {}
+      }
+    );
+  }
 });
 
 //get bagID
@@ -133,7 +164,7 @@ router.get('/bagId', function(req,res,next){
         payload:id[0].bagId+1
     })
 }).catch((e) => {
-    res.status(400).json({success:false,message:error.message,payload:{}})
+    res.status(400).json({success:false,message:e.message,payload:{}})
 })
 
 });
@@ -186,7 +217,7 @@ router.post('/add-transfusion-details', function (req, res, next) {
 
   const transfusion = new transfusionModel({
     bagId:req.body.bagId,
-    id: req.body.patientId,
+    id: req.body.id,
    name: req.body.name,
     reason: req.body.reason,
     issueDate: req.body.issueDate,
@@ -216,6 +247,48 @@ router.post('/add-transfusion-details', function (req, res, next) {
     );
   }
 
+});
+
+router.get('/details/readTransfusion', async (req, res, next) => {
+  try {
+    let bloodTransfusionDetail = await transfusionModel.find({}).then((response)=> {
+      res.status(200).json({
+        succuss: true,
+        message: 'read succussfull',
+        payload: response
+      })
+
+    }).catch((error)=> {
+      res.status(400).json({
+        succuss: true,
+        message: error.message
+      });
+    })
+
+  } catch (error) {
+    res.status(400).json({
+      succuss: true,
+      message: error.message
+    });
+  }
+});
+
+//update status
+router.put('/update-status', (req, res, next) => {
+
+  const bagId = req.query.id;
+
+  bloodbagModel.updateOne({bagId:bagId},
+    {$set: {status: 'pending'}})
+    .then((result) => {
+      res.json({
+          success:true,
+          message:'update sucessful',
+          payload:{}
+      })
+    }).catch((e) => {
+      res.status(400).json({success:false,message:e.message,payload:{}})
+    })
 });
 
 module.exports = router;

@@ -25,9 +25,9 @@ service.interceptors.request.use(config => {
   Promise.reject(error)
 })
 
-// // Config
-// const ENTRY_ROUTE = '/auth/login'
-// const TOKEN_PAYLOAD_KEY = 'authorization'
+// // // Config
+// const ENTRY_ROUTE = '/'
+// const TOKEN_PAYLOAD_KEY = 'x-access-token'
 // const PUBLIC_REQUEST_KEY = 'public-request'
 
 // // API Request interceptor

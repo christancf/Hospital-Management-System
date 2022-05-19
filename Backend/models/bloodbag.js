@@ -29,15 +29,18 @@ const dataSchema = new mongoose.Schema({
         required:false,
         type: String
     },
-    volume:{
-        volume:'1ml',
+    status:{
         required:true,
-        type: String
-    }
-    // status:{
-    //     required:true,
-    //     type:String
-    // }
+        type:String
+    },
+    volume:{
+        required:true,
+        type:String
+    },
+    expireDate:{
+        required:true,
+        type:Number
+    },
 })
 
 module.exports = mongoose.model('bloodbag', dataSchema)

@@ -9,33 +9,10 @@ import {
   LogoutOutlined 
 } from '@ant-design/icons';
 import Icon from 'components/util-components/Icon';
-import { signOut } from 'redux/actions/Auth';
 
-const menuItem = [
-	{
-		title: "Edit Profile",
-		icon: EditOutlined ,
-		path: "/"
-    },
-    
-    {
-		title: "Account Setting",
-		icon: SettingOutlined,
-		path: "/"
-    },
-    {
-		title: "Billing",
-		icon: ShopOutlined ,
-		path: "/"
-	},
-    {
-		title: "Help Center",
-		icon: QuestionCircleOutlined,
-		path: "/"
-	}
-]
+const menuItem = []
 
-export const NavProfile = ({signOut}) => {
+export const NavProfile = () => {
   const profileImg = "/img/avatars/thumb-1.jpg";
   const profileMenu = (
     <div className="nav-profile nav-dropdown">
@@ -43,8 +20,8 @@ export const NavProfile = ({signOut}) => {
         <div className="d-flex">
           <Avatar size={45} src={profileImg} />
           <div className="pl-3">
-            <h4 className="mb-0">Charlie Howard</h4>
-            <span className="text-muted">Frontend Developer</span>
+            <h4 className="mb-0">{localStorage.getItem('name')}</h4>
+            <span className="text-muted">{localStorage.getItem('role')}</span>
           </div>
         </div>
       </div>
@@ -60,7 +37,7 @@ export const NavProfile = ({signOut}) => {
               </Menu.Item>
             );
           })}
-          <Menu.Item key={menuItem.length + 1} onClick={e => signOut()}>
+          <Menu.Item key={menuItem.length + 1} onClick={()=>{ localStorage.clear(); window.location.reload();}}>
             <span>
               <LogoutOutlined className="mr-3"/>
               <span className="font-weight-normal">Sign Out</span>
@@ -81,4 +58,4 @@ export const NavProfile = ({signOut}) => {
   );
 }
 
-export default connect(null, {signOut})(NavProfile)
+export default connect(null, {})(NavProfile)

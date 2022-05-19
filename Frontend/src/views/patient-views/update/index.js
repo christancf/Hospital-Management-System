@@ -86,6 +86,21 @@ const bloodGroup = [
   },
 ];
 
+const category =[
+	{
+		label:"General",
+		value:"General"
+	},
+	{
+		label:"Accident",
+		value:"Accident"
+	},
+	{
+		label:"ICU",
+		value:"ICU"
+	},
+]
+
 const PatientAdmittance = () => {
   const [form] = Form.useForm();
 
@@ -130,6 +145,7 @@ const PatientAdmittance = () => {
       const modal = Modal.success({
         title: title,
         content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+        onOk:() => {window.location.href = `../patient/update?patient`}
       });
       const timer = setInterval(() => {
         delay -= 1;
@@ -140,7 +156,7 @@ const PatientAdmittance = () => {
       setTimeout(() => {
         clearInterval(timer);
         modal.destroy();
-		window.location.href = `../patient/update?patient`
+		    window.location.href = `../patient/update?patient`
         
       }, delay * 1000);
     } else {
@@ -178,6 +194,7 @@ const PatientAdmittance = () => {
       mobile: values.mobile,
       address: values.address,
       bloodGroup: values.bloodGroup,
+      category:values.category
     };
 
     const payload = { patient: patient };
@@ -299,7 +316,7 @@ const PatientAdmittance = () => {
           name="nic"
           initialValue={data.nic}
           label=" NIC"
-          rules={[{ required: true }]}
+          rules={[{ required: true, pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' , message: 'Enter valid NIC' }]}
           placeholder="NIC"
         >
           <Input />
@@ -366,6 +383,24 @@ const PatientAdmittance = () => {
             ))}
           </Select>
         </Form.Item>
+        <Form.Item
+          name="category"
+          initialValue={data.category}
+          label="category"
+          rules={[{ required: true }]}
+        >
+          <Select
+            placeholder="Select category"
+            filterOption={false}
+            showSearch={{ filter }}
+            style={{ width: "100%" }}
+          >
+            {category.map((d) => (
+              <Option key={d.value}>{d.label}</Option>
+            ))}
+          </Select>
+        </Form.Item>
+        
 
         <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
           <Button type="primary" htmlType="submit">

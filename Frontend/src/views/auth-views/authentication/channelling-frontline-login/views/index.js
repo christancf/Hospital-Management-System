@@ -1,14 +1,14 @@
 import React from 'react'
-import LoginForm from '../../components/LoginForm'
-import { Row, Col } from "antd";
+import LoginForm from '../components/LoginForm'
+import { Card, Row, Col } from "antd";
 import { useSelector } from 'react-redux';
 
-const backgroundURL = '/img/others/img-17.jpg'
 const backgroundStyle = {
-	backgroundImage: `url(${backgroundURL})`,
+	backgroundImage: 'url(/img/others/img-17.jpg)',
 	backgroundRepeat: 'no-repeat',
 	backgroundSize: 'cover'
 }
+
 
 const LoginTwo = props => {
 	const theme = useSelector(state => state.theme.currentTheme)
@@ -21,9 +21,9 @@ const LoginTwo = props => {
 						<Row justify="center">
 							<Col xs={24} sm={24} md={20} lg={12} xl={8}>
 								<h1>Sign In</h1>
-								<p>Don't have an account yet? <a href="/auth/register-2">Sign Up</a></p>
+								<p>Channelling Management - Frontline</p>
 								<div className="mt-4">
-									<LoginForm {...props}/>
+									<LoginForm  allowRedirect={false}/>
 								</div>
 							</Col>
 						</Row>

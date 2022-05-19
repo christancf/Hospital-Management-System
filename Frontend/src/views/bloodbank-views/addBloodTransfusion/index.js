@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Form, Input, Button, Checkbox, Card, Select, DatePicker, message, Spin,Modal } from 'antd';
+import { Form, Input, Button, Checkbox, Card, Select, DatePicker, message, Spin,Modal,Typography } from 'antd';
 import { fromPairs } from 'lodash';
 import bloodBankService from 'services/BloodBankService';
 import moment from 'moment';
 
+const { Title } = Typography
 const { TextArea } = Input;
 const { Search } = Input
 const { Option } = Select
@@ -76,21 +77,6 @@ const AddBloodTransfusion = () => {
 			setError(true);
 			setData();
 		});
-
-
-		// if(form.getFieldValue['category'] !== undefined){
-		// 	wardService.readWardCategoryIDs(form.getFieldValue['category'])
-		// 	.then((res) => {
-		// 		setOptions(res)
-		// 		setLoading(false)
-		// 	})
-		// 	.catch((e) => {
-		// 		setIloading(false)
-		// 		setIerror(true)
-		// 		setOptions()
-		// 		console.log(`Error: ${ e }`)
-		// 	})
-		// }
 	}, [])
 
 	function ShowModel(title, delay, innercontent, isSuccess) {
@@ -109,7 +95,7 @@ const AddBloodTransfusion = () => {
 		  setTimeout(() => {
 			clearInterval(timer);
 			modal.destroy();
-			window.location.reload(false)
+			// window.location.reload(false)
 		  }, delay * 1000);
 		}
 	
@@ -141,36 +127,60 @@ const AddBloodTransfusion = () => {
 		  issueDate: moment(values.issueDate).format("X"),
 		  bloodGroup: values.bloodGroup,
 		  pbloodGroup:values.pbloodGroup,
+			// status:values.status,
 		}
 		console.log(payload)
 	
-		bloodBankService.AddBloodTransfusion(payload).then((res) => {
+		bloodBankService.addTransfusion(payload).then((res) => {
 		  ShowModel("Successful!", 5, "Blood Bag Added Sucessfully", true)
 		  form.resetFields();
 		}).catch((error) => {
 		  ShowModel("Failed!", 5, "Blood Bag Added Failed", false)
 		})
+
+		
+		bloodBankService.updateStatus(bagId,payload).then((res) => {
+			ShowModel("Successful!", 5, "Bloody", true)
+			form.resetFields();
+		}).catch((error) => {
+			ShowModel("Failed!", 5, "Blood", false)
+		})
 	
 		console.log(payload)
-	
-	
-		//console.log(res);
+
+
+
+		// const bloodbag = {
+		// 	bagId: bagId,
+		// 	status:values.status,
+		// }
+
+		// const payload2 = { bloodbag: bloodbag }
+
+		// bloodBankService.updateStatus(payload2).then((res) => {
+		// 	ShowModel("Successful!", 5, "Bloody", true)
+		// 	form.resetFields();
+		// }).catch((error) => {
+		// 	ShowModel("Failed!", 5, "Blood", false)
+		// })
+
+		// console.log(payload2)
+
 	  };
 
 	const searchById = (patientId) => {
 
 		bloodBankService.getPatientDetails(patientId)
 			.then((data) => {
-				// console.log(patientId)
 				console.log(data)
 				if (data.payload != null) {
 					form.setFieldsValue({
 						name: data.payload.fullName,
 						pbloodGroup: data.payload.bloodGroup,
 					})
-				} else message.error('ID doesn\'t belong to patient')
+				} else message.error('ID doesn\'t belong to blood bag')
 			}).catch((e) => {
-				console.log(`Error @ update-ward-details: ${e}`)
+				console.log(`Error @ update-details: ${e}`)
 			})
 	}
 
@@ -204,12 +214,14 @@ const AddBloodTransfusion = () => {
 		}
 		function disabledDate2(current) {
 			// Can not select days before today and today
-			return current && current > moment().startOf('day');
+			return current && current > moment().endOf('day');
 		}
+
 
 		const resData = data
 		return (
 			<Form {...layout} name="add blood transfusion" form={form} onFinish={onFinish} initialValues={{ remember: true }}>
+				<Title>Add Blood Transfusion</Title><br></br>
 				<Form.Item name="bagId" label="Bag Id" initialValue={bagId} placeholder="Bag Id" >
 					<Input disabled />
 				</Form.Item>
@@ -245,7 +257,7 @@ const AddBloodTransfusion = () => {
 						Discard
 					</Button>
 
-					<Button type="primary" htmlType="submit">
+					<Button type="primary" htmlType="submit" >
 						Confirm
 					</Button>
 				</Form.Item>
