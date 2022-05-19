@@ -102,4 +102,12 @@ mortuaryService.filter = function (params) {
     data: params
   });
 };
+
+//stat 1
+mortuaryService.stat = function () {
+  return fetch({
+    url: `/mortuary/stat`,
+    method: "post",
+  });
+};
 export default mortuaryService;
