@@ -283,9 +283,9 @@ router.post("/release", function (req, res, next) {
 router.post("/search", async function (req, res, next) {
   corpseName = req.body.name;
   try {
-    let corpseDetails = await corpseModel.find(
-      { $text: {$search: corpseName}}
-    );
+    let corpseDetails = await corpseModel.find({
+      $text: { $search: corpseName },
+    });
     console.log(corpseDetails);
     res.status(200).json({
       success: true,
@@ -303,26 +303,26 @@ router.post("/search", async function (req, res, next) {
 //read data according to age
 router.post("/filter", async function (req, res, next) {
   const lowerYear = req.body.high;
-  const  upperYear = req.body.low;
+  const upperYear = req.body.low;
   const cod = req.body.cod;
   const dod = req.body.dod;
 
-  let query = {}
-  if(lowerYear != undefined && upperYear != undefined){
-    query.date_of_birth = {$lt: upperYear, $gt: lowerYear}
+  let query = {};
+  if (lowerYear != undefined && upperYear != undefined) {
+    query.date_of_birth = { $lt: upperYear, $gt: lowerYear };
   }
-  if(cod != undefined){
+  if (cod != undefined) {
     query.cause_of_death = cod;
   }
-  if(dod != undefined) {
-    const greaterThan = new Date(dod).setHours(0,0,0,0)
-    const lessThan = new Date(dod).setHours(24,0,0,0) 
-    query.date_time_of_death = {$lt: lessThan, $gt: greaterThan}
+  if (dod != undefined) {
+    const greaterThan = new Date(dod).setHours(0, 0, 0, 0);
+    const lessThan = new Date(dod).setHours(24, 0, 0, 0);
+    query.date_time_of_death = { $lt: lessThan, $gt: greaterThan };
   }
   try {
     let corpseDetails = await corpseModel.find(
-     // {date_of_birth: {$lt: upperYear, $gt: lowerYear}}
-     query
+      // {date_of_birth: {$lt: upperYear, $gt: lowerYear}}
+      query
     );
     res.status(200).json({
       success: true,
@@ -336,4 +336,25 @@ router.post("/filter", async function (req, res, next) {
     });
   }
 });
+
+//stat 1
+router.post("/stat", async function (req, res, next) {
+  try {
+    let corpseDetails = await corpseModel.aggregate([
+      { $group: { _id: "$cause_of_death", count: { $sum: 1 } } },
+    ]);
+    console.log(corpseDetails);
+    res.status(200).json({
+      success: true,
+      message: "Successful Retrieval",
+      payload: corpseDetails,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
 module.exports = router;
