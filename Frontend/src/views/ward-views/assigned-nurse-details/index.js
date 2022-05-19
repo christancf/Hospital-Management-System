@@ -12,19 +12,13 @@ const AssignedNurseDetails= () => {
   const [error, setError] = useState(false)
   const [data, setData] = useState()
   const [fullData, setFullData] = useState()
-  const [deleted, setDeleted] = useState(false)
-  let status
+  const [deleted, setDeleted] = useState(1)
+  const [status, setStatus] = useState()
   //const []
   
   useEffect(() => {
     wardService.getAssignedNurses()
     .then(res => {
-      res.map(d => (
-        wardService.checkStatus(d.nurseID)
-        .then(res => {
-          status = (res?.checkOut)? "Unavailable" : "Available"
-        }).catch(e => console.log(`Error: ${e}`))
-      ))
       setFullData(res)
       setData(res)
       setLoading(false)
@@ -60,9 +54,22 @@ const AssignedNurseDetails= () => {
     wardService.unassignNurse(id)
     .then((res) => {
       console.log(res)
-      setDeleted(true)
+      setDeleted(prevDelete => {
+        return prevDelete += 1
+      })
       message.success({content: "Unassigned Successfully", key, duration:2})})
     .catch((e) => message.error({content:"Could not unassign right now. Try again later.", key, duration:2}))
+  }
+
+  const getStatus = id => {
+    wardService.checkStatus(id)
+        .then(res => {
+          let a = (res?.checkOut)? "Unavailable":"Available"
+          //setStatus(a)
+        }).catch(e => console.log(`Error: ${e}`))
+        console.log('status')
+        console.log(status)
+        return status
   }
   if(loading){
     return(
@@ -108,7 +115,7 @@ const AssignedNurseDetails= () => {
                 <span>{`Staff Name: ${d.details[0].staffName}`}</span><br/>
                 <span>{`Ward: ${(d.wardCategory === 'icu')? d.wardCategory.toUpperCase() : d.wardCategory[0].toUpperCase() + d.wardCategory.substring(1)}`}</span><br/>
                 <span>{`Ward Unit: ${d.wardID}`}</span><br/>
-                <span>{`Status: ${status}`}</span>                
+                <span>{`Status: ${getStatus(d.nurseID)}`}</span>                
                 <Button className="bin" htmlType="button" onClick={() => showDeleteConfirm(d.nurseID, d.details[0].staffName)} icon={<DeleteOutlined id="delete"/>}></Button>
                 <Button className="view" htmlType="button" onClick={() => alert("View More")} icon={<EyeOutlined id="eye"/>}></Button>
               </div>
