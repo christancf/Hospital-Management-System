@@ -133,7 +133,7 @@ const UpdateBloodBag = () => {
 			donorName: values.donorName,
 			donorNIC: values.donorNIC,
 			donationNumber: values.donationNumber,
-			donateDate: moment(values.donateDate).format("X"),
+			donateDate: moment(values.donateDate).valueOf(),
 			place: values.place,
 			bloodGroup: values.bloodGroup,
 		}

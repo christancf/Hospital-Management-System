@@ -15,7 +15,7 @@ router.post('/add-details', function (req, res, next) {
     return mydate.setMonth( mydate.getMonth() + 1 )
     }
 
-    const expDate=getExpiretime(parseInt(req.body.donateDate))
+    const expDate=getExpiretime(req.body.donateDate)
     console.log(expDate);
 
   const bloodbag = new bloodbagModel({
@@ -27,8 +27,8 @@ router.post('/add-details', function (req, res, next) {
     donateDate: req.body.donateDate,
     bloodGroup: req.body.bloodGroup.value,
     expireDate:expDate,
-    status:'AA',
-    volume:'450ml',
+    status:'In Stock',
+    volume:'1 pint(450ml)',
     // status: req.body.status
   });
 
@@ -57,8 +57,10 @@ router.post('/add-details', function (req, res, next) {
 
 //read blood bag details
 router.get('/details/read', async (req, res, next) => {
+  var today = new Date().setHours(24, 0, 0, 0)
+
   try {
-    let bloodbagDetail = await bloodbagModel.find({}).then((response)=> {
+    let bloodbagDetail = await bloodbagModel.find({expireDate:{$gt:today},status:'In Stock'}).then((response)=> {
       res.status(200).json({
         succuss: true,
         message: 'read succussfull',
@@ -116,43 +118,21 @@ router.put('/update-details', (req, res, next) => {
 });
 
 //delete blood bag
-router.delete('/deleteBagList', function (req, res, next) {
+router.delete('/deleteBagList', (req,res,next) => {
 
-  const id = req.query.bagId;
+  const bagId = req.query.id;
 
-  try {
-    bloodbagModel.updateOne(id, {
-      $set: {
-        status: 'deleted'
-      }
-    }).then((response) => {
-      res.status(200).json(
-        {
-          succuss: true,
-          message: 'Delete process succussfull',
-          payload: {}
-        }
-      );
-    }).catch((err) => {
-      res.status(400).json(
-        {
-          succuss: false,
-          message: err.message,
-          payload: {}
-        }
-      );
-    });
-  }
-  catch (error) {
-    res.status(400).json(
-      {
-        succuss: false,
-        message: error.message,
-        payload: {}
-      }
-    );
-  }
-});
+  bloodbagModel.updateOne({bagId:bagId},{$set: {status: 'Removed'}})
+  .then((result) => {
+      res.json({
+          success:true,
+          message:'Deleted sucessful',
+          payload:{}
+      })
+    }).catch((e) => {
+      res.status(400).json({success:false,message:e.message,payload:{}})
+    })
+})
 
 //get bagID
 router.get('/bagId', function(req,res,next){
@@ -279,7 +259,7 @@ router.put('/update-status', (req, res, next) => {
   const bagId = req.query.id;
 
   bloodbagModel.updateOne({bagId:bagId},
-    {$set: {status: 'pending'}})
+    {$set: {status: 'Out Stock'}})
     .then((result) => {
       res.json({
           success:true,
@@ -289,6 +269,38 @@ router.put('/update-status', (req, res, next) => {
     }).catch((e) => {
       res.status(400).json({success:false,message:e.message,payload:{}})
     })
+});
+
+//Find expire bags
+router.get('/details/readExpireBag', async (req, res, next) => {
+
+  var today = new Date().setHours(24, 0, 0, 0)
+  // exDate = new Date(req.query.expireDate).toLocaleDateString()
+  // console.log(exDate);
+
+
+  try {
+    let bloodbagDetail = await bloodbagModel.find(
+      {expireDate:{$lt:today},status:'In Stock'}).then((response)=> {
+      res.status(200).json({
+        succuss: true,
+        message: 'read succussfull',
+        payload: response
+      })
+
+    }).catch((error)=> {
+      res.status(400).json({
+        succuss: true,
+        message: error.message
+      });
+    })
+
+  } catch (error) {
+    res.status(400).json({
+      succuss: true,
+      message: error.message
+    });
+  }
 });
 
 module.exports = router;
