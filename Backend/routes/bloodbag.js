@@ -57,8 +57,10 @@ router.post('/add-details', function (req, res, next) {
 
 //read blood bag details
 router.get('/details/read', async (req, res, next) => {
+  var today = new Date().setHours(24, 0, 0, 0)
+
   try {
-    let bloodbagDetail = await bloodbagModel.find({}).then((response)=> {
+    let bloodbagDetail = await bloodbagModel.find({expireDate:{$gt:today},status:'In Stock'}).then((response)=> {
       res.status(200).json({
         succuss: true,
         message: 'read succussfull',
@@ -120,7 +122,7 @@ router.delete('/deleteBagList', (req,res,next) => {
 
   const bagId = req.query.id;
 
-  bloodbagModel.updateOne({bagId:bagId},{$set: {status: 'Expired'}})
+  bloodbagModel.updateOne({bagId:bagId},{$set: {status: 'Removed'}})
   .then((result) => {
       res.json({
           success:true,
@@ -131,43 +133,6 @@ router.delete('/deleteBagList', (req,res,next) => {
       res.status(400).json({success:false,message:e.message,payload:{}})
     })
 })
-// router.delete('/deleteBagList', function (req, res, next) {
-
-//   const id = req.query.bagId;
-
-//   try {
-//     bloodbagModel.updateOne(id, {
-//       $set: {
-//         status: 'deleted'
-//       }
-//     }).then((response) => {
-//       res.status(200).json(
-//         {
-//           succuss: true,
-//           message: 'Delete process succussfull',
-//           payload: {}
-//         }
-//       );
-//     }).catch((err) => {
-//       res.status(400).json(
-//         {
-//           succuss: false,
-//           message: err.message,
-//           payload: {}
-//         }
-//       );
-//     });
-//   }
-//   catch (error) {
-//     res.status(400).json(
-//       {
-//         succuss: false,
-//         message: error.message,
-//         payload: {}
-//       }
-//     );
-//   }
-// });
 
 //get bagID
 router.get('/bagId', function(req,res,next){
@@ -316,7 +281,7 @@ router.get('/details/readExpireBag', async (req, res, next) => {
 
   try {
     let bloodbagDetail = await bloodbagModel.find(
-      {expireDate:{$lt:today}}).then((response)=> {
+      {expireDate:{$lt:today},status:'In Stock'}).then((response)=> {
       res.status(200).json({
         succuss: true,
         message: 'read succussfull',

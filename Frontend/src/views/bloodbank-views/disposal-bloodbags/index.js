@@ -49,21 +49,21 @@ const DisposaBloodBag = () => {
 	  const deleteExpireBag = (id) => {
 
 		confirm({
-			title: 'Do you want to discharge this patient?',
-			content: 'When clicked the OK button, patient will be discharged',
+			title: 'Do you want to remove this expired blood bag?',
+			content: 'When clicked the OK button, bag will be removed',
 			async onOk() {
 			  try {
 					return await new Promise((resolve, reject) => {
 
-						bloodBankService.delete(id).then((ress) => {
-							openNotification("Successfull !", "Patient Discharged Sucessfully");
+						bloodBankService.deleteBagList(id).then((ress) => {
+							openNotification("Successfull !", "Expire blood bag remove proccess successfull");
 							setTimeout(function () {
 								window.location.reload(false);
 							}, 2000);
 
 
 						}).catch((errors) => {
-							openNotification("Unsuccessfull !", "Patient Discharge Process Failed");
+							openNotification("Unsuccessfull !", "Expire blood bag remove proccess Failed");
 
 						});
 						setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
@@ -217,7 +217,7 @@ const DisposaBloodBag = () => {
 					// 	</span>
 					// </div>
 					<span>
-						<a onClick={()=> { deleteExpireBag(record.patientId)}}>Delete </a>
+						<a onClick={()=> { deleteExpireBag(record.bagId)}}>Delete </a>
 						{/* <a href={`../bloodbank/update-details?bagId=${record.bagId}`}>Edit</a> */}
 						{/* <a onClick={() => { showModal(record.bagId) }}>View More</a> */}
 						{/* <a onClick={showModal}>View More</a> */}
