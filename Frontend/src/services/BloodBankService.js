@@ -123,4 +123,11 @@ bloodBankService.expireBagDetails = function (data){
   })
 }
 
+bloodBankService.bloodBagsCount = function () {
+  return fetch({
+    url: `/bloodbag/bloodBagsCount`,
+    method: "post",
+  });
+};
+
 export default bloodBankService

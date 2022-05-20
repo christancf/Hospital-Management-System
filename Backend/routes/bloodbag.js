@@ -338,4 +338,26 @@ router.get('/details/readExpireBag', async (req, res, next) => {
   }
 });
 
+//Available blood bag count
+router.post("/bloodBagsCount", async function (req, res, next) {
+
+  var status='In Stock'
+
+  try {
+    let bagsDetails = await bloodbagModel.aggregate([
+      { $group: { _id: "$bloodGroup", count: { $sum: 1} } },
+    ]);
+    res.status(200).json({
+      success: true,
+      message: "Successful Retrieval",
+      payload: bagsDetails,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
 module.exports = router;
