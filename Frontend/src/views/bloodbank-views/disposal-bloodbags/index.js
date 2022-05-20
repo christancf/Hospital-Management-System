@@ -143,8 +143,7 @@ const DisposaBloodBag = () => {
 			{
 				title: 'Expire Date',
 				dataIndex: 'expireDate',
-				// render: text => <a>{text}</a>,
-				color: 'red'
+				render: text => <a style={{ color: "red" }}>{text}</a>,
 			},
 			// {
 			// 	title: 'Place',
@@ -233,7 +232,7 @@ const DisposaBloodBag = () => {
 			<div>
 				<Title>Details Of Disposal Blood Bags</Title>
 				<br></br>
-				<Table columns={columns} dataSource={bloodBags} />
+				<Table columns={columns} dataSource={bloodBags} style={{ padding: '26px 0px 16px'}} />
 			</div>
 		)
 	}

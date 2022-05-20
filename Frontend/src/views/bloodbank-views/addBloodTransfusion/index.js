@@ -239,7 +239,7 @@ const AddBloodTransfusion = () => {
 						autoSize={{ minRows: 3, maxRows: 5 }}
 					/>
 				</Form.Item>
-				<Form.Item label="Issue Date & Time" name="issueDate">
+				<Form.Item label="Issue Date" name="issueDate">
 					<DatePicker disabledDate={disabledDate2} />
 				</Form.Item>
 				<Form.Item name="bloodGroup" initialValue={data.bloodGroup} label="Blood Group of Bag" >
