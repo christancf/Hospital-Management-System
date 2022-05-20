@@ -171,7 +171,7 @@ const BloodBags = () => {
 			{
 				title: 'Donors Name',
 				dataIndex: 'donorName',
-				render: text => <a>{text}</a>,
+				render: text => <a style={{ color: "darkred" }}>{text}</a>,
 			},
 			// {
 			// 	title: 'Donors NIC',
@@ -449,12 +449,15 @@ const BloodBags = () => {
 			<div>
 
 				<Title>Blood Bags Details</Title>
-				<Button type="primary" href='/bloodbank/add-details'>Add Blood Bag</Button>
+				<div style={{ padding: '26px 1020px 16px'}}>
+					<Button type="primary" href='/bloodbank/add-details'>Add Blood Bag</Button>
+				</div>
+				
 				<br></br>
 				<Table columns={columns} dataSource={bloodBags} />
 
 				<Title>Blood Transfusion Details</Title>
-				<Table columns={column} dataSource={bloodTransfusion} />
+				<Table columns={column} dataSource={bloodTransfusion} style={{ padding: '26px 0px 16px'}}/>
 				<Modal title="Basic Modal"
 					visible={modalData}
 					// onCancel={handleCancel}
