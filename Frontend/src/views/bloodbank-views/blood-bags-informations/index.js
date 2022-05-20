@@ -437,7 +437,7 @@ const BloodBags = () => {
 				render: (text, record) => (
 					<span>
 						<a >View More</a>
-						<a >Edit</a>
+						<a href={`../bloodbank/update-transfusion?bagId=${record.bagId}`}>Edit</a>
 						<Divider type="vertical" />
 
 					</span>
