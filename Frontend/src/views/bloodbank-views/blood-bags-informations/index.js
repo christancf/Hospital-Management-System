@@ -4,6 +4,8 @@ import bloodBankService from 'services/BloodBankService'
 import moment from 'moment';
 
 const { Title } = Typography
+const queryParams = new URLSearchParams(window.location.search);
+const bagId = queryParams.get('bagId');
 
 
 const BloodBags = () => {
@@ -13,9 +15,14 @@ const BloodBags = () => {
 		return datum / 1000;
 	}
 
+	const handleCancel = () => {
+		setModalData({ visible: false });
+	  };
+
 	const showModal = (bagId) => {
 		setModalData({
 			visible: true,
+
 		});
 	};
 
@@ -49,6 +56,16 @@ const BloodBags = () => {
 			t_setError(true);
 			t_setData();
 		});
+		
+		// bloodBankService.bloodBagDetails(bagId).then((resp) => {
+		// 	setModalData(resp.payload);
+		// 	setLoading(false);
+
+		// }).catch((err) => {
+		// 	setLoading(false);
+		// 	setError(true);
+		// 	setModalData();
+		// });
 	}, []);
 
 	const bagViewMore = (bagId) => {
@@ -440,9 +457,19 @@ const BloodBags = () => {
 				<Table columns={column} dataSource={bloodTransfusion} />
 				<Modal title="Basic Modal"
 					visible={modalData}
+					// onCancel={handleCancel}
+					footer={[
+						<Button key="Cancel" onClick={handleCancel}>
+						  Cancel
+						</Button>,
+						// <Button key="Tranfusion" type="primary" href={`../bloodbank/add-transfusion?bagId=${record.bagId}`}>
+						//   Tranfusion
+						// </Button>,
+					  ]}
 				>
 					<p>Some contents...</p>
 					<p>{data[0].bagId}</p>
+					<p></p>
          
 				</Modal>
 				{/* <Modal
