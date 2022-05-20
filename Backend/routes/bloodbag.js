@@ -82,9 +82,23 @@ router.get('/details/read', async (req, res, next) => {
   }
 });
 
-//read one
+//read blood bag one
 router.get('/read', function(req,res,next){
   bloodbagModel.find({bagId:req.query.id})
+  .then((bloodBag) => {
+      res.status(200).json({
+          success:true,
+          message:'inserted sucessful',
+          payload:bloodBag[0]
+      })
+  }).catch((e) => {
+      res.status(400).json({success:false,message:e.message,payload:{}})
+  })
+});
+
+//read blood transfusion one
+router.get('/readTransfusion', function(req,res,next){
+  transfusionModel.find({bagId:req.query.id})
   .then((bloodBag) => {
       res.status(200).json({
           success:true,
@@ -109,7 +123,28 @@ router.put('/update-details', (req, res, next) => {
     .then((result) => {
       res.json({
           success:true,
-          message:'inserted sucessful',
+          message:'Update sucessful',
+          payload:{}
+      })
+    }).catch((e) => {
+      res.status(400).json({success:false,message:e.message,payload:{}})
+    })
+});
+
+//update blood transfusion details
+router.put('/update-transfusion', (req, res, next) => {
+
+  transfusionModel.updateOne({"bagId":req.body.bloodbag.bagId,},
+    {$set: {"id":req.body.bloodbag.id,
+      "name":req.body.bloodbag.name,
+      "reason":req.body.bloodbag.reason, 
+      "issueDate":req.body.bloodbag.issueDate,
+      "bloodGroup":req.body.bloodbag.bloodGroup,
+      "pbloodGroup":req.body.bloodbag.pbloodGroup}})
+    .then((result) => {
+      res.json({
+          success:true,
+          message:'Update sucessful',
           payload:{}
       })
     }).catch((e) => {

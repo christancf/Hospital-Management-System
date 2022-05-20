@@ -200,7 +200,7 @@ const UpdateBloodBag = () => {
 				<Form.Item name="donationNumber" initialValue={data.donationNumber} label=" Donation Number" rules={[{ required: true }]} placeholder="Donation Number">
 					<Input />
 				</Form.Item>
-				<Form.Item name="donateDate" initialValue={moment(new Date(data.donateDate * 1000))} label="Donate Date" rules={[{ required: true }]} placeholder=" Donate Date">
+				<Form.Item name="donateDate" initialValue={moment(new Date(data.donateDate))} label="Donate Date" rules={[{ required: true }]} placeholder=" Donate Date">
 					<DatePicker disabledDate={disabledDate2} />
 				</Form.Item>
 				<Form.Item name="place" initialValue={data.place} label="Place" rules={[{ required: true }]} placeholder="Place">
@@ -220,9 +220,9 @@ const UpdateBloodBag = () => {
 				</Form.Item>
 
 				<Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-					{/* <Button className="mr-2" htmlType="button" onClick={onReset}>
-						Reset
-					</Button> */}
+				<Button className="mr-2" htmlType="button" href={`../bloodbank/bags-informations`}>
+							Cancel
+						</Button>
 
 					<Button type="primary" htmlType="submit">
 						Update
