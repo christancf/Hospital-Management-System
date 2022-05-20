@@ -116,43 +116,58 @@ router.put('/update-details', (req, res, next) => {
 });
 
 //delete blood bag
-router.delete('/deleteBagList', function (req, res, next) {
+router.delete('/deleteBagList', (req,res,next) => {
 
-  const id = req.query.bagId;
+  const bagId = req.query.id;
 
-  try {
-    bloodbagModel.updateOne(id, {
-      $set: {
-        status: 'deleted'
-      }
-    }).then((response) => {
-      res.status(200).json(
-        {
-          succuss: true,
-          message: 'Delete process succussfull',
-          payload: {}
-        }
-      );
-    }).catch((err) => {
-      res.status(400).json(
-        {
-          succuss: false,
-          message: err.message,
-          payload: {}
-        }
-      );
-    });
-  }
-  catch (error) {
-    res.status(400).json(
-      {
-        succuss: false,
-        message: error.message,
-        payload: {}
-      }
-    );
-  }
-});
+  bloodbagModel.updateOne({bagId:bagId},{$set: {status: 'Expired'}})
+  .then((result) => {
+      res.json({
+          success:true,
+          message:'Deleted sucessful',
+          payload:{}
+      })
+    }).catch((e) => {
+      res.status(400).json({success:false,message:e.message,payload:{}})
+    })
+})
+// router.delete('/deleteBagList', function (req, res, next) {
+
+//   const id = req.query.bagId;
+
+//   try {
+//     bloodbagModel.updateOne(id, {
+//       $set: {
+//         status: 'deleted'
+//       }
+//     }).then((response) => {
+//       res.status(200).json(
+//         {
+//           succuss: true,
+//           message: 'Delete process succussfull',
+//           payload: {}
+//         }
+//       );
+//     }).catch((err) => {
+//       res.status(400).json(
+//         {
+//           succuss: false,
+//           message: err.message,
+//           payload: {}
+//         }
+//       );
+//     });
+//   }
+//   catch (error) {
+//     res.status(400).json(
+//       {
+//         succuss: false,
+//         message: error.message,
+//         payload: {}
+//       }
+//     );
+//   }
+// });
 
 //get bagID
 router.get('/bagId', function(req,res,next){

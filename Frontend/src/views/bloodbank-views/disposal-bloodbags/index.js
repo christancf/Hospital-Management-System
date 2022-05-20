@@ -1,10 +1,8 @@
-import React, { useState, useEffect, Modal, Component } from 'react';
-import { Table, Typography, Spin, Button, Divider, Tag } from 'antd';
-import Chart from "react-apexcharts";
-import { COLORS } from 'constants/ChartConstant';
-
+import React, { useState, useEffect} from 'react';
+import { Table, Typography, Spin, Button, Divider, Tag,Modal,notification } from 'antd';
 import bloodBankService from 'services/BloodBankService'
 
+const { confirm } = Modal;
 const { Title } = Typography
 
 const DisposaBloodBag = () => {
@@ -38,7 +36,47 @@ const DisposaBloodBag = () => {
 		});
 	}, []);
 
+	const openNotification = (title, content) => {
+		notification.open({
+		  message: title,
+		  description: content,
+		  onClick: () => {
+			console.log('Notification Clicked!');
+		  },
+		});
+	  };
 
+	  const deleteExpireBag = (id) => {
+
+		confirm({
+			title: 'Do you want to discharge this patient?',
+			content: 'When clicked the OK button, patient will be discharged',
+			async onOk() {
+			  try {
+					return await new Promise((resolve, reject) => {
+
+						bloodBankService.delete(id).then((ress) => {
+							openNotification("Successfull !", "Patient Discharged Sucessfully");
+							setTimeout(function () {
+								window.location.reload(false);
+							}, 2000);
+
+
+						}).catch((errors) => {
+							openNotification("Unsuccessfull !", "Patient Discharge Process Failed");
+
+						});
+						setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
+					});
+				} catch {
+					return console.log('Oops errors!');
+				}
+			},
+			onCancel() {},
+		  });
+	
+	
+	}
 
 	if (loading) {
 		return (
@@ -179,7 +217,7 @@ const DisposaBloodBag = () => {
 					// 	</span>
 					// </div>
 					<span>
-						<a >Delete </a>
+						<a onClick={()=> { deleteExpireBag(record.patientId)}}>Delete </a>
 						{/* <a href={`../bloodbank/update-details?bagId=${record.bagId}`}>Edit</a> */}
 						{/* <a onClick={() => { showModal(record.bagId) }}>View More</a> */}
 						{/* <a onClick={showModal}>View More</a> */}

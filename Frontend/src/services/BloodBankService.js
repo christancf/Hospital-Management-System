@@ -96,7 +96,7 @@ bloodBankService.updateStatus = function (id,data){
   })
 }
 
-bloodBankService.expireBagDetails = function (id,data){
+bloodBankService.expireBagDetails = function (data){
 
   return fetch({
     url: `/bloodbag/details/readExpireBag`,
