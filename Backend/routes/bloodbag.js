@@ -15,7 +15,7 @@ router.post('/add-details', function (req, res, next) {
     return mydate.setMonth( mydate.getMonth() + 1 )
     }
 
-    const expDate=getExpiretime(parseInt(req.body.donateDate))
+    const expDate=getExpiretime(req.body.donateDate)
     console.log(expDate);
 
   const bloodbag = new bloodbagModel({
@@ -27,8 +27,8 @@ router.post('/add-details', function (req, res, next) {
     donateDate: req.body.donateDate,
     bloodGroup: req.body.bloodGroup.value,
     expireDate:expDate,
-    status:'AA',
-    volume:'450ml',
+    status:'In Stock',
+    volume:'1 pint(450ml)',
     // status: req.body.status
   });
 
@@ -279,7 +279,7 @@ router.put('/update-status', (req, res, next) => {
   const bagId = req.query.id;
 
   bloodbagModel.updateOne({bagId:bagId},
-    {$set: {status: 'pending'}})
+    {$set: {status: 'Out Stock'}})
     .then((result) => {
       res.json({
           success:true,
@@ -293,8 +293,15 @@ router.put('/update-status', (req, res, next) => {
 
 //Find expire bags
 router.get('/details/readExpireBag', async (req, res, next) => {
+
+  var today = new Date().setHours(24, 0, 0, 0)
+  // exDate = new Date(req.query.expireDate).toLocaleDateString()
+  // console.log(exDate);
+
+
   try {
-    let bloodbagDetail = await bloodbagModel.find({}).then((response)=> {
+    let bloodbagDetail = await bloodbagModel.find(
+      {expireDate:{$lt:today}}).then((response)=> {
       res.status(200).json({
         succuss: true,
         message: 'read succussfull',

@@ -1,5 +1,5 @@
-import React, { useState, useEffect,Modal,Component } from 'react';
-import { Table, Typography, Spin, Button, Divider, Tag } from 'antd';
+import React, { useState, useEffect, Component } from 'react';
+import { Table, Typography, Spin, Button, Divider, Tag, Modal } from 'antd';
 import bloodBankService from 'services/BloodBankService'
 import moment from 'moment';
 
@@ -7,18 +7,17 @@ const { Title } = Typography
 
 
 const BloodBags = () => {
-	const state = { visible: false };
 
 	function toTimestamp(strDate) {
 		var datum = Date.parse(strDate);
 		return datum / 1000;
 	}
 
-	const showModal = () => {
-		this.setState({
-		  visible: true,
+	const showModal = (bagId) => {
+		setModalData({
+			visible: true,
 		});
-	  };
+	};
 
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
@@ -27,6 +26,8 @@ const BloodBags = () => {
 	const [t_loading, t_setLoading] = useState(true);
 	const [t_error, t_setError] = useState(false);
 	const [t_data, t_setData] = useState();
+
+	const [modalData, setModalData] = useState();
 
 	useEffect(() => {
 		bloodBankService.readBloodDetails().then((resp) => {
@@ -39,7 +40,7 @@ const BloodBags = () => {
 			setData();
 		});
 
-			bloodBankService.readTransfusionDetails().then((resp) => {
+		bloodBankService.readTransfusionDetails().then((resp) => {
 			t_setData(resp.payload);
 			t_setLoading(false);
 
@@ -49,6 +50,16 @@ const BloodBags = () => {
 			t_setData();
 		});
 	}, []);
+
+	const bagViewMore = (bagId) => {
+
+		// Modal({
+		// 	title:"Basic Modal",
+		//   visible:{modalData}
+		// //   onOk:{this.handleOk}
+		// //   onCancel:{this.handleCancel}
+		//   });
+	}
 
 	if (loading) {
 		return (
@@ -97,12 +108,12 @@ const BloodBags = () => {
 	else {
 		console.log(data);
 		for (var i = 0; i < data.length; i++) {
-			data[i].donateDate = new Date(data[i].donateDate * 1000).toLocaleDateString()
-			data[i].expireDate = new Date(data[i].expireDate * 1000).toLocaleDateString()
+			data[i].donateDate = new Date(data[i].donateDate).toLocaleDateString()
+			data[i].expireDate = new Date(data[i].expireDate).toLocaleDateString()
 		}
 
 		for (var i = 0; i < t_data.length; i++) {
-			t_data[i].issueDate = new Date(t_data[i].issueDate * 1000).toLocaleDateString()
+			t_data[i].issueDate = new Date(t_data[i].issueDate).toLocaleDateString()
 
 		}
 
@@ -114,7 +125,7 @@ const BloodBags = () => {
 				donorName: response.donorName,
 				donorNIC: response.donorNIC,
 				donationNumber: response.donationNumber,
-				expireDate:response.expireDate,
+				expireDate: response.expireDate,
 				donateDate: response.donateDate,
 				place: response.place,
 				tags: response.bloodGroup
@@ -177,7 +188,7 @@ const BloodBags = () => {
 				{ text: 'O negative(O-)', value: 'O-' },
 				{ text: 'AB positive(AB+)', value: 'AB+' },
 				{ text: 'AB negative(AB-)', value: 'AB-' },],
-				onFilter: (value, record) => record.tags==value,
+				onFilter: (value, record) => record.tags == value,
 
 				render: tags => (
 					<span>
@@ -243,9 +254,10 @@ const BloodBags = () => {
 					<span>
 						<a href={`../bloodbank/add-transfusion?bagId=${record.bagId}`}>Transfusion </a>
 						<a href={`../bloodbank/update-details?bagId=${record.bagId}`}>Edit</a>
+						<a onClick={() => { showModal(record.bagId) }}>View More</a>
 						{/* <a onClick={showModal}>View More</a> */}
 						<Divider type="vertical" />
-						
+
 					</span>
 				),
 			},
@@ -288,7 +300,7 @@ const BloodBags = () => {
 				{ text: 'O negative(O-)', value: 'O-' },
 				{ text: 'AB positive(AB+)', value: 'AB+' },
 				{ text: 'AB negative(AB-)', value: 'AB-' },],
-				onFilter: (value, record) => record.tags==value,
+				onFilter: (value, record) => record.tags == value,
 
 				render: tags => (
 					<span>
@@ -351,7 +363,7 @@ const BloodBags = () => {
 				{ text: 'O negative(O-)', value: 'O-' },
 				{ text: 'AB positive(AB+)', value: 'AB+' },
 				{ text: 'AB negative(AB-)', value: 'AB-' },],
-				onFilter: (value, record) => record.tags==value,
+				onFilter: (value, record) => record.tags == value,
 
 				render: pbloodGroup => (
 					<span>
@@ -410,7 +422,7 @@ const BloodBags = () => {
 						<a >View More</a>
 						<a >Edit</a>
 						<Divider type="vertical" />
-						
+
 					</span>
 				),
 			},
@@ -418,7 +430,7 @@ const BloodBags = () => {
 
 		return (
 			<div>
-				
+
 				<Title>Blood Bags Details</Title>
 				<Button type="primary" href='/bloodbank/add-details'>Add Blood Bag</Button>
 				<br></br>
@@ -426,6 +438,13 @@ const BloodBags = () => {
 
 				<Title>Blood Transfusion Details</Title>
 				<Table columns={column} dataSource={bloodTransfusion} />
+				<Modal title="Basic Modal"
+					visible={modalData}
+				>
+					<p>Some contents...</p>
+					<p>{data[0].bagId}</p>
+         
+				</Modal>
 				{/* <Modal
           title="Basic Modal"
           visible={state.visible}
