@@ -55,6 +55,11 @@ const Demo = () => {
     let dataset = Object.entries(data)
     dataset[1][0] = 'Name'
     dataset[2][0] = 'Sex'
+    if (dataset[2][1] == 'female') {
+      dataset[2][1] = "Female"
+    } else {
+      dataset[2][1] = "Male"
+    }
     dataset[3][0] = 'Address'
     dataset[4][0] = 'Date of Birth'
     dataset[5][0] = 'Date & Time of Death'
