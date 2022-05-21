@@ -124,7 +124,7 @@ const AddBloodTransfusion = () => {
 		  id: values.id,
 		  name: values.name,
 		  reason: values.reason,
-		  issueDate: moment(values.issueDate).format("X"),
+		  issueDate: moment(values.issueDate).valueOf(),
 		  bloodGroup: values.bloodGroup,
 		  pbloodGroup:values.pbloodGroup,
 			// status:values.status,
@@ -140,10 +140,10 @@ const AddBloodTransfusion = () => {
 
 		
 		bloodBankService.updateStatus(bagId,payload).then((res) => {
-			ShowModel("Successful!", 5, "Bloody", true)
+			// ShowModel("Successful!", 5, "Bloody", true)
 			form.resetFields();
 		}).catch((error) => {
-			ShowModel("Failed!", 5, "Blood", false)
+			// ShowModel("Failed!", 5, "Blood", false)
 		})
 	
 		console.log(payload)
@@ -239,7 +239,7 @@ const AddBloodTransfusion = () => {
 						autoSize={{ minRows: 3, maxRows: 5 }}
 					/>
 				</Form.Item>
-				<Form.Item label="Issue Date & Time" name="issueDate">
+				<Form.Item label="Issue Date" name="issueDate">
 					<DatePicker disabledDate={disabledDate2} />
 				</Form.Item>
 				<Form.Item name="bloodGroup" initialValue={data.bloodGroup} label="Blood Group of Bag" >

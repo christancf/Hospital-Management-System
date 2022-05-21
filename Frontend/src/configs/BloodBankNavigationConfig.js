@@ -37,7 +37,7 @@ const dashBoardNavTree = [{
   },
   {
     key: 'disposalBloodBag',
-    path: `${BLOODBANK_PREFIX_PATH}/disposal-bag`,
+    path: `${BLOODBANK_PREFIX_PATH}/disposal-bloodbags`,
     title: 'Disposal Of Blood Bag',
     icon: ExclamationCircleOutlined,
     breadcrumb: false,
