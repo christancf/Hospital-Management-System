@@ -357,4 +357,29 @@ router.post("/stat", async function (req, res, next) {
   }
 });
 
+
+//stat 2
+router.post("/stat2", async function (req, res, next) {
+  try {
+    let corpseDetails = await corpseModel.aggregate([
+      { $group: { 
+        _id: {
+          "sex": "$sex",
+          "cod": "$cause_of_death"
+        },
+        count: { $sum: 1 } } },
+    ]);
+    res.status(200).json({
+      success: true,
+      message: "Successful Retrieval",
+      payload: corpseDetails,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
 module.exports = router;

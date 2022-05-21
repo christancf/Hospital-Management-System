@@ -110,4 +110,12 @@ mortuaryService.stat = function () {
     method: "post",
   });
 };
+
+//stat 2
+mortuaryService.stat2 = function () {
+  return fetch({
+    url: `/mortuary/stat2`,
+    method: "post",
+  });
+};
 export default mortuaryService;
