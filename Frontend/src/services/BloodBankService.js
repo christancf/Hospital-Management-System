@@ -130,4 +130,18 @@ bloodBankService.bloodBagsCount = function () {
   });
 };
 
+bloodBankService.transfusionCount = function () {
+  return fetch({
+    url: `/bloodbag/transfusionCount`,
+    method: "post",
+  });
+};
+
+bloodBankService.availableBagCount = function () {
+  return fetch({
+    url: `/bloodbag/availaleBloodCount`,
+    method: "post",
+  });
+};
+
 export default bloodBankService

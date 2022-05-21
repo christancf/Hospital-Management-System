@@ -341,12 +341,56 @@ router.get('/details/readExpireBag', async (req, res, next) => {
 //Available blood bag count
 router.post("/bloodBagsCount", async function (req, res, next) {
 
-  var status='In Stock'
+  try {
+    let bagsDetails = await bloodbagModel.aggregate([
+      { $match: {$and: [{ status: "In Stock" },]} },
+      { $group: { _id: "$bloodGroup", count: { $sum: 1} } },
+    ]);
+    res.status(200).json({
+      success: true,
+      message: "Successful Retrieval",
+      payload: bagsDetails,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+//Blood transfusion
+router.post("/transfusionCount", async function (req, res, next) {
+
+  var today = new Date().setHours(24, 0, 0, 0)
+  var januOne = new Date(1640975400000).setHours(0,0,0,0)
+
+  try {
+    let bagsDetails = await transfusionModel.aggregate([
+    { $match: {$and: [{ issueDate: { $gte: januOne } },{ issueDate: { $lte: today } }]} },
+      { $group: { _id: "$bloodGroup", count: { $sum: 1} } },]);
+    res.status(200).json({
+      success: true,
+      message: "Successful Retrieval",
+      payload: bagsDetails,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+//Available blood count
+router.post("/availaleBloodCount", async function (req, res, next) {
+
+  var today = new Date().setHours(24, 0, 0, 0)
 
   try {
     let bagsDetails = await bloodbagModel.aggregate([
-      { $group: { _id: "$bloodGroup", count: { $sum: 1} } },
-    ]);
+      { $match: {$and: [{ status: "In Stock" },{expireDate:{$gt:today}}]} },
+      { $group: { _id: '', count: { $sum: 1} } },]);
     res.status(200).json({
       success: true,
       message: "Successful Retrieval",
