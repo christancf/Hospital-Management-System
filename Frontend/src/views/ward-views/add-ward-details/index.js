@@ -50,7 +50,7 @@ const AddWardForm = () => {
         <Input placeholder='Ward ID' />
       </Form.Item>
 	    <Form.Item label="Category" name="category" rules={[{ required: true, message: 'Please select ward category' }]}>
-        <Select allowClear>
+        <Select allowClear placeholder='Select a category'>
           <Option value="accident">Accident</Option>
           <Option value="general">General</Option>
           <Option value="icu">ICU</Option>
@@ -58,6 +58,9 @@ const AddWardForm = () => {
       </Form.Item>
       <Form.Item label="Ward Capacity" name="capacity" rules={[{ required: true, message: 'Please input the ward capacity'}]}>
 		    <Input placeholder='Capacity' />
+      </Form.Item>
+      <Form.Item label="Room Charge" name="room-charge" rules={[{ required: true, message: 'Please input the ward capacity'}]}>
+		    <Input placeholder='Room Charge' />
       </Form.Item>
 	    <Form.Item label="Status" name="status" rules={[{ required: true, message: 'Please select status' }]}>
         <Select placeholder="Select the current status of the ward" allowClear>
