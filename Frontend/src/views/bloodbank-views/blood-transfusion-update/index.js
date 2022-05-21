@@ -4,14 +4,10 @@ import { useState, useEffect } from 'react';
 import bloodBankService from 'services/BloodBankService';
 const { Title } = Typography
 const { Option } = Select;
+const { TextArea } = Input
 
 const queryParams = new URLSearchParams(window.location.search);
 const bagId = queryParams.get('bagId');
-
-function toTimestamp(strDate) {
-	var datum = Date.parse(strDate);
-	return datum / 1000;
-}
 
 const layout = {
 	labelCol: { span: 5 },
@@ -60,11 +56,7 @@ const bloodGroup = [
 	},
 ]
 
-
-const UpdateBloodBag = () => {
-	// const onReset = () => {
-	// 	form.resetFields();
-	// };
+const UpdateTransfusion = () => {
 
 	const [form] = Form.useForm();
 
@@ -73,7 +65,7 @@ const UpdateBloodBag = () => {
 	const [data, setData] = useState();
 
 	useEffect(() => {
-		bloodBankService.bloodBagDetails(bagId).then((resp) => {
+		bloodBankService.bloodTransfusionDetails(bagId).then((resp) => {
 			setData(resp.payload);
 			setLoading(false);
 		}).catch((err) => {
@@ -99,7 +91,7 @@ const UpdateBloodBag = () => {
 			setTimeout(() => {
 				clearInterval(timer);
 				modal.destroy();
-				window.location.href="../bloodbank/bags-informations";
+				window.location.href = "../bloodbank/bags-informations";
 			}, delay * 1000);
 		}
 
@@ -125,32 +117,26 @@ const UpdateBloodBag = () => {
 		return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
 	}
 
-
 	const onFinish = values => {
 
 		const bloodbag = {
 			bagId: bagId,
-			donorName: values.donorName,
-			donorNIC: values.donorNIC,
-			donationNumber: values.donationNumber,
-			donateDate: moment(values.donateDate).valueOf(),
-			place: values.place,
+			id: values.id,
+			name: values.name,
+			reason: values.reason,
+			issueDate: moment(values.issueDate).valueOf(),
 			bloodGroup: values.bloodGroup,
+			pbloodGroup: values.pbloodGroup,
 		}
 
 		const payload = { bloodbag: bloodbag }
 
-		bloodBankService.updateBloodDetails(payload).then((res) => {
-			ShowModel("Successful!", 5, "Blood Bag details updated Sucessfully", true)
+		bloodBankService.updateBloodTransfusion(payload).then((res) => {
+			ShowModel("Successful!", 5, "Blood Bag Transfusion details updated Sucessfully", true)
 			form.resetFields();
 		}).catch((error) => {
-			ShowModel("Failed!", 5, "Blood Bag details update Failed", false)
+			ShowModel("Failed!", 5, "Blood Bag Transfusion details update Failed", false)
 		})
-
-		console.log(payload)
-
-
-		//console.log(res);
 	};
 
 	if (loading) {
@@ -175,52 +161,43 @@ const UpdateBloodBag = () => {
 		)
 
 	}
-
 	else {
 
 		function disabledDate2(current) {
 			// Can not select days before today and today
 			return current && current > moment().endOf('day');
-		  }
-		// var myDate = new Date(data.dateOfBirth);
-		// myDate.toLocaleString();
+		}
 
 		return (
-			<Form {...layout} name="BloodBagUpdate" onFinish={onFinish} validateMessages={validateMessages}>
-				<Title>Edit Blood Bag</Title><br></br>
+			<Form {...layout} name="BloodTransfusionUpdate" onFinish={onFinish} validateMessages={validateMessages}>
+				<Title>Edit Blood Transfusion Details</Title><br></br>
 				<Form.Item name="bagId" label="Bag Id" initialValue={bagId} placeholder="Bag Id" >
 					<Input disabled />
 				</Form.Item>
-				<Form.Item name="donorName" initialValue={data.donorName} label="Donor's  Name" rules={[{ required: true }]} placeholder="Donor's  Name" >
-					<Input />
+				<Form.Item name="id" initialValue={data.id} label="Recipient ID" placeholder="Recipient ID" >
+					<Input disabled />
 				</Form.Item>
-				<Form.Item name="donorNIC" initialValue={data.donorNIC} label=" Donor's NIC" rules={[{ required: true,pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' , message: 'Enter valid NIC' }]} placeholder="Donor's NIC">
-					<Input />
+				<Form.Item name="name" initialValue={data.name} label=" Recipient Name" placeholder="Recipient Name">
+					<Input disabled />
 				</Form.Item>
-				<Form.Item name="donationNumber" initialValue={data.donationNumber} label=" Donation Number" rules={[{ required: true }]} placeholder="Donation Number">
-					<Input />
+				<Form.Item label="Reason" name="reason" initialValue={data.reason} rules={[{ required: true }]} style={{ margin: '24px 0' }}>
+					<TextArea
+						placeholder="Reason of the blood transfusion"
+						autoSize={{ minRows: 3, maxRows: 5 }}
+					/>
 				</Form.Item>
-				<Form.Item name="donateDate" initialValue={moment(new Date(data.donateDate))} label="Donate Date" rules={[{ required: true }]} placeholder=" Donate Date">
+				<Form.Item name="issueDate" initialValue={moment(new Date(data.issueDate))} label="Issue Date" rules={[{ required: true }]} placeholder=" Issue Date">
 					<DatePicker disabledDate={disabledDate2} />
 				</Form.Item>
-				<Form.Item name="place" initialValue={data.place} label="Place" rules={[{ required: true }]} placeholder="Place">
-					<Input />
+				<Form.Item name="bloodGroup" initialValue={data.bloodGroup} label="Blood Group of Bag" placeholder="Blood Group of Bag">
+					<Input disabled />
 				</Form.Item>
-				<Form.Item name="bloodGroup" initialValue={data.bloodGroup} label="bloodGroup" rules={[{ required: true }]}>
-					<Select
-						placeholder="Select Blood Group"
-						filterOption={false}
-						showSearch={{ filter }}
-						style={{ width: '100%' }}
-					>
-						{bloodGroup.map(d => (
-							<Option key={d.value}>{d.label}</Option>
-						))}
-					</Select>
+				<Form.Item name="bloodGroup" initialValue={data.pbloodGroup} label="Blood Group of Recipient" placeholder="Blood Group of Recipient">
+					<Input disabled />
 				</Form.Item>
 
 				<Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-				<Button className="mr-2" htmlType="button" href={`../bloodbank/bags-informations`}>
+					<Button className="mr-2" htmlType="button" href={`../bloodbank/bags-informations`}>
 							Cancel
 						</Button>
 
@@ -229,8 +206,10 @@ const UpdateBloodBag = () => {
 					</Button>
 				</Form.Item>
 			</Form>
-		);
+		)
 	}
-};
 
-export default UpdateBloodBag;
+
+}
+
+export default UpdateTransfusion
