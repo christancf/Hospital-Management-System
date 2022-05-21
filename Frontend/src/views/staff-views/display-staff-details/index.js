@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Spin, Table, Tag, Typography, Divider, Input  } from 'antd';
+import { Spin, Table, Tag, Typography, Divider, <Input:color></Input:color> } from 'antd';
 import staffService from 'services/StaffService';
 
 const { Title } = Typography
@@ -66,14 +66,31 @@ const DisplayStaffDetails = () => {
         )
       })
       setData(savedData)
-  }
+    }
+
+    const search = (value) => {
+      if(value === '') return setData(data)
+      value = value.toUpperCase()
+      data.map(d => {
+        let staffName = d.staffName.toUpperCase()
+        if(staffName === value || staffName.includes(value)) {
+          savedData.push(d)
+        }
+        return
+      })
+      setData(savedData)
+    }
 
     return (
       <div >
         <Title>Staff Details</Title>
         <Search 
           placeholder="input search text" 
-          onSearch={value => searchByName(value)} enterButton allowClear
+          id="searchStaff"
+          onSearch={value => search(value)}
+          onInput={() => searchByName(document.getElementById('searchStaff').value)} 
+          enterButton 
+          allowClear
           style={{width: 300, marginBottom: 20}} />
         <Table columns={columns} dataSource={data} onChange={onChange}/>        
       </div>
