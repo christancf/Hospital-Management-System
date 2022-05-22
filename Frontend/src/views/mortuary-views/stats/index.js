@@ -2,50 +2,38 @@ import React, { useState, useEffect } from "react";
 import Chart from "react-apexcharts";
 import ReactApexChart from "react-apexcharts";
 import mortuaryService from "services/MortuaryService";
-import { Divider } from "antd";
-import {
-  Page,
-  Text,
-  Image,
-  Document,
-  StyleSheet,
-  PDFDownloadLink,
-  View,
-  usePDF,
-} from "@react-pdf/renderer";
+import { Divider, Button } from "antd";
+import jsPDF from "jspdf";
+import domtoimage from "dom-to-image";
 
-const styles = StyleSheet.create({
-  page: { flexDirection: "row", backgroundColor: "#E4E4E4" },
-  section: { margin: 10, padding: 10, flexGrow: 1 },
-});
 
 const App = () => {
+  const printDocument = () => {
+    const input = document.getElementsByClassName("printing-wrapper")[0];
+    const pdf = new jsPDF();
+    if (pdf) {
+      domtoimage.toPng(input).then((imgData) => {
+        pdf.addImage(imgData, "PNG", 15, 15, 180, 160);
+        pdf.save("download.pdf");
+      });
+    }
+  };
+
   return (
     <div>
-      <Home />
-      <GeneratePDF />
+      <div className="printing-wrapper">
+        <Home />
+      </div>
+
+      <div style={{ textAlign: "right", margin: 20 }}>
+        <Button type="primary" onClick={printDocument}>
+          Download PDF
+        </Button>
+      </div>
     </div>
   );
 };
-const MyDocument = () => (
-  <Document>
-    <Page size="A4" style={styles.page}>
-      <View style={styles.section}>
-        <Home />
-      </View>
-    </Page>
-  </Document>
-);
-const GeneratePDF = () => {
-  const [instance, updateInstance] = usePDF({ document: <MyDocument /> });
-  if (instance.loading) return <div>Loading ...</div>;
-  if (instance.error) return <div>Something went wrong: {instance.error}</div>;
-  return (
-    <a href={instance.url} download="test.pdf">
-      Download
-    </a>
-  );
-};
+
 const Home = () => {
   const [loading1, setLoading1] = useState(true);
   const [error1, setError1] = useState(false);
@@ -214,25 +202,21 @@ const Home = () => {
     );
   } else if (!(loading1 && loading2)) {
     return (
-      <Document>
-        <Page>
-          <div style={{ marginLeft: 50, marginRight: 70 }}>
-            <Divider>
-              <h3>Number of Deaths vs Cause of Death</h3>
-            </Divider>
-            <Chart options={options} series={series} height={300} />
-            <Divider style={{ marginTop: 100 }}>
-              <h3>Number of Deaths vs Cause of Death</h3>
-            </Divider>
-            <ReactApexChart
-              options={options2}
-              series={series2}
-              type="bar"
-              height={350}
-            />
-          </div>
-        </Page>
-      </Document>
+      <div style={{ marginLeft: 50, marginRight: 70 }}>
+        <Divider>
+          <h3>Number of Deaths vs Cause of Death</h3>
+        </Divider>
+        <Chart options={options} series={series} height={300} />
+        <Divider style={{ marginTop: 100 }}>
+          <h3>Number of Deaths vs Cause of Death</h3>
+        </Divider>
+        <ReactApexChart
+          options={options2}
+          series={series2}
+          type="bar"
+          height={350}
+        />
+      </div>
     );
   }
 };
