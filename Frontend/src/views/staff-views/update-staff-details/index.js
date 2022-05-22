@@ -1,6 +1,7 @@
 import React from 'react'
 import { Form, Input, Button, DatePicker, message, Card, Select } from 'antd';
 import moment from 'moment';
+import {useLocation} from "react-router-dom";
 import staffService from 'services/StaffService';
 
 const { Search } = Input;
@@ -45,15 +46,19 @@ const Demo = () => {
 
   const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo);
-  }; 
+  };
+  
+  const search = useLocation().search;
+  const id = new URLSearchParams(search).get('id');
 
-  const searchById = (id) => {
-
+  if (id != null) {
+  
     staffService.readStaffDetails(id)
     .then((details) => {
       staffDetails = details[0]
         
-      form.setFieldsValue({
+      form.setFieldsValue({ 
+        staffID: id,
         staffName: staffDetails.staffName,
         NIC: staffDetails.NIC,
         email: staffDetails.email,
@@ -65,6 +70,32 @@ const Demo = () => {
         basicSalary: staffDetails.basicSalary,
         mobile: staffDetails.mobile,
         home: staffDetails.home})
+
+      document.getElementById('staffID').setAttribute('disabled', 'true')
+    })
+    .catch((e) => console.log(`Error: ${ e }`))
+  }
+
+  const searchById = (id) => {
+
+    staffService.readStaffDetails(id)
+    .then((details) => {
+      staffDetails = details[0]
+        
+      form.setFieldsValue({ 
+        staffName: staffDetails.staffName,
+        NIC: staffDetails.NIC,
+        email: staffDetails.email,
+        designation: staffDetails.designation,
+        qualification: staffDetails.qualification,
+        dateOfBirth: moment(staffDetails.dateOfBirth),
+        gender: staffDetails.gender,
+        address: staffDetails.address,
+        basicSalary: staffDetails.basicSalary,
+        mobile: staffDetails.mobile,
+        home: staffDetails.home})
+
+      document.getElementById('staffID').setAttribute('disabled', 'true')
     })
     .catch((e) => console.log(`Error: ${ e }`))
   };
@@ -82,10 +113,11 @@ const Demo = () => {
       >
         <Form.Item
           label="Staff ID"
-          name="staffID"  
-          rules={[{ required: true, message: 'Please input the staff ID!' }]}      
+          name="staffID"
+           
+          rules={[{ required: true, message: 'Please input the staff ID!' }]} 
         >
-          <Search placeholder="Enter Staff ID" onSearch={id => searchById(id)} enterButton />
+          <Search placeholder="Enter Staff ID" onSearch={id => searchById(id)} enterButton  id='staffID' />
         </Form.Item>
 
         <Form.Item
