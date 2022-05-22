@@ -119,7 +119,7 @@ const tailLayout = {
 					<Input disabled="true" id="qualification" />
 				</Form.Item>
 
-				<Form.Item name="attendanceType" label="Attendance Type" >
+				<Form.Item name="attendanceType" label="Attendance Type" rules={[{ required: true, message: 'Please select the attendance type' }]}>
 					<Select allowClear>
 						<Option value="check in">Check In</Option>
 						<Option value="check out">Check Out</Option>

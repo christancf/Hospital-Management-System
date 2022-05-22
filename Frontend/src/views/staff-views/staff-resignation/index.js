@@ -112,7 +112,7 @@ const tailLayout = {
 				label="Designation"
 				name="designation"
 				>
-					<Input disabled="true" id="designation" />
+					<Input disabled id="designation" />
 				</Form.Item>
 		
 				<Form.Item
