@@ -3,7 +3,7 @@ import {message, Input, Button, Modal} from 'antd';
 import { DeleteOutlined, EyeOutlined, ExclamationCircleOutlined} from '@ant-design/icons';
 import wardService from 'services/WardService';
 import './index.css'
-const imgUrl = "https://wallpapercave.com/w/wp3977281"
+
 const { Search } = Input;
 const { confirm } = Modal
 const key = 'read'
@@ -36,7 +36,7 @@ const AssignedNurseDetails= () => {
     confirm({
       title: 'Are you sure you want to unassign this staff?',
       icon: <ExclamationCircleOutlined />,
-      content: 'ID: ' + id + ' Staff Name: ' + name,
+      content: '',
       okText: 'Yes',
       okType: 'danger',
       cancelText: 'No',
@@ -98,7 +98,7 @@ const AssignedNurseDetails= () => {
       <div className="container">
         <div className='filter'>
           <Search
-            placeholder="input search text"
+            placeholder="Search ID..."
             id="searchTxt"
             onInput={() => search(document.getElementById('searchTxt').value)}
             allowClear
@@ -108,14 +108,12 @@ const AssignedNurseDetails= () => {
         <div className="collection">    
           {data.map(d => (
             <div className="card">
-              
-              <div className="img"></div>
               <div>
-                <span>{`Staff ID: ${d.nurseID}`}</span><br/>
-                <span>{`Staff Name: ${d.details[0].staffName}`}</span><br/>
-                <span>{`Ward: ${(d.wardCategory === 'icu')? d.wardCategory.toUpperCase() : d.wardCategory[0].toUpperCase() + d.wardCategory.substring(1)}`}</span><br/>
-                <span>{`Ward Unit: ${d.wardID}`}</span><br/>
-                <span>{`Status: ${getStatus(d.nurseID)}`}</span>                
+                <span className='title'>Staff ID: </span><span className='value'>{d.nurseID}</span><br/>
+                <span className='title'>Staff Name: </span><span className='value'>{d.details[0].staffName}</span><br/>
+                <span className='title'>Ward: </span><span className='value'>{(d.wardCategory === 'icu')? d.wardCategory.toUpperCase() : d.wardCategory[0].toUpperCase() + d.wardCategory.substring(1)}</span><br/>
+                <span className='title'>Ward Unit: </span><span className='value'>{d.wardID}</span><br/>
+                <span className='title'>Status: </span><span className='value'>{getStatus(d.nurseID)}</span>                
                 <Button className="bin" htmlType="button" onClick={() => showDeleteConfirm(d.nurseID, d.details[0].staffName)} icon={<DeleteOutlined id="delete"/>}></Button>
                 <Button className="view" htmlType="button" onClick={() => alert("View More")} icon={<EyeOutlined id="eye"/>}></Button>
               </div>

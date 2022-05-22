@@ -59,7 +59,7 @@ const AddWardForm = () => {
       <Form.Item label="Ward Capacity" name="capacity" rules={[{ required: true, message: 'Please input the ward capacity'}]}>
 		    <Input placeholder='Capacity' />
       </Form.Item>
-      <Form.Item label="Room Charge" name="room-charge" rules={[{ required: true, message: 'Please input the ward capacity'}]}>
+      <Form.Item label="Room Charge/day" name="roomCharge" rules={[{ required: true, message: 'Please input the ward capacity'}]}>
 		    <Input placeholder='Room Charge' />
       </Form.Item>
 	    <Form.Item label="Status" name="status" rules={[{ required: true, message: 'Please select status' }]}>
