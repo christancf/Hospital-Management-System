@@ -253,7 +253,11 @@ const Home = () => {
 					<Button type="primary" href='/bloodbank/add-details'>Add Blood Bag</Button>
 				</div>
 
-				<Title>Available Blood Bags</Title>
+				<div style={{ padding: '26px 1020px 16px'}}>
+					<Button type="primary" href='/bloodbank/bags-informations'>Available Blood Bags</Button>
+				</div>
+
+				<Title style={{ padding: '36px 0px 16px' }}>Available Blood Bags</Title>
 				{/* <div >
 					<Doughnut data={myData} width='300'legend={{position:"right"}}/>
 				</div> */}
