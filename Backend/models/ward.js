@@ -13,6 +13,10 @@ const dataSchema = new mongoose.Schema({
         required: true,
         type: Number
     },
+    roomCharge: {
+        required: true,
+        type: Number
+    },
     status: {
         required: true,
         type: String
