@@ -1,5 +1,6 @@
 import React from 'react'
 import { Form, Input, Button, DatePicker, message, Card, Select } from 'antd';
+import moment from 'moment';
 import staffService from 'services/StaffService';
 
 const add = 'add'
@@ -11,6 +12,11 @@ const AddStaffMember = () => {
 			<Demo />
 		</div>
 	)
+}
+
+//disable current date and dates before current date
+function disabledDate(current) {
+	return current && current > moment().endOf('day');
 }
 
 const layout = {
@@ -76,12 +82,12 @@ const Demo = () => {
       <Form.Item
           label="E-mail"
           name="email"
-          rules={[{ pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$", message: 'Please enter a valid email!' }]}
+          rules={[{ required: true, pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$", message: 'Please enter a valid email!' }]}
         >
           <Input />
         </Form.Item>
 
-        <Form.Item name="designation" label="Designation" >
+        <Form.Item name="designation" label="Designation" rules={[{ required: true, message: 'Please select the designation!'}]}>
           <Select allowClear>
             <Option value="doctor">Doctor</Option>
             <Option value="nurse">Nurse</Option>
@@ -102,10 +108,13 @@ const Demo = () => {
           name="dateOfBirth"
           rules={[{ required: true, message: 'Please input the date of birth!'}]}
         >
-            <DatePicker />
+            <DatePicker
+              placeholder='Select Date'
+              format="YYYY-MM-DD"
+              disabledDate={disabledDate} />
         </Form.Item>
 
-        <Form.Item name="gender" label="Gender" >
+        <Form.Item name="gender" label="Gender" rules={[{ required: true, message: 'Please select the gender' }]}>
           <Select allowClear>
             <Option value="male">Male</Option>
             <Option value="female">Female</Option>
@@ -132,7 +141,7 @@ const Demo = () => {
         <Form.Item
           label="Mobile"
           name="mobile"
-          rules={[{ required: true, message: 'Please input the mobile number!' }]}
+          rules={[{ required: true, pattern:'^([0-9]{10}|)$', message: 'Please input valid mobile number!' }]}
         >
         <Input />
         </Form.Item>
@@ -140,7 +149,7 @@ const Demo = () => {
         <Form.Item
           label="Home"
           name="home"
-          rules={[{ required: true, message: 'Please input the home number!' }]}
+          rules={[{ required: true, pattern:'^([0-9]{10}|)$', message: 'Please input valid home number!' }]}
         >
         <Input />
         </Form.Item>
