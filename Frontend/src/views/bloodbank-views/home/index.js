@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Component } from "react";
-import { Typography } from 'antd';
+import { Typography,Button,Card } from 'antd';
 import Chart from "react-apexcharts";
 import { COLORS } from 'constants/ChartConstant';
 import bloodBankService from "services/BloodBankService";
@@ -21,7 +21,9 @@ const Home = () => {
 
 	const [transfusion_loading, transfusion_setLoading] = useState(true);
 	const [transfusion_error, transfusion_setError] = useState(false);
+	const [transfusion_key, transfusion_setKey] = useState(null);
 	const [transfusion_value, transfusion_setValue] = useState(null);
+	
 
 	useEffect(() => {
 		bloodBankService.bloodBagsCount().then((res) => {
@@ -73,15 +75,17 @@ const Home = () => {
 		bloodBankService.transfusionCount().then((res) => {
 			const transfusion_myData = res.payload;
 			var transfusion_key = [];
-			var transfusion_value = [];
-
-			console.log(transfusion_myData);
-
+		var transfusion_value = [... new Set(transfusion_myData.map((item) => {
+			return item._id.transfusion_value;
+		  }))];
+			
 			for (let i = 0; i < transfusion_myData.length; i++) {
 				transfusion_key[i] = transfusion_myData[i]._id;
 				transfusion_value[i] = transfusion_myData[i].count;
+				// transfusion_value.indexOf(transfusion_myData[i]._id.transfusion_value) = transfusion_myData[i].count;
 			}
-			transfusion_setValue(value);
+			transfusion_setKey(transfusion_key);
+			transfusion_setValue(transfusion_value);
 			transfusion_setLoading(false);
 		})
 			.catch((err) => {
@@ -159,49 +163,61 @@ const Home = () => {
 		// 	]
 		// }
 
-		
-
-
-		const Availale_series = [
-			{
-				name: "Desktops",
-				data: Aailable_value,
-			},
-		];
-
 		const transfusion_series = [
 			{
-				name: "Desktops",
+				name: "Number of blood bags",
 				data: transfusion_value,
 			},
 		];
 
 		const transfusion_options = {
-			plotOptions: {
-				bar: {
-					horizontal: false,
-					columnWidth: '55%',
-					endingShape: 'rounded'
-				},
-			},
 			chart: {
-				type: "line",
-				zoom: {
-					enabled: false,
+				type: 'bar',
+				height: 350,
+				fontSize: "140px"
+			  },
+			  plotOptions: {
+				bar: {
+				  horizontal: false,
+				  columnWidth: '40%',
+				  endingShape: 'rounded'
 				},
-			},
-			dataLabels: {
-				enabled: true,
-			},
-			stroke: {
-				curve: "smooth",
-				width: 3,
-			},
-			colors: ["#008FFB","#3e82f7"],
-			//   colors: [COLOR_2],
-			xaxis: {
-			
-			},
+			  },
+			  dataLabels: {
+				enabled: false
+			  },
+			  stroke: {
+				show: true,
+				width: 2,
+				colors: ['transparent']
+			  },
+			  xaxis: {
+				categories: transfusion_key
+			  },
+			  yaxis: {
+				title: {
+				  text: 'Number of blood bags', 
+				  style: {
+					color: undefined,
+					fontSize: '14px',
+					fontFamily: 'Helvetica, Arial, sans-serif',
+					fontWeight: 300,
+					cssClass: 'apexcharts-yaxis-title',
+				}
+				}
+				,
+			  },
+			  fill: {
+				opacity: 1,
+				colors: ['#9D174D','#EC4899','#160C28']
+			  },
+			  tooltip: {
+				y: {
+				  formatter: function (val) {
+					return val + " bags"
+				  }
+				}
+			  }
 		};
 
 		const series = [value[0].count, value[1].count, value[2].count, value[3].count, value[4].count, value[5].count, value[6].count, value[7].count];
@@ -233,14 +249,24 @@ const Home = () => {
 					<p >Available blood count:{Aailable_value[0].count}</p>
 				</div>
 
+				<div style={{ padding: '26px 1020px 16px'}}>
+					<Button type="primary" href='/bloodbank/add-details'>Add Blood Bag</Button>
+				</div>
+
 				<Title>Available Blood Bags</Title>
 				{/* <div >
 					<Doughnut data={myData} width='300'legend={{position:"right"}}/>
 				</div> */}
-
-				<Chart options={options} series={series} height={300} width={600} type="donut" />
+<Card style={{backgroundColor: '#efefef'}}>
+	<Chart options={options} series={series} height={300} width={600} type="donut" />
+</Card>
+				
 				<Title style={{ padding: '36px 0px 16px' }}>Analysis Of Blood Transfusion</Title>
-				<Chart options={transfusion_options} series={transfusion_series} height={300} />
+
+				<Card style={{backgroundColor: '#efefef'}}>
+					<Chart options={transfusion_options} series={transfusion_series} type="bar" height={300} />
+				</Card>
+				
 
 			</div>
 		)
