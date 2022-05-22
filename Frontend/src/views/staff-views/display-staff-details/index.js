@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Spin, Table, Tag, Typography, Divider, <Input:color></Input:color> } from 'antd';
+import { Spin, Table, Tag, Typography, Divider, Input} from 'antd';
 import staffService from 'services/StaffService';
 
 const { Title } = Typography
@@ -49,43 +49,40 @@ const DisplayStaffDetails = () => {
 	}
   else {
     const resData = data
-    const savedData = []
-    const searchByName = (name) => {
-      console.log(name)
-      if(name === '') {
-        return setData(resData)
-      }
+    let savedData = []
+
+    let searchByName = (name) => {
       name = name.toUpperCase()
+      //if(name === '') return setData(resData)
       data.map(d => {
         let staffName = d.staffName.toUpperCase()
         if(staffName === name || staffName.includes(name)) {
           savedData.push(d)
         }
-        return (
-          null
-        )
+        if(name === '') return setData(resData)
+        return setData(savedData)
       })
-      setData(savedData)
+      console.log(savedData)
     }
 
-    const search = (value) => {
-      if(value === '') return setData(data)
+    let search = (value) => {
+      if(value === '') return setData(resData)
       value = value.toUpperCase()
       data.map(d => {
         let staffName = d.staffName.toUpperCase()
         if(staffName === value || staffName.includes(value)) {
           savedData.push(d)
         }
-        return
+        return setData(savedData)
       })
-      setData(savedData)
+      //setData(savedData)
     }
 
     return (
       <div >
         <Title>Staff Details</Title>
         <Search 
-          placeholder="input search text" 
+          placeholder="Search by staff name" 
           id="searchStaff"
           onSearch={value => search(value)}
           onInput={() => searchByName(document.getElementById('searchStaff').value)} 
