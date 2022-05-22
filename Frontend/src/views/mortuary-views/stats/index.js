@@ -3,10 +3,52 @@ import Chart from "react-apexcharts";
 import ReactApexChart from "react-apexcharts";
 import mortuaryService from "services/MortuaryService";
 import { Divider } from "antd";
+import {
+  Page,
+  Text,
+  Image,
+  Document,
+  StyleSheet,
+  PDFDownloadLink,
+  View,
+  usePDF,
+} from "@react-pdf/renderer";
 
+const styles = StyleSheet.create({
+  page: { flexDirection: "row", backgroundColor: "#E4E4E4" },
+  section: { margin: 10, padding: 10, flexGrow: 1 },
+});
+
+const App = () => {
+  return (
+    <div>
+      <Home />
+      <GeneratePDF />
+    </div>
+  );
+};
+const MyDocument = () => (
+  <Document>
+    <Page size="A4" style={styles.page}>
+      <View style={styles.section}>
+        <Home />
+      </View>
+    </Page>
+  </Document>
+);
+const GeneratePDF = () => {
+  const [instance, updateInstance] = usePDF({ document: <MyDocument /> });
+  if (instance.loading) return <div>Loading ...</div>;
+  if (instance.error) return <div>Something went wrong: {instance.error}</div>;
+  return (
+    <a href={instance.url} download="test.pdf">
+      Download
+    </a>
+  );
+};
 const Home = () => {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [loading1, setLoading1] = useState(true);
+  const [error1, setError1] = useState(false);
   const [key, setKey] = useState(null);
   const [value, setValue] = useState(null);
 
@@ -30,51 +72,55 @@ const Home = () => {
         }
         setKey(key);
         setValue(value);
-        setLoading(false);
+        setLoading1(false);
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false);
-        setError(true);
+        setLoading1(false);
+        setError1(true);
         setKey();
         setValue();
       });
-      // graph 2
-      mortuaryService
+    // graph 2
+    mortuaryService
       .stat2()
       .then((res) => {
         const myData = res.payload;
         var male = [];
         var female = [];
-        var cod = [... new Set(myData.map((item) => {
-          return item._id.cod;
-        }))];
+        var cod = [
+          ...new Set(
+            myData.map((item) => {
+              return item._id.cod;
+            })
+          ),
+        ];
 
         for (let i = 0; i < myData.length; i++) {
-          if(myData[i]._id.sex == 'male') {
+          if (myData[i]._id.sex == "male") {
             male[cod.indexOf(myData[i]._id.cod)] = myData[i].count;
           } else {
             female[cod.indexOf(myData[i]._id.cod)] = myData[i].count;
           }
         }
-        setCod(cod)
-        setMale(male)
-        setFemale(female)
+        setCod(cod);
+        setMale(male);
+        setFemale(female);
         setLoading2(false);
       })
       .catch((err) => {
         setLoading2(false);
         setError2(true);
-        setCod()
-        setMale()
-        setFemale()
+        setCod();
+        setMale();
+        setFemale();
       });
   }, []);
   const series = [
     {
       name: "Number of Deaths",
       data: value,
-    }
+    },
   ];
   const options = {
     chart: {
@@ -97,50 +143,49 @@ const Home = () => {
   };
   const series2 = [
     {
-      name: 'Male',
-      data: male
+      name: "Male",
+      data: male,
     },
     {
-      name: 'Female',
-      data: female
-    }
+      name: "Female",
+      data: female,
+    },
   ];
   const options2 = {
     chart: {
-      type: 'bar',
+      type: "bar",
       height: 350,
-      fontSize: "140px"
+      fontSize: "140px",
     },
     plotOptions: {
       bar: {
         horizontal: false,
-        columnWidth: '40%',
-        endingShape: 'rounded'
+        columnWidth: "40%",
+        endingShape: "rounded",
       },
     },
     dataLabels: {
-      enabled: false
+      enabled: false,
     },
     stroke: {
       show: true,
       width: 2,
-      colors: ['transparent']
+      colors: ["transparent"],
     },
     xaxis: {
-      categories: cod
+      categories: cod,
     },
     yaxis: {
       title: {
-        text: 'Number of Deaths', 
+        text: "Number of Deaths",
         style: {
           color: undefined,
-          fontSize: '14px',
-          fontFamily: 'Helvetica, Arial, sans-serif',
+          fontSize: "14px",
+          fontFamily: "Helvetica, Arial, sans-serif",
           fontWeight: 300,
-          cssClass: 'apexcharts-yaxis-title',
-      }
-      }
-      ,
+          cssClass: "apexcharts-yaxis-title",
+        },
+      },
     },
     fill: {
       opacity: 1,
@@ -149,34 +194,47 @@ const Home = () => {
     tooltip: {
       y: {
         formatter: function (val) {
-          return val + " deaths"
-        }
-      }
-    }
+          return val + " deaths";
+        },
+      },
+    },
   };
-  
-  if (loading || loading2) {
+
+  if (loading1 || loading2) {
     return (
       <>
         <p>Data Loading</p>
       </>
     );
-  } else if (error || error2) {
+  } else if (error1 || error2) {
     return (
       <>
         <p>Error</p>
       </>
     );
-  } else if (!(loading && loading2)){
+  } else if (!(loading1 && loading2)) {
     return (
-      <div style={{marginLeft: 50, marginRight: 70}}>
-        <Divider><h3>Number of Deaths vs Cause of Death</h3></Divider>
-        <Chart options={options} series={series} height={300} />
-        <Divider style={{marginTop: 100}}><h3>Number of Deaths vs Cause of Death</h3></Divider>
-        <ReactApexChart options={options2} series={series2} type="bar" height={350} />
-      </div>
+      <Document>
+        <Page>
+          <div style={{ marginLeft: 50, marginRight: 70 }}>
+            <Divider>
+              <h3>Number of Deaths vs Cause of Death</h3>
+            </Divider>
+            <Chart options={options} series={series} height={300} />
+            <Divider style={{ marginTop: 100 }}>
+              <h3>Number of Deaths vs Cause of Death</h3>
+            </Divider>
+            <ReactApexChart
+              options={options2}
+              series={series2}
+              type="bar"
+              height={350}
+            />
+          </div>
+        </Page>
+      </Document>
     );
   }
 };
 
-export default Home;
+export default App;
