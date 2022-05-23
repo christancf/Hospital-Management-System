@@ -1,6 +1,7 @@
 var express = require('express');
 const staffModel = require('../models/staff');
 const attendanceModel = require('../models/attendance');
+const bonusModel = require('../models/bonus');
 var router = express.Router();
 const auth = require("../middleware/auth");
 
@@ -21,9 +22,7 @@ router.post('/add-member', function (req, res, next) {
     basicSalary:Number( req.body.basicSalary),
     mobile: req.body.mobile,
     home: req.body.home,
-    status: 'Employed',
-    bonus: Number(0),
-    totalSalary: Number(0)
+    status: 'Employed'
   });
 
   staff.save()
@@ -85,7 +84,7 @@ router.put('/update-status', (req, res, next) => {
 //insert checkIn attendance
 router.post('/attendance/checkin', function (req, res, next) {
   const attendance = new attendanceModel({
-    staffID: String(req.body.staffID),
+    staffID: Number(req.body.staffID),
     checkIn: req.body.checkIn
   });
 
@@ -105,13 +104,27 @@ router.put('/attendance/checkout', function (req, res, next) {
   }).catch((e) => console.log(`Error: ${e}`))
 });
 
-//update bonus
-router.put('/salary/bonus', (req, res, next) => {
-  staffModel.updateOne({staffID: req.body.staffID},
-    {$inc: {bonus: Number(req.body.bonus)}})
-    .then(() => res.json("Bonus Added!"))
-    .catch((e) => console.log(`Error: ${ e }`))
-})
+// //update bonus
+// router.put('/salary/bonus', (req, res, next) => {
+//   staffModel.updateOne({staffID: req.body.staffID},
+//     {$inc: {bonus: Number(req.body.bonus)}})
+//     .then(() => res.json("Bonus Added!"))
+//     .catch((e) => console.log(`Error: ${ e }`))
+// });
+
+//insert bonuses
+router.post('/salary/bonus', function (req, res, next) {
+  const bonus = new bonusModel({
+    staffID: Number(req.body.staffID),
+    bonusAmount: req.body.bonusAmount,
+    addedDate: req.body.addedDate
+  });
+
+  bonus.save()
+  .then(() => res.json("Bonus Added!"))
+  .catch((e) => console.log(`Error: ${ e }`))
+
+});
 
 
 
