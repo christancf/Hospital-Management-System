@@ -96,6 +96,52 @@ router.post('/appointment/edit', function (req, res, next) {
 
 });
 
+
+router.post('/appointment/editstatus', function (req, res, next) {
+
+  const id = req.query.id;
+
+  try {
+
+    appointmentModel.findByIdAndUpdate(id, {
+      $set: {
+        status: req.body.status
+      }
+    }).then((response) => {
+      res.status(200).json(
+        {
+          succuss: true,
+          message: 'Update process succussfull',
+          payload: {}
+        }
+      );
+
+    }).catch((err) => {
+      res.status(400).json(
+        {
+          succuss: false,
+          message: err.message,
+          payload: {}
+        }
+      );
+
+    });
+
+
+  }
+  catch (error) {
+    res.status(400).json(
+      {
+        succuss: false,
+        message: error.message,
+        payload: {}
+      }
+    );
+  }
+
+
+});
+
 router.post('/appointment/delete', function (req, res, next) {
 
   const id = req.query.id;
