@@ -1,5 +1,6 @@
-import React, { useState, useEffect} from 'react';
-import { Table, Typography, Spin, Button, Divider, Tag,Modal,notification } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Table, Typography, Spin, Button, Divider, Tag, Modal, notification, Row, Col, Tooltip  } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 import bloodBankService from 'services/BloodBankService'
 
 const { confirm } = Modal;
@@ -38,21 +39,21 @@ const DisposaBloodBag = () => {
 
 	const openNotification = (title, content) => {
 		notification.open({
-		  message: title,
-		  description: content,
-		  onClick: () => {
-			console.log('Notification Clicked!');
-		  },
+			message: title,
+			description: content,
+			onClick: () => {
+				console.log('Notification Clicked!');
+			},
 		});
-	  };
+	};
 
-	  const deleteExpireBag = (id) => {
+	const deleteExpireBag = (id) => {
 
 		confirm({
 			title: 'Do you want to remove this expired blood bag?',
 			content: 'When clicked the OK button, bag will be removed',
 			async onOk() {
-			  try {
+				try {
 					return await new Promise((resolve, reject) => {
 
 						bloodBankService.deleteBagList(id).then((ress) => {
@@ -72,10 +73,10 @@ const DisposaBloodBag = () => {
 					return console.log('Oops errors!');
 				}
 			},
-			onCancel() {},
-		  });
-	
-	
+			onCancel() { },
+		});
+
+
 	}
 
 	if (loading) {
@@ -207,20 +208,14 @@ const DisposaBloodBag = () => {
 				title: 'Action',
 				key: 'action',
 				render: (text, record) => (
-
-					// <div class="ant-dropdown-trigger ellipsis-dropdown ant-dropdown-open">
-					// 	<span role="img" aria-label="ellipsis" class="anticon anticon-ellipsis">
-					// 		<svg viewBox="64 64 896 896" focusable="false" data-icon="ellipsis" width="1em" height="1em" fill="currentColor" aria-hidden="true">
-					// 			<path d="M176 511a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0z"></path>
-					// 		</svg>
-					// 	</span>
-					// </div>
 					<span>
-						<a onClick={()=> { deleteExpireBag(record.bagId)}}>Delete </a>
-						{/* <a href={`../bloodbank/update-details?bagId=${record.bagId}`}>Edit</a> */}
-						{/* <a onClick={() => { showModal(record.bagId) }}>View More</a> */}
-						{/* <a onClick={showModal}>View More</a> */}
-						<Divider type="vertical" />
+						<Row>
+							<Tooltip title="Edit Bag Details">
+								<Col span={6}>
+								<a onClick={() => { deleteExpireBag(record.bagId) }}><DeleteOutlined style={{ fontSize: '1.15rem', color: '#262626' }} /></a>
+								</Col>
+							</Tooltip>
+						</Row>
 
 					</span>
 				),
@@ -232,7 +227,7 @@ const DisposaBloodBag = () => {
 			<div>
 				<Title>Details Of Disposal Blood Bags</Title>
 				<br></br>
-				<Table columns={columns} dataSource={bloodBags} style={{ padding: '26px 0px 16px'}} />
+				<Table columns={columns} dataSource={bloodBags} style={{ padding: '26px 0px 16px' }} />
 			</div>
 		)
 	}
