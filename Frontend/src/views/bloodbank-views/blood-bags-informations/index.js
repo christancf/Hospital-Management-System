@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Component } from 'react';
-import { Table, Typography, Spin, Button, Divider, Tag, Modal, Row, Col, Form, DatePicker, Input, Select,Tooltip } from 'antd';
+import { Table, Typography, Spin, Button, Divider, Tag, Modal, Row, Col, Form, DatePicker, Input, Select, Tooltip } from 'antd';
 import bloodBankService from 'services/BloodBankService'
-import { EyeOutlined, EditOutlined,SisternodeOutlined ,PlusSquareOutlined } from '@ant-design/icons';
+import { EyeOutlined, EditOutlined, SisternodeOutlined, PlusSquareOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
 const { Title } = Typography
@@ -14,12 +14,47 @@ const layout = {
 	wrapperCol: { span: 12 },
 };
 
+const bloodGroup = [
+	{
+		label: "A positive(A+)",
+		value: "A+"
+	},
+	{
+		label: "A negative(A-)",
+		value: "A-"
+	},
+	{
+		label: "B positive(B+)",
+		value: "B+",
+	},
+	{
+		label: "B negative(B-)",
+		value: "B-",
+	},
+	{
+		label: "AB positive(AB+)",
+		value: "AB+",
+	},
+	{
+		label: "AB negative(AB-)",
+		value: "AB-",
+	},
+	{
+		label: "O positive(O+)",
+		value: "O+",
+	},
+	{
+		label: "O negative(O-)",
+		value: "O-",
+	},
+]
+
 function disabledDate(current) {
 	return current && current > moment().endOf('day');
 }
 
 const BloodBags = () => {
-	
+
 
 	function toTimestamp(strDate) {
 		var datum = Date.parse(strDate);
@@ -126,7 +161,8 @@ const BloodBags = () => {
 				expireDate: response.expireDate,
 				donateDate: response.donateDate,
 				place: response.place,
-				tags: response.bloodGroup
+				tags: response.bloodGroup,
+				volume: response.volume
 			}
 		})
 
@@ -153,12 +189,12 @@ const BloodBags = () => {
 				</div>
 				<Title>Blood Bags Details</Title>
 				<br></br>
-				<Table columns={columns} dataSource={bloodBags} onChange={onChange}/>
+				<Table columns={columns} dataSource={bloodBags} onChange={onChange} />
 
 				<Title>Blood Transfusion Details</Title>
 				<Table columns={column} dataSource={bloodTransfusion} style={{ padding: '26px 0px 16px' }} />
 
-				
+
 
 			</div>
 		)
@@ -264,35 +300,35 @@ const columns = [
 
 				<Row>
 					<Tooltip title="View More">
-					<Col span={5}>
-						<ViewMore moreDetails={record} />
-					</Col>
+						<Col span={5}>
+							<ViewMore moreDetails={record} />
+						</Col>
 					</Tooltip>
 
 					<Col>
 						<Divider type="vertical" />
 					</Col>
-					
+
 					<Tooltip title="Edit Bag Details">
-					<Col span={5}>
-						<a href={`../bloodbank/update-details?bagId=${record.bagId}`}><EditOutlined style={{ fontSize: '1.15rem', color: '#262626' }} /></a>
-					</Col>
+						<Col span={5}>
+							<a href={`../bloodbank/update-details?bagId=${record.bagId}`}><EditOutlined style={{ fontSize: '1.15rem', color: '#262626' }} /></a>
+						</Col>
 					</Tooltip>
 					<Col>
 						<Divider type="vertical" />
 					</Col>
 					<Col span={5}>
-					<Tooltip title="Transfusion Bag">
-						<a href={`../bloodbank/add-transfusion?bagId=${record.bagId}`}><PlusSquareOutlined style={{ fontSize: '1.15rem', color: '#262626' }} /></a>
-					</Tooltip>
-						
+						<Tooltip title="Transfusion Bag">
+							<a href={`../bloodbank/add-transfusion?bagId=${record.bagId}`}><PlusSquareOutlined style={{ fontSize: '1.15rem', color: '#262626' }} /></a>
+						</Tooltip>
+
 					</Col>
 				</Row>
 				{/* <a href={`../bloodbank/add-transfusion?bagId=${record.bagId}`}>Transfusion </a> */}
 				{/* <a href={`../bloodbank/update-details?bagId=${record.bagId}`}>Edit</a> */}
 				{/* <a onClick={() => { showModal(record.bagId) }}>View More</a> */}
 				{/* <a onClick={showModal}>View More</a> */}
-				
+
 
 			</span>
 		),
@@ -301,6 +337,9 @@ const columns = [
 
 function onChange(pagination, filters, sorter, extra) {
 	console.log('params', pagination, filters, sorter, extra);
+}
+function filter(inputValue, path) {
+	return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
 }
 
 const ViewMore = ({ moreDetails }) => {
@@ -317,8 +356,10 @@ const ViewMore = ({ moreDetails }) => {
 			expireDate: moment(moreDetails.expireDate),
 			donateDate: moment(moreDetails.donateDate),
 			place: moreDetails.place,
-			bloodGroup: moreDetails.bloodGroup,
+			tags: moreDetails.bloodGroup,
+			volume: moreDetails.volume
 		})
+		
 	};
 
 	const handleOk = e => {
@@ -356,6 +397,20 @@ const ViewMore = ({ moreDetails }) => {
 							<Form.Item label="Donation Number" name="donationNumber">
 								<Input />
 							</Form.Item>
+							<Form.Item name="tags"  label="Blood Group" initialValue={viewDetails.tags}>
+								<Select
+									// placeholder="Select Blood Group"
+									filterOption={false}
+									showSearch={{ filter }}
+									style={{ width: '100%' }}
+								>
+									{bloodGroup.map(d => (
+										// <Option key={d.value}>{d.label}</Option>
+										<Option key={d.value}>{d.label}</Option>
+										
+									))}
+								</Select>
+							</Form.Item>
 
 						</Col>
 
@@ -374,10 +429,13 @@ const ViewMore = ({ moreDetails }) => {
 									disabledDate={disabledDate} />
 							</Form.Item>
 
-							<Form.Item label="Place" name="place"
-							>
+							<Form.Item label="Place" name="place">
 								<Input />
 							</Form.Item>
+							<Form.Item label="Volume" name="volume" >
+								<Input />
+							</Form.Item>
+
 						</Col>
 					</Row>
 
@@ -542,25 +600,25 @@ const column = [
 		render: (text, record) => (
 			<span>
 				<Row>
-				<Tooltip title="View More">
-					<Col span={6}>
-						<ViewMore moreDetails={record} />
-					</Col>
+					<Tooltip title="View More">
+						<Col span={6}>
+							<ViewMore moreDetails={record} />
+						</Col>
 					</Tooltip>
 
 					<Col>
 						<Divider type="vertical" />
 					</Col>
-					
+
 					<Tooltip title="Edit Bag Details">
-					<Col span={6}>
-						<a href={`../bloodbank/update-transfusion?bagId=${record.bagId}`}><EditOutlined style={{ fontSize: '1.15rem', color: '#262626' }} /></a>
-					</Col>
+						<Col span={6}>
+							<a href={`../bloodbank/update-transfusion?bagId=${record.bagId}`}><EditOutlined style={{ fontSize: '1.15rem', color: '#262626' }} /></a>
+						</Col>
 					</Tooltip>
-				{/* <EyeOutlined onClick={bloodTransfusion} style={{ fontSize: '1.15rem', color: '#262626' }} /> */}
-				{/* <a >View More</a>
+					{/* <EyeOutlined onClick={bloodTransfusion} style={{ fontSize: '1.15rem', color: '#262626' }} /> */}
+					{/* <a >View More</a>
 				<a href={`../bloodbank/update-transfusion?bagId=${record.bagId}`}>Edit</a> */}
-				{/* <Divider type="vertical" /> */}
+					{/* <Divider type="vertical" /> */}
 				</Row>
 			</span>
 		),

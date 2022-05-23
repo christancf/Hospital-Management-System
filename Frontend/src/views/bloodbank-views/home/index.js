@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Component } from "react";
-import { Typography,Button,Card } from 'antd';
+import { Typography, Button, Card, Col, Row } from 'antd';
 import Chart from "react-apexcharts";
 import { COLORS } from 'constants/ChartConstant';
 import bloodBankService from "services/BloodBankService";
@@ -23,7 +23,7 @@ const Home = () => {
 	const [transfusion_error, transfusion_setError] = useState(false);
 	const [transfusion_key, transfusion_setKey] = useState(null);
 	const [transfusion_value, transfusion_setValue] = useState(null);
-	
+
 
 	useEffect(() => {
 		bloodBankService.bloodBagsCount().then((res) => {
@@ -75,10 +75,10 @@ const Home = () => {
 		bloodBankService.transfusionCount().then((res) => {
 			const transfusion_myData = res.payload;
 			var transfusion_key = [];
-		var transfusion_value = [... new Set(transfusion_myData.map((item) => {
-			return item._id.transfusion_value;
-		  }))];
-			
+			var transfusion_value = [... new Set(transfusion_myData.map((item) => {
+				return item._id.transfusion_value;
+			}))];
+
 			for (let i = 0; i < transfusion_myData.length; i++) {
 				transfusion_key[i] = transfusion_myData[i]._id;
 				transfusion_value[i] = transfusion_myData[i].count;
@@ -92,7 +92,7 @@ const Home = () => {
 				console.log(err);
 				transfusion_setLoading(false);
 				transfusion_setError(true);
-				
+
 				transfusion_setValue();
 			});
 	}, []);
@@ -175,56 +175,56 @@ const Home = () => {
 				type: 'bar',
 				height: 350,
 				fontSize: "140px"
-			  },
-			  plotOptions: {
+			},
+			plotOptions: {
 				bar: {
-				  horizontal: false,
-				  columnWidth: '40%',
-				  endingShape: 'rounded'
+					horizontal: false,
+					columnWidth: '40%',
+					endingShape: 'rounded'
 				},
-			  },
-			  dataLabels: {
+			},
+			dataLabels: {
 				enabled: false
-			  },
-			  stroke: {
+			},
+			stroke: {
 				show: true,
 				width: 2,
 				colors: ['transparent']
-			  },
-			  xaxis: {
+			},
+			xaxis: {
 				categories: transfusion_key
-			  },
-			  yaxis: {
+			},
+			yaxis: {
 				title: {
-				  text: 'Number of blood bags', 
-				  style: {
-					color: undefined,
-					fontSize: '14px',
-					fontFamily: 'Helvetica, Arial, sans-serif',
-					fontWeight: 300,
-					cssClass: 'apexcharts-yaxis-title',
-				}
+					text: 'Number of blood bags',
+					style: {
+						color: undefined,
+						fontSize: '14px',
+						fontFamily: 'Helvetica, Arial, sans-serif',
+						fontWeight: 300,
+						cssClass: 'apexcharts-yaxis-title',
+					}
 				}
 				,
-			  },
-			  fill: {
+			},
+			fill: {
 				opacity: 1,
-				colors: ['#9D174D','#EC4899','#160C28']
-			  },
-			  tooltip: {
+				colors: ['#9D174D', '#EC4899', '#160C28']
+			},
+			tooltip: {
 				y: {
-				  formatter: function (val) {
-					return val + " bags"
-				  }
+					formatter: function (val) {
+						return val + " bags"
+					}
 				}
-			  }
+			}
 		};
 
 		const series = [value[0].count, value[1].count, value[2].count, value[3].count, value[4].count, value[5].count, value[6].count, value[7].count];
 
 		const options = {
 
-			colors: ['#9D174D','#EC4899','#160C28','#5B5296','#064E3B','#34D399','#F59E0B','#FACC15'],
+			colors: ['#9D174D', '#EC4899', '#160C28', '#5B5296', '#064E3B', '#34D399', '#F59E0B', '#FACC15'],
 			labels: [key[0]._id, key[1]._id, key[2]._id, key[3]._id, key[4]._id, key[5]._id, key[6]._id, key[7]._id],
 			responsive: [{
 				type: "donut",
@@ -236,41 +236,69 @@ const Home = () => {
 					legend: {
 						position: 'bottom'
 					}
-					
+
 				}
 			}],
-			legend:{offsetX:10}
+			legend: { offsetX: 10 }
 
 		};
 		return (
 			<div>
-
-				<div style={{ padding: '26px 800px 16px' }}>
+{/* 
+				<div style={{ padding: '26px 800px 16px',color: 'blue' }}>
 					<p >Available blood count:{Aailable_value[0].count}</p>
 				</div>
 
-				<div style={{ padding: '26px 1020px 16px'}}>
+				<div style={{ padding: '26px 1020px 16px' }}  >
 					<Button type="primary" href='/bloodbank/add-details'>Add Blood Bag</Button>
 				</div>
 
-				<div style={{ padding: '26px 1020px 16px'}}>
+				<div style={{ padding: '26px 1020px 16px' }}>
 					<Button type="primary" href='/bloodbank/bags-informations'>Available Blood Bags</Button>
-				</div>
+				</div> */}
 
 				<Title style={{ padding: '36px 0px 16px' }}>Available Blood Bags</Title>
 				{/* <div >
 					<Doughnut data={myData} width='300'legend={{position:"right"}}/>
 				</div> */}
-<Card style={{backgroundColor: '#efefef'}}>
-	<Chart options={options} series={series} height={300} width={600} type="donut" />
-</Card>
-				
+				<div >
+					<Row  >
+						<Col span={130} display="block">
+							<Card style={{ backgroundColor: '#efefef', width: "700px" }}>
+								<Chart options={options} series={series} height={300} width={600} type="donut" />
+							</Card>
+						</Col>
+
+						<Col span={100}  >
+							<Card style={{ backgroundColor: '#efefef', width: "500px", marginLeft: "10px" }}>
+								<Row>
+									<Row>		
+									<h1 style={{ padding: '26px 800px 16px' ,color: 'blue'}} >Available blood count:{Aailable_value[0].count}</h1>
+									
+									</Row>
+									
+									<Col span={14}>
+										<Button type="primary" href='/bloodbank/add-details' padding='36px 0px 16px'>Add Blood Bag</Button>
+									</Col>
+									<Col span={10}>
+										<Button type="primary" href='/bloodbank/bags-informations' padding='36px 0px 16px'>Available Blood Bags</Button>
+									</Col>
+
+								</Row>
+
+							</Card>
+						</Col>
+					</Row>
+
+				</div>
+
+
 				<Title style={{ padding: '36px 0px 16px' }}>Analysis Of Blood Transfusion</Title>
 
-				<Card style={{backgroundColor: '#efefef'}}>
+				<Card style={{ backgroundColor: '#efefef' }}>
 					<Chart options={transfusion_options} series={transfusion_series} type="bar" height={300} />
 				</Card>
-				
+
 
 			</div>
 		)
