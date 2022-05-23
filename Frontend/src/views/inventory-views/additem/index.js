@@ -67,7 +67,7 @@ const Additem = () => {
 		const manufacturer = values.manufacturer;
 		const category = values.category;
 		const unit_price = values.unit_price;
-		const total_quantity = values.total_quantity;
+		
 
 		inventoryService.additem(
 			{
@@ -77,7 +77,7 @@ const Additem = () => {
 				manufacturer: manufacturer,
 				category: category,
 				unit_price: unit_price,
-				total_quantity: total_quantity
+				
 			}).then((value) => {
 
 
@@ -190,9 +190,7 @@ const Additem = () => {
 				<Form.Item label="Unit price" name="unit_price">
 					<Input />
 				</Form.Item>
-				<Form.Item label="Total Quantity" name="total_quantity">
-					<Input />
-				</Form.Item>
+				
 
 
 				<Form.Item {...tailLayout}>

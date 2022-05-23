@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import inventoryService from '../../../services/inventoryService'
-import { Form, Input, Button, Select, DatePicker, Modal } from 'antd';
-
+import { Form, Input, Button, Select, DatePicker, Modal,InputNumber } from 'antd';
+import moment from 'moment';
 
 const { Option } = Select;
 
@@ -19,7 +19,7 @@ function ShowModel(title, delay, innercontent, isSuccess) {
 		const modal = Modal.success({
 			title: title,
 			content: `${innercontent}.This popup will be destroyed after ${delay} seconds.`,
-			onOk: () => { window.location = '.../inventory' }
+			onOk: () => { window.location = './inventory/inventorylist/all' }
 		});
 		const timer = setInterval(() => {
 			delay -= 1;
@@ -33,7 +33,7 @@ function ShowModel(title, delay, innercontent, isSuccess) {
 			clearInterval(timer);
 
 			modal.destroy();
-			window.location = '.../inventory'
+			window.location = './inventory/inventorylist/all'
 		}, delay * 1000);
 	}
 
@@ -55,30 +55,73 @@ function ShowModel(title, delay, innercontent, isSuccess) {
 	}
 }
 
-const addInvenotryItem = () => {
+function disabledDate2(current) {
+	return current && current > moment().endOf('day');
+}
+
+
+function disabledDate1(current) {
+	return current && current < moment().endOf('day');
+}
+
+function filter(inputValue, path) {
+	return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
+}
+
+//convert date string to timestamp
+function toTimestamp(strDate) {
+
+    var datum = Date.parse(strDate);
+
+    return datum / 1000;
+
+}
+const AddInvenotryItem = () => {
 	const [form] = Form.useForm();
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false);
+	const [data, setData] = useState();
+
+	useEffect(() => {
+		inventoryService.getAllItems().then((res) => {
+
+			setData(res.payload);
+			setLoading(false);
+
+		}).catch((err) => {
+			console.log(error)
+			setLoading(false);
+			setError(true);
+			setData();
+		});
+	}, []);
+
 
 
 
 	const onFinish = values => {
-		const batch_id= values.batch_id;
-		const item_id = values.item_id;
-		const item_name = values.item_name;
+		console.log(values);
+		const item_id = values.item_id.key;
 		const quantity = values.quantity;
 		const manufacture_date = values.manufacture_date;
 		const expire_date = values.expire_date;
-		const status = values.status;
+		const item_name = data.filter( (item)=> { 
+			
+			if (item.id == item_id){
+				return true;
+			}
+		else{
+			return false
+		}} )[0].item_name;
 
-		inventoryService.addInvenotryItem(
+		inventoryService.addInventoryItem(
 			{
-				batch_id:batch_id,
 				item_id:item_id,
-				item_name: item_name,
+				item_name:item_name,
 				quantity: quantity,
-				manufacture_date: manufacture_date,
-				expire_date: expire_date,
-				unit_price: unit_price,
-				status: status,
+				manufacture_date: toTimestamp(manufacture_date) ,
+				expire_date: toTimestamp(expire_date),
+				status: "Available",
 			}).then((value) => {
 
 
@@ -118,23 +161,9 @@ const addInvenotryItem = () => {
 
 
 
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
-	const [data, setData] = useState();
+	
 
-	useEffect(() => {
-		inventoryService.getId().then((res) => {
-
-			setData(res.payload);
-			setLoading(false);
-
-		}).catch((err) => {
-			console.log(error)
-			setLoading(false);
-			setError(true);
-			setData();
-		});
-	}, []);
+	
 	if (loading) {
 		return (
 			<>
@@ -154,51 +183,38 @@ const addInvenotryItem = () => {
 		return (
 
 			<Form {...layout} ref={form} name="control-ref" onFinish={onFinish}>
-				<Form.Item
-
-					//label="id"
-
-					name="batch_id"
-
-					initialValue={data}
-
-				>
-
-					{/* <Input placeholder={data} disabled /> */}
-
-				</Form.Item>
-				<Form.Item name="item_name" label="item_name" >
-					<Input />
-				</Form.Item>
-				<Form.Item label="description" name="description" rules={[{ required: true, message: 'Please input Description' }]}>
-					<Input />
-				</Form.Item>
-				<Form.Item label="manufacturer " name="manufacturer" rules={[{ required: true, message: 'Please input manufacturer' }]}>
-					<Input />
-				</Form.Item>
-				<Form.Item name="category" label="category" rules={[{ required: true }]}>
+				<Form.Item name="item_id" label="Item Name"  rules={[{ required: true }]} >
+							
 					<Select
-						placeholder="Select the category"
-					
-						allowClear
-					>
-						<Select.Option value="medicines">Medicine</Select.Option>
-						<Select.Option value="surgicalitems">surgical items</Select.Option>
-						<Select.Option value="tools">Tools</Select.Option>
 
+						labelInValue
+						placeholder="Select item"
+						filterOption={false}
+						showSearch={{ filter }}
+						style={{ width: '100%' }}
+					>
+						{data.map(d => (
+							<Option key={d.id}>{d.item_name} - {d.description}</Option>
+						))}
 					</Select>
 				</Form.Item>
-				<Form.Item label="Unit price" name="unit_price">
-					<Input />
+				<Form.Item name="manufacture_date" label="Manufactured Date" rules={[{ required: true }]}>
+					<DatePicker disabledDate={disabledDate2}/>
 				</Form.Item>
-				<Form.Item label="Total Quantity" name="total_quantity">
-					<Input />
+
+				<Form.Item name="expire_date" label="Expired Date" rules={[{ required: true }]}>
+					<DatePicker disabledDate={disabledDate1}/>
 				</Form.Item>
+
+				<Form.Item label="Quantity" name="quantity" rules={[{ required: true, message: 'Please input quantity' }]}>
+					<InputNumber min={1} />
+				</Form.Item>
+				
 
 
 				<Form.Item {...tailLayout}>
 					<Button className="mr-2" type="primary" htmlType="submit">
-						Submit
+						ADD
 					</Button>
 					<Button className="mr-2" htmlType="button" onClick={onReset}>
 						Reset
@@ -211,5 +227,5 @@ const addInvenotryItem = () => {
 
 }
 
-	export default Additem;
+	export default AddInvenotryItem;
 

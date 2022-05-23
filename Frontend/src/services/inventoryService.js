@@ -2,11 +2,22 @@ import fetch from 'auth/FetchInterceptor'
 
 const inventoryService = {}
 
-
+//add item API call
 inventoryService.additem = function (jsonbody){
 
   return fetch({
     url: '/inventory/item',
+    method: 'post',
+    data: jsonbody
+
+  })
+}
+
+//add inventory item API call
+inventoryService.addInventoryItem = function (jsonbody){
+
+  return fetch({
+    url: '/inventory/inventoryItem',
     method: 'post',
     data: jsonbody
 
@@ -22,11 +33,20 @@ inventoryService.getItems = function (categoryType){
   })
 }
 
+inventoryService.getAllItems = function (){
+
+  return fetch({
+    url: `/inventory/getallitems`,
+    method: 'get',
+
+  })
+}
+
 
 inventoryService.updateItemDetails = function(data) {
   return fetch({
     url: '/inventory/update-details',
-    method: 'put',
+    method: 'post',
     data: data
   })
 }
