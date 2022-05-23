@@ -34,9 +34,9 @@ staffService.readStaffs = function () {
 
 staffService.updateStatus = function (data) {
   return fetch({
-    url: 'staff/update-status',
+    url: 'staff/resign',
     method: 'put',
-    data
+    data: data
   })
 }
 
@@ -56,15 +56,6 @@ staffService.checkOutAttendance = function (data) {
   })
 }
 
-// staffService.incrementBonus = function (data) {
-//   return fetch({
-//     url: 'staff/salary/bonus',
-//     method: 'put',
-//     data
-//   })
-// }
-
-//add bonus amounts
 staffService.addBonus = function (data) {
   return fetch({
     url: 'staff/salary/bonus',

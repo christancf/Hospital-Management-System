@@ -36,8 +36,14 @@ const tailLayout = {
 			let checkIn = new Date().getTime();
 
 			staffService.checkInAttendance({staffID, checkIn})
-			.then(() => {
-				message.success({content: 'Successfully Marked Attendance', checkin, duration: 2})
+			.then((status) => {
+				if(status) {
+					message.success({content: 'Successfully Marked Attendance', checkin, duration: 2})
+				}
+				else {
+					message.error({content: 'Checkout not marked!', checkIn, duration: 2})
+				}
+			
 			})
 			.catch(() => 
 				message.error({content: 'Please Try Again!', checkIn, duration: 2}))
@@ -46,8 +52,13 @@ const tailLayout = {
 			//message.loading({content: 'Please wait...', checkout})
 			let checkOut = new Date().getTime();
 			staffService.checkOutAttendance({staffID, checkOut})
-			.then(() => {
-				message.success({content: 'Successfully Marked Attendance', checkout, duration: 2})
+			.then((status) => {
+				if(status) {
+					message.success({content: 'Successfully Marked Attendance', checkout, duration: 2})
+				}
+				else {
+					message.error({content: 'Check in not marked!', checkOut, duration: 2})
+				}
 			})
 			.catch(() => 
 				message.error({content: 'Please Try Again!', checkout, duration: 2}))
