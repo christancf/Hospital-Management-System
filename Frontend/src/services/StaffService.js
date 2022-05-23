@@ -55,4 +55,12 @@ staffService.checkOutAttendance = function (data) {
     data: data
   })
 }
+
+staffService.incrementBonus = function (data) {
+  return fetch({
+    url: 'staff/salary/bonus',
+    method: 'put',
+    data
+  })
+}
 export default staffService

@@ -21,7 +21,9 @@ router.post('/add-member', function (req, res, next) {
     basicSalary:Number( req.body.basicSalary),
     mobile: req.body.mobile,
     home: req.body.home,
-    status: 'Employed'
+    status: 'Employed',
+    bonus: Number(0),
+    totalSalary: Number(0)
   });
 
   staff.save()
@@ -42,7 +44,7 @@ router.get('/read-details?:id', (req, res, next) => {
   .catch((e) => console.log(`Error: ${ e }`))
 });
 
-//read staff details
+//read all staff details
 router.get('/read-staffs', (req, res, next) => {
   staffModel.find()
   .then((details) => res.json(details))
@@ -82,7 +84,6 @@ router.put('/update-status', (req, res, next) => {
 
 //insert checkIn attendance
 router.post('/attendance/checkin', function (req, res, next) {
-
   const attendance = new attendanceModel({
     staffID: String(req.body.staffID),
     checkIn: req.body.checkIn
@@ -103,6 +104,14 @@ router.put('/attendance/checkout', function (req, res, next) {
     .catch((e) => console.log(`Error ${ e }`))
   }).catch((e) => console.log(`Error: ${e}`))
 });
+
+//update bonus
+router.put('/salary/bonus', (req, res, next) => {
+  staffModel.updateOne({staffID: req.body.staffID},
+    {$inc: {bonus: Number(req.body.bonus)}})
+    .then(() => res.json("Bonus Added!"))
+    .catch((e) => console.log(`Error: ${ e }`))
+})
 
 
 
