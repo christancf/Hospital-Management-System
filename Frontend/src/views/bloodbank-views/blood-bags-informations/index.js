@@ -1,30 +1,30 @@
 import React, { useState, useEffect, Component } from 'react';
-import { Table, Typography, Spin, Button, Divider, Tag, Modal } from 'antd';
+import { Table, Typography, Spin, Button, Divider, Tag, Modal, Row, Col, Form, DatePicker, Input, Select,Tooltip } from 'antd';
 import bloodBankService from 'services/BloodBankService'
+import { EyeOutlined, EditOutlined,SisternodeOutlined ,PlusSquareOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
 const { Title } = Typography
+const { Option } = Select
 const queryParams = new URLSearchParams(window.location.search);
 const bagId = queryParams.get('bagId');
 
+const layout = {
+	labelCol: { span: 8 },
+	wrapperCol: { span: 12 },
+};
+
+function disabledDate(current) {
+	return current && current > moment().endOf('day');
+}
 
 const BloodBags = () => {
+	
 
 	function toTimestamp(strDate) {
 		var datum = Date.parse(strDate);
 		return datum / 1000;
 	}
-
-	const handleCancel = () => {
-		setModalData({ visible: false });
-	  };
-
-	const showModal = (bagId) => {
-		setModalData({
-			visible: true,
-
-		});
-	};
 
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
@@ -56,27 +56,8 @@ const BloodBags = () => {
 			t_setError(true);
 			t_setData();
 		});
-		
-		// bloodBankService.bloodBagDetails(bagId).then((resp) => {
-		// 	setModalData(resp.payload);
-		// 	setLoading(false);
 
-		// }).catch((err) => {
-		// 	setLoading(false);
-		// 	setError(true);
-		// 	setModalData();
-		// });
 	}, []);
-
-	const bagViewMore = (bagId) => {
-
-		// Modal({
-		// 	title:"Basic Modal",
-		//   visible:{modalData}
-		// //   onOk:{this.handleOk}
-		// //   onCancel:{this.handleCancel}
-		//   });
-	}
 
 	if (loading) {
 		return (
@@ -163,329 +144,429 @@ const BloodBags = () => {
 			}
 		})
 
-		const columns = [
-			{
-				title: 'Bag ID',
-				dataIndex: 'bagId',
-			},
-			{
-				title: 'Donors Name',
-				dataIndex: 'donorName',
-				render: text => <a style={{ color: "darkred" }}>{text}</a>,
-			},
-			// {
-			// 	title: 'Donors NIC',
-			// 	dataIndex: 'donorNIC',
-			// },
-			{
-				title: 'Donation Number',
-				dataIndex: 'donationNumber',
-			},
-			{
-				title: 'Donate Date',
-				dataIndex: 'donateDate'
-			},
-			{
-				title: 'Expire Date',
-				dataIndex: 'expireDate'
-			},
-			{
-				title: 'Place',
-				dataIndex: 'place'
-			},
-			{
-				title: 'Blood Group',
-				dataIndex: 'tags',
-				key: 'tags',
-				filters: [{ text: 'A positive(A+)', value: 'A+' },
-				{ text: 'A negative(A-)', value: 'A-' },
-				{ text: 'B positive(B+)', value: 'B+' },
-				{ text: 'B negative(B-)', value: 'B-' },
-				{ text: 'O positive(O+)', value: 'O+' },
-				{ text: 'O negative(O-)', value: 'O-' },
-				{ text: 'AB positive(AB+)', value: 'AB+' },
-				{ text: 'AB negative(AB-)', value: 'AB-' },],
-				onFilter: (value, record) => record.tags == value,
 
-				render: tags => (
-					<span>
-						{tags == "A+" &&
-							<Tag color='purple' key={tags}>
-								{tags.toUpperCase()}
-							</Tag>
-						}
-						{tags == "A-" &&
-							<Tag color='pink' key={tags}>
-								{tags.toUpperCase()}
-							</Tag>
-						}
-						{tags == "B+" &&
-							<Tag color='gold' key={tags}>
-								{tags.toUpperCase()}
-							</Tag>
-						}
-						{tags == "B-" &&
-							<Tag color='orange' key={tags}>
-								{tags.toUpperCase()}
-							</Tag>
-						}
-						{tags == "O+" &&
-							<Tag color='blue' key={tags}>
-								{tags.toUpperCase()}
-							</Tag>
-
-						}
-						{tags == "O-" &&
-							<Tag color='geekblue' key={tags}>
-								{tags.toUpperCase()}
-							</Tag>
-
-						}
-						{tags == "AB+" &&
-							<Tag color='green' key={tags}>
-								{tags.toUpperCase()}
-							</Tag>
-
-						}
-						{tags == "AB-" &&
-							<Tag color='lime' key={tags}>
-								{tags.toUpperCase()}
-							</Tag>
-
-						}
-					</span>
-				),
-			},
-			{
-				title: 'Action',
-				key: 'action',
-				render: (text, record) => (
-
-					// <div class="ant-dropdown-trigger ellipsis-dropdown ant-dropdown-open">
-					// 	<span role="img" aria-label="ellipsis" class="anticon anticon-ellipsis">
-					// 		<svg viewBox="64 64 896 896" focusable="false" data-icon="ellipsis" width="1em" height="1em" fill="currentColor" aria-hidden="true">
-					// 			<path d="M176 511a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0z"></path>
-					// 		</svg>
-					// 	</span>
-					// </div>
-					<span>
-						<a href={`../bloodbank/add-transfusion?bagId=${record.bagId}`}>Transfusion </a>
-						<a href={`../bloodbank/update-details?bagId=${record.bagId}`}>Edit</a>
-						<a onClick={() => { showModal(record.bagId) }}>View More</a>
-						{/* <a onClick={showModal}>View More</a> */}
-						<Divider type="vertical" />
-
-					</span>
-				),
-			},
-		];
-
-		const column = [
-			{
-				title: 'Bag ID',
-				dataIndex: 'bagId',
-			},
-			{
-				title: 'Recepient Id',
-				dataIndex: 'id',
-			},
-			{
-				title: 'Recepient Name',
-				dataIndex: 'name',
-			},
-			{
-				title: 'Reason',
-				dataIndex: 'reason',
-			},
-			// {
-			// 	title: 'Donors NIC',
-			// 	dataIndex: 'donorNIC',
-			// },
-			{
-				title: 'Issue Date',
-				dataIndex: 'issueDate'
-			},
-			{
-				title: 'Blood Group Of Bag',
-				dataIndex: 'tags',
-				key: 'tags',
-				filters: [{ text: 'A positive(A+)', value: 'A+' },
-				{ text: 'A negative(A-)', value: 'A-' },
-				{ text: 'B positive(B+)', value: 'B+' },
-				{ text: 'B negative(B-)', value: 'B-' },
-				{ text: 'O positive(O+)', value: 'O+' },
-				{ text: 'O negative(O-)', value: 'O-' },
-				{ text: 'AB positive(AB+)', value: 'AB+' },
-				{ text: 'AB negative(AB-)', value: 'AB-' },],
-				onFilter: (value, record) => record.tags == value,
-
-				render: tags => (
-					<span>
-						{tags == "A+" &&
-							<Tag color='purple' key={tags}>
-								{tags.toUpperCase()}
-							</Tag>
-						}
-						{tags == "A-" &&
-							<Tag color='pink' key={tags}>
-								{tags.toUpperCase()}
-							</Tag>
-						}
-						{tags == "B+" &&
-							<Tag color='gold' key={tags}>
-								{tags.toUpperCase()}
-							</Tag>
-						}
-						{tags == "B-" &&
-							<Tag color='orange' key={tags}>
-								{tags.toUpperCase()}
-							</Tag>
-						}
-						{tags == "O+" &&
-							<Tag color='blue' key={tags}>
-								{tags.toUpperCase()}
-							</Tag>
-
-						}
-						{tags == "O-" &&
-							<Tag color='geekblue' key={tags}>
-								{tags.toUpperCase()}
-							</Tag>
-
-						}
-						{tags == "AB+" &&
-							<Tag color='green' key={tags}>
-								{tags.toUpperCase()}
-							</Tag>
-
-						}
-						{tags == "AB-" &&
-							<Tag color='lime' key={tags}>
-								{tags.toUpperCase()}
-							</Tag>
-
-						}
-					</span>
-				),
-			},
-			{
-				title: 'Blood Group Of Recepient',
-				dataIndex: 'pbloodGroup',
-				key: 'pbloodGroup',
-				filters: [{ text: 'A positive(A+)', value: 'A+' },
-				{ text: 'A negative(A-)', value: 'A-' },
-				{ text: 'B positive(B+)', value: 'B+' },
-				{ text: 'B negative(B-)', value: 'B-' },
-				{ text: 'O positive(O+)', value: 'O+' },
-				{ text: 'O negative(O-)', value: 'O-' },
-				{ text: 'AB positive(AB+)', value: 'AB+' },
-				{ text: 'AB negative(AB-)', value: 'AB-' },],
-				onFilter: (value, record) => record.tags == value,
-
-				render: pbloodGroup => (
-					<span>
-						{pbloodGroup == "A+" &&
-							<Tag color='purple' key={pbloodGroup}>
-								{pbloodGroup.toUpperCase()}
-							</Tag>
-						}
-						{pbloodGroup == "A-" &&
-							<Tag color='pink' key={pbloodGroup}>
-								{pbloodGroup.toUpperCase()}
-							</Tag>
-						}
-						{pbloodGroup == "B+" &&
-							<Tag color='gold' key={pbloodGroup}>
-								{pbloodGroup.toUpperCase()}
-							</Tag>
-						}
-						{pbloodGroup == "B-" &&
-							<Tag color='orange' key={pbloodGroup}>
-								{pbloodGroup.toUpperCase()}
-							</Tag>
-						}
-						{pbloodGroup == "O+" &&
-							<Tag color='blue' key={pbloodGroup}>
-								{pbloodGroup.toUpperCase()}
-							</Tag>
-
-						}
-						{pbloodGroup == "O-" &&
-							<Tag color='geekblue' key={pbloodGroup}>
-								{pbloodGroup.toUpperCase()}
-							</Tag>
-
-						}
-						{pbloodGroup == "AB+" &&
-							<Tag color='green' key={pbloodGroup}>
-								{pbloodGroup.toUpperCase()}
-							</Tag>
-
-						}
-						{pbloodGroup == "AB-" &&
-							<Tag color='lime' key={pbloodGroup}>
-								{pbloodGroup.toUpperCase()}
-							</Tag>
-
-						}
-					</span>
-				),
-			},
-			{
-				title: 'Action',
-				key: 'action',
-				render: (text, record) => (
-					<span>
-						<a >View More</a>
-						<a href={`../bloodbank/update-transfusion?bagId=${record.bagId}`}>Edit</a>
-						<Divider type="vertical" />
-
-					</span>
-				),
-			},
-		];
 
 		return (
 			<div>
-
-				<Title>Blood Bags Details</Title>
-				<div style={{ padding: '26px 1020px 16px'}}>
+				<div style={{ padding: '26px 1040px 16px' }}>
 					<Button type="primary" href='/bloodbank/add-details'>Add Blood Bag</Button>
 				</div>
-				
+				<Title>Blood Bags Details</Title>
 				<br></br>
-				<Table columns={columns} dataSource={bloodBags} />
+				<Table columns={columns} dataSource={bloodBags} onChange={onChange}/>
 
 				<Title>Blood Transfusion Details</Title>
-				<Table columns={column} dataSource={bloodTransfusion} style={{ padding: '26px 0px 16px'}}/>
-				<Modal title="Basic Modal"
-					visible={modalData}
-					// onCancel={handleCancel}
-					footer={[
-						<Button key="Cancel" onClick={handleCancel}>
-						  Cancel
-						</Button>,
-						// <Button key="Tranfusion" type="primary" href={`../bloodbank/add-transfusion?bagId=${record.bagId}`}>
-						//   Tranfusion
-						// </Button>,
-					  ]}
-				>
-					<p>Some contents...</p>
-					<p>{data[0].bagId}</p>
-					<p></p>
-         
-				</Modal>
-				{/* <Modal
-          title="Basic Modal"
-          visible={state.visible}
-        ></Modal> */}
+				<Table columns={column} dataSource={bloodTransfusion} style={{ padding: '26px 0px 16px' }} />
+
+				
+
 			</div>
 		)
 
 	}
+}
 
+const columns = [
+	{
+		title: 'Bag ID',
+		dataIndex: 'bagId',
+	},
+	{
+		title: "Donor's Name",
+		dataIndex: 'donorName',
+		render: text => <a style={{ color: "darkred" }}>{text}</a>,
+	},
+	{
+		title: 'Donation Number',
+		dataIndex: 'donationNumber',
+	},
+	{
+		title: 'Donate Date',
+		dataIndex: 'donateDate'
+	},
+	{
+		title: 'Expire Date',
+		dataIndex: 'expireDate'
+	},
+	{
+		title: 'Place',
+		dataIndex: 'place'
+	},
+	{
+		title: 'Blood Group',
+		dataIndex: 'tags',
+		key: 'tags',
+		filters: [{ text: 'A positive(A+)', value: 'A+' },
+		{ text: 'A negative(A-)', value: 'A-' },
+		{ text: 'B positive(B+)', value: 'B+' },
+		{ text: 'B negative(B-)', value: 'B-' },
+		{ text: 'O positive(O+)', value: 'O+' },
+		{ text: 'O negative(O-)', value: 'O-' },
+		{ text: 'AB positive(AB+)', value: 'AB+' },
+		{ text: 'AB negative(AB-)', value: 'AB-' },],
+		onFilter: (value, record) => record.tags == value,
+
+		render: tags => (
+			<span>
+				{tags == "A+" &&
+					<Tag color='purple' key={tags}>
+						{tags.toUpperCase()}
+					</Tag>
+				}
+				{tags == "A-" &&
+					<Tag color='pink' key={tags}>
+						{tags.toUpperCase()}
+					</Tag>
+				}
+				{tags == "B+" &&
+					<Tag color='gold' key={tags}>
+						{tags.toUpperCase()}
+					</Tag>
+				}
+				{tags == "B-" &&
+					<Tag color='orange' key={tags}>
+						{tags.toUpperCase()}
+					</Tag>
+				}
+				{tags == "O+" &&
+					<Tag color='blue' key={tags}>
+						{tags.toUpperCase()}
+					</Tag>
+
+				}
+				{tags == "O-" &&
+					<Tag color='geekblue' key={tags}>
+						{tags.toUpperCase()}
+					</Tag>
+
+				}
+				{tags == "AB+" &&
+					<Tag color='green' key={tags}>
+						{tags.toUpperCase()}
+					</Tag>
+
+				}
+				{tags == "AB-" &&
+					<Tag color='lime' key={tags}>
+						{tags.toUpperCase()}
+					</Tag>
+
+				}
+			</span>
+		),
+	},
+	{
+		title: 'Action',
+		key: 'action',
+		render: (text, record) => (
+
+			<span>
+
+				<Row>
+					<Tooltip title="View More">
+					<Col span={5}>
+						<ViewMore moreDetails={record} />
+					</Col>
+					</Tooltip>
+
+					<Col>
+						<Divider type="vertical" />
+					</Col>
+					
+					<Tooltip title="Edit Bag Details">
+					<Col span={5}>
+						<a href={`../bloodbank/update-details?bagId=${record.bagId}`}><EditOutlined style={{ fontSize: '1.15rem', color: '#262626' }} /></a>
+					</Col>
+					</Tooltip>
+					<Col>
+						<Divider type="vertical" />
+					</Col>
+					<Col span={5}>
+					<Tooltip title="Transfusion Bag">
+						<a href={`../bloodbank/add-transfusion?bagId=${record.bagId}`}><PlusSquareOutlined style={{ fontSize: '1.15rem', color: '#262626' }} /></a>
+					</Tooltip>
+						
+					</Col>
+				</Row>
+				{/* <a href={`../bloodbank/add-transfusion?bagId=${record.bagId}`}>Transfusion </a> */}
+				{/* <a href={`../bloodbank/update-details?bagId=${record.bagId}`}>Edit</a> */}
+				{/* <a onClick={() => { showModal(record.bagId) }}>View More</a> */}
+				{/* <a onClick={showModal}>View More</a> */}
+				
+
+			</span>
+		),
+	},
+];
+
+function onChange(pagination, filters, sorter, extra) {
+	console.log('params', pagination, filters, sorter, extra);
+}
+
+const ViewMore = ({ moreDetails }) => {
+	const [viewDetails, setViewDetails] = useState(false)
+	const [form] = Form.useForm();
+
+	const showModal = () => {
+		setViewDetails(true)
+		form.setFieldsValue({
+			bagId: moreDetails.bagId,
+			donorName: moreDetails.donorName,
+			donorNIC: moreDetails.donorNIC,
+			donationNumber: moreDetails.donationNumber,
+			expireDate: moment(moreDetails.expireDate),
+			donateDate: moment(moreDetails.donateDate),
+			place: moreDetails.place,
+			bloodGroup: moreDetails.bloodGroup,
+		})
+	};
+
+	const handleOk = e => {
+		console.log(e)
+		setViewDetails(false)
+	};
+
+	const handleCancel = e => {
+		console.log(e)
+		setViewDetails(false)
+	};
+
+	return (
+		<div>
+			<EyeOutlined onClick={showModal} style={{ fontSize: '1.15rem', color: '#262626' }} />
+			<Modal
+				title={`Bag ID  ${moreDetails['bagId']}`}
+				visible={viewDetails}
+				onOk={handleOk}
+				onCancel={handleCancel}
+				width='65%'
+			>
+				<Form {...layout} name="basic" initialValues={{ remember: true }} form={form} style={{ pointerEvents: 'none' }} >
+					<Row>
+						<Col span={11}>
+
+							<Form.Item label="Dornor's Name" name="donorName" >
+								<Input />
+							</Form.Item>
+
+							<Form.Item label="Donor's NIC" name="donorNIC">
+								<Input />
+							</Form.Item>
+
+							<Form.Item label="Donation Number" name="donationNumber">
+								<Input />
+							</Form.Item>
+
+						</Col>
+
+						<Col span={13}>
+							<Form.Item label="Donated Date" name="donateDate">
+								<DatePicker
+									placeholder='Select Date'
+									format="YYYY-MM-DD"
+									disabledDate={disabledDate} />
+							</Form.Item>
+
+							<Form.Item label="Expire Date" name="expireDate">
+								<DatePicker
+									placeholder='Select Date'
+									format="YYYY-MM-DD"
+									disabledDate={disabledDate} />
+							</Form.Item>
+
+							<Form.Item label="Place" name="place"
+							>
+								<Input />
+							</Form.Item>
+						</Col>
+					</Row>
+
+				</Form>
+			</Modal>
+		</div>
+	);
 
 }
+
+//Transfusion
+const column = [
+	{
+		title: 'Bag ID',
+		dataIndex: 'bagId',
+	},
+	{
+		title: 'Recepient Id',
+		dataIndex: 'id',
+	},
+	{
+		title: 'Recepient Name',
+		dataIndex: 'name',
+	},
+	{
+		title: 'Reason',
+		dataIndex: 'reason',
+	},
+	{
+		title: 'Issue Date',
+		dataIndex: 'issueDate'
+	},
+	{
+		title: 'Blood Group Of Bag',
+		dataIndex: 'tags',
+		key: 'tags',
+		filters: [{ text: 'A positive(A+)', value: 'A+' },
+		{ text: 'A negative(A-)', value: 'A-' },
+		{ text: 'B positive(B+)', value: 'B+' },
+		{ text: 'B negative(B-)', value: 'B-' },
+		{ text: 'O positive(O+)', value: 'O+' },
+		{ text: 'O negative(O-)', value: 'O-' },
+		{ text: 'AB positive(AB+)', value: 'AB+' },
+		{ text: 'AB negative(AB-)', value: 'AB-' },],
+		onFilter: (value, record) => record.tags == value,
+
+		render: tags => (
+			<span>
+				{tags == "A+" &&
+					<Tag color='purple' key={tags}>
+						{tags.toUpperCase()}
+					</Tag>
+				}
+				{tags == "A-" &&
+					<Tag color='pink' key={tags}>
+						{tags.toUpperCase()}
+					</Tag>
+				}
+				{tags == "B+" &&
+					<Tag color='gold' key={tags}>
+						{tags.toUpperCase()}
+					</Tag>
+				}
+				{tags == "B-" &&
+					<Tag color='orange' key={tags}>
+						{tags.toUpperCase()}
+					</Tag>
+				}
+				{tags == "O+" &&
+					<Tag color='blue' key={tags}>
+						{tags.toUpperCase()}
+					</Tag>
+
+				}
+				{tags == "O-" &&
+					<Tag color='geekblue' key={tags}>
+						{tags.toUpperCase()}
+					</Tag>
+
+				}
+				{tags == "AB+" &&
+					<Tag color='green' key={tags}>
+						{tags.toUpperCase()}
+					</Tag>
+
+				}
+				{tags == "AB-" &&
+					<Tag color='lime' key={tags}>
+						{tags.toUpperCase()}
+					</Tag>
+
+				}
+			</span>
+		),
+	},
+	{
+		title: 'Blood Group Of Recepient',
+		dataIndex: 'pbloodGroup',
+		key: 'pbloodGroup',
+		filters: [{ text: 'A positive(A+)', value: 'A+' },
+		{ text: 'A negative(A-)', value: 'A-' },
+		{ text: 'B positive(B+)', value: 'B+' },
+		{ text: 'B negative(B-)', value: 'B-' },
+		{ text: 'O positive(O+)', value: 'O+' },
+		{ text: 'O negative(O-)', value: 'O-' },
+		{ text: 'AB positive(AB+)', value: 'AB+' },
+		{ text: 'AB negative(AB-)', value: 'AB-' },],
+		onFilter: (value, record) => record.tags == value,
+
+		render: pbloodGroup => (
+			<span>
+				{pbloodGroup == "A+" &&
+					<Tag color='purple' key={pbloodGroup}>
+						{pbloodGroup.toUpperCase()}
+					</Tag>
+				}
+				{pbloodGroup == "A-" &&
+					<Tag color='pink' key={pbloodGroup}>
+						{pbloodGroup.toUpperCase()}
+					</Tag>
+				}
+				{pbloodGroup == "B+" &&
+					<Tag color='gold' key={pbloodGroup}>
+						{pbloodGroup.toUpperCase()}
+					</Tag>
+				}
+				{pbloodGroup == "B-" &&
+					<Tag color='orange' key={pbloodGroup}>
+						{pbloodGroup.toUpperCase()}
+					</Tag>
+				}
+				{pbloodGroup == "O+" &&
+					<Tag color='blue' key={pbloodGroup}>
+						{pbloodGroup.toUpperCase()}
+					</Tag>
+
+				}
+				{pbloodGroup == "O-" &&
+					<Tag color='geekblue' key={pbloodGroup}>
+						{pbloodGroup.toUpperCase()}
+					</Tag>
+
+				}
+				{pbloodGroup == "AB+" &&
+					<Tag color='green' key={pbloodGroup}>
+						{pbloodGroup.toUpperCase()}
+					</Tag>
+
+				}
+				{pbloodGroup == "AB-" &&
+					<Tag color='lime' key={pbloodGroup}>
+						{pbloodGroup.toUpperCase()}
+					</Tag>
+
+				}
+			</span>
+		),
+	},
+	{
+		title: 'Action',
+		key: 'action',
+		render: (text, record) => (
+			<span>
+				<Row>
+				<Tooltip title="View More">
+					<Col span={6}>
+						<ViewMore moreDetails={record} />
+					</Col>
+					</Tooltip>
+
+					<Col>
+						<Divider type="vertical" />
+					</Col>
+					
+					<Tooltip title="Edit Bag Details">
+					<Col span={6}>
+						<a href={`../bloodbank/update-transfusion?bagId=${record.bagId}`}><EditOutlined style={{ fontSize: '1.15rem', color: '#262626' }} /></a>
+					</Col>
+					</Tooltip>
+				{/* <EyeOutlined onClick={bloodTransfusion} style={{ fontSize: '1.15rem', color: '#262626' }} /> */}
+				{/* <a >View More</a>
+				<a href={`../bloodbank/update-transfusion?bagId=${record.bagId}`}>Edit</a> */}
+				{/* <Divider type="vertical" /> */}
+				</Row>
+			</span>
+		),
+	},
+];
+
 
 export default BloodBags
 

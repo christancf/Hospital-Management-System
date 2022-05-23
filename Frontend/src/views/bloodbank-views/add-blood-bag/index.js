@@ -201,7 +201,7 @@ const AddBloodBag = () => {
           <Input />
         </Form.Item>
 
-        <Form.Item name="bloodGroup" label="bloodGroup" rules={[{ required: true }]}>
+        <Form.Item name="bloodGroup" label="Blood Group" rules={[{ required: true }]}>
           <Select
             labelInValue
             placeholder="Select Blood Group"
