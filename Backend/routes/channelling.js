@@ -182,6 +182,7 @@ router.get('/appointments', auth, async function (req, res, next) {
 
 });
 
+
 router.get('/search/appointment', auth, async function (req, res, next) {
 
   const appointmentNo = req.query.id;
@@ -234,6 +235,68 @@ router.get('/doctors/', auth, async function (req, res, next) {
         payload: response
       }
     );
+
+  }
+  catch (error) {
+    res.status(400).json(
+      {
+        succuss: false,
+        message: error.message,
+        payload: []
+      }
+    );
+  }
+
+
+});
+
+
+router.get('/doctor/appointments', async function (req, res, next) {
+
+
+  try {
+
+    const doc = await staffModel.find({
+      designation: 'doctor',
+      email: req.query.email
+    });
+    if(doc.length == 0 || doc != null){
+      console.log(doc)
+      const response = await appointmentModel.find({
+        status : {$ne : 'deleted'},
+        doctor_id : doc[0].staffID
+      }).then((response) => {
+        res.status(200).json(
+          {
+            succuss: true,
+            message: 'Retriaval succussfull',
+            payload: response
+          }
+        );
+      }).catch(() => {
+        res.status(400).json(
+          {
+            succuss: false,
+            message: error.message,
+            payload: []
+          }
+        );
+  
+      })
+
+    }
+    else{
+
+      res.status(400).json(
+        {
+          succuss: false,
+          message: "Cannot find doctor !",
+          payload: []
+        }
+      );
+    }
+
+
 
   }
   catch (error) {
