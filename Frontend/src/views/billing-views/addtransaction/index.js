@@ -21,39 +21,31 @@ const Home = () => {
 
   const [itemLoading, setitemLoading] = useState(true);
   const [itemData, setItemData] = useState();
+  
+  const [roomLoading, setRoomLoading] = useState(true);
+  const [roomData, setRoomData] = useState();
 
+  const[remainingCount,setRemainingCount] = useState();
+  
+
+
+  
 
   const columns = [
     {
       title: 'Item ID',
       dataIndex: 'itemId',
       key: 'itemId',
-      render: text => <a>{text}</a>,
     },
     {
       title: 'Quantity',
-      dataIndex: 'qty',
+      dataIndex: 'count',
       key: 'qty',
     },
     {
       title: 'Item Charge',
-      dataIndex: 'itemCharge',
-      key: 'itemCharge',
-    },
-    {
-      title: 'Doctor Charge',
-      dataIndex: 'doctorCharge',
-      key: 'doctorCharge',
-    },
-    {
-      title: 'Room Charge',
-      dataIndex: 'roomCharge',
-      key: 'roomCharge',
-    },
-    {
-      title: 'Tax',
-      dataIndex: 'tax',
-      key: 'tax',
+      dataIndex: 'charge',
+      key: 'charge',
     },
     {
       title: 'Total',
@@ -124,24 +116,28 @@ const Home = () => {
       setItemData();
     });
 
+    billingService.getAllRooms().then((resp) =>{
+      setRoomData(resp.payload);
+      setRoomLoading(false);
+    }).catch((error)=>{
+      setRoomLoading(false);
+      setRoomData();
+    })
+
 
   }, []);
 
   const onFinishTransaction = (values) => {
 
-    console.log(values);
+    //console.log(values);
 
     const sendingObj = {
       patientId: values.patientid[0],
-      type: values.type.value,
-      itemId: values.itemname,
-      qty: values.qty,
+      type: values.type,
+      id: values.item[0],
+      count: values.count,
       patientName: values.patientid[1],
-      roomCharges: 100,
-      itemCharges: 100,
-      doctorCharges: 100,
-      tax: 50,
-      total: 500
+      charge:values.item[1]
     }
 
     console.log(sendingObj);
@@ -155,7 +151,7 @@ const Home = () => {
           "Your Transaction successfully added",
           true
         );
-        form.resetFields(['type','itemname','qty']);
+        form.resetFields(['type','item','count']);
         onPatientSearch(form.getFieldValue('patientid'));
 
       }
@@ -192,12 +188,9 @@ const Home = () => {
 
       TransactionList = resp.payload.map((transaction) => {
         return {
-          itemId: transaction.itemId,
-          qty: transaction.qty,
-          itemCharge: transaction.itemCharges,
-          doctorCharge: transaction.doctorCharges,
-          roomCharge: transaction.roomCharges,
-          tax: transaction.tax,
+          itemId: transaction.id,
+          count: transaction.count,
+          charge: transaction.charge,
           total: transaction.total
         }
       });
@@ -210,6 +203,10 @@ const Home = () => {
       setTransactionData();
     });
 
+  }
+
+  const onItemSelect = (value) => {
+    setRemainingCount(value[2])
   }
 
   const formLayout = {
@@ -233,7 +230,7 @@ const Home = () => {
 
       const itemoptionList = itemData.map((item) => {
         return (
-          <Option value={item.id}>{item.item_name} - {item.id}</Option>
+          <Option value={[item.id,item.unit_price,item.total_quantity]}>{item.item_name} - {item.id}</Option>
         )
       })
 
@@ -255,7 +252,6 @@ const Home = () => {
                     placeholder="Select a Patient"
                     optionFilterProp="children"
                     onSelect={onPatientSearch}
-
                   >
                     {optionList}
                   </Select>
@@ -265,39 +261,36 @@ const Home = () => {
                 <Form.Item
                   name="type"
                   label="Type" rules={[{ required: true }]}
-
                 >
                   <Select
-
-                    labelInValue
                     placeholder="Select Type"
                     filterOption={false}
                     style={{ width: '100%' }}
                   >
-                    <Option key="item charges">Item Charges</Option>
-                    <Option key="room charges" disabled={true}>Room Charges</Option>
-                    <Option key="doctor charges" disabled={true}>Doctor Charges</Option>
+                    <Option key="item">Item Charges</Option>
+                    <Option key="room">Room Charges</Option>
                   </Select>
                 </Form.Item>
 
 
-                <Form.Item name="itemname"
+                <Form.Item name="item"
                   label="Item Name" rules={[{ required: true }]}>
                   <Select
                     showSearch
                     placeholder="Select a Item"
                     optionFilterProp="children"
                     onChange={()=> {}}
+                    onSelect={onItemSelect}
 
                   >
                     {itemoptionList}
                   </Select>
 
                 </Form.Item>
-                <Form.Item name="qty"
+                <Form.Item name="count"
                   label="Item Quantity" rules={[{ required: true }]}
                 >
-                  <InputNumber min={0}/>
+                  <InputNumber min={0} max={remainingCount}/>
 
                 </Form.Item>
 

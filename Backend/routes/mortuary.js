@@ -174,7 +174,7 @@ router.post("/update/corpse", function (req, res, next) {
       )
       .then((response) => {
         res.status(200).json({
-          succuss: true,
+          success: true,
           message: "Update process successful",
           payload: {},
         });
@@ -182,14 +182,14 @@ router.post("/update/corpse", function (req, res, next) {
       .catch((err) => {
         console.log(err);
         res.status(400).json({
-          succuss: false,
+          success: false,
           message: err.message,
           payload: {},
         });
       });
   } catch (error) {
     res.status(400).json({
-      succuss: false,
+      success: false,
       message: error.message,
       payload: {},
     });
@@ -202,17 +202,9 @@ router.post("/home/read", async function (req, res, next) {
       .find(
         { id: req.query.id },
         {
-          NIC: 1,
-          name: 1,
-          sex: 1,
-          address: 1,
-          date_of_birth: 1,
-          date_time_of_death: 1,
-          cause_of_death: 1,
-          date_time_of_death: 1,
-          cabinet_number: 1,
-          specifics_of_death: 1,
+          id: 0,
           _id: 0,
+          __v: 0
         }
       )
       .then((response) => {
@@ -257,7 +249,7 @@ router.post("/release", function (req, res, next) {
       )
       .then((response) => {
         res.status(200).json({
-          succuss: true,
+          success: true,
           message: "Release process successful",
           payload: {},
         });
@@ -265,14 +257,14 @@ router.post("/release", function (req, res, next) {
       .catch((err) => {
         console.log(err);
         res.status(400).json({
-          succuss: false,
+          success: false,
           message: err.message,
           payload: {},
         });
       });
   } catch (error) {
     res.status(400).json({
-      succuss: false,
+      success: false,
       message: error.message,
       payload: {},
     });
