@@ -3,7 +3,7 @@ import React from 'react'
 const Home = () => {
 	return (
 		<div>
-			This is Doctor channelling components
+			This is Doctor channelling reports
 		</div>
 	)
 }
