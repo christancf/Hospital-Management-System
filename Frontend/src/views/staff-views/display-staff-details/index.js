@@ -113,7 +113,11 @@ const columns = [
   {
     title: 'Designation',
     dataIndex: 'designation',
-    key: 'designation'
+    key: 'designation',
+    filters: [{ text: 'Doctor', value: 'doctor'},
+              { text: 'Nurse', value: 'nurse'},
+              { text: 'Allied Health Professionals', value: 'allied health professionals'}],
+    onFilter: (value, record) => record.designation === value
   },
   {
     title: 'Qualification',
@@ -129,6 +133,10 @@ const columns = [
     title: 'Status',
     key: 'status',
     dataIndex: 'status',
+    filters: [{ text: 'Employed', value: 'Employed'},
+              { text: 'Resigned', value: 'Resigned'},],
+    onFilter: (value, record) => record.status === value,
+
     render: tags => (
       <span>
       {tags === "Resigned" &&

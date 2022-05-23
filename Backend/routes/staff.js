@@ -125,14 +125,6 @@ router.get('/attendance/test?:staffID', function (req, res, next) {
   }).catch((e) => console.log(`Error: ${e}`))
 });
 
-// //update bonus
-// router.put('/salary/bonus', (req, res, next) => {
-//   staffModel.updateOne({staffID: req.body.staffID},
-//     {$inc: {bonus: Number(req.body.bonus)}})
-//     .then(() => res.json("Bonus Added!"))
-//     .catch((e) => console.log(`Error: ${ e }`))
-// });
-
 //insert bonuses
 router.post('/salary/bonus', function (req, res, next) {
   const bonus = new bonusModel({
