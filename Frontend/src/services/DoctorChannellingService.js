@@ -12,6 +12,16 @@ doctorChannellingService.getAppointmentList = function (email){
   
     })
   }
+
+  doctorChannellingService.updateAppointmentStatus = function (id, body){
+
+    return fetch({
+      url: `/channelling/doctor/appointment/editstatus?is=${id}`,
+      method: 'post',
+      data: body
+  
+    })
+  }
   
 
   export default doctorChannellingService
