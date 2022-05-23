@@ -17,7 +17,6 @@ const StaffResignation = () => {
 }
 
 const showResignationConfirm = (id, name) => {
-	console.log(id)
     confirm({
       title: 'Are you sure you want to mark ' + name + ' as Resigned?',
       icon: <ExclamationCircleOutlined />,
@@ -26,10 +25,9 @@ const showResignationConfirm = (id, name) => {
       okType: 'danger',
       cancelText: 'No',
       onOk() {
-        staffService.updateStatus({id})
-		.then(() => message.success({content: 'Marked as Resigned!', resign, duration: 2}))
+        staffService.updateStatus({'staffID': id})
+ 		.then(() => message.success({content: 'Marked as Resigned!', resign, duration: 2}))
 		.catch((e) => message.error({content: 'Please try again!', resign, duration: 2}))
-		console.log(id)
       },
       onCancel() {
         console.log('Cancel');
@@ -53,7 +51,7 @@ const tailLayout = {
 	const onFinish = values => {
 		
 		showResignationConfirm(values.staffID, values.staffName)
-		form.resetFields();
+		form.resetFields()
 	};
   
 	const onFinishFailed = errorInfo => {
