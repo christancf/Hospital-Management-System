@@ -64,10 +64,15 @@ const tailLayout = {
 		staffService.readStaffDetails(id)
 		.then((details) => {
 			staffDetails = details[0]
-			document.getElementById('staffName').value = staffDetails.staffName 
-			document.getElementById('NIC').value = staffDetails.NIC
-			document.getElementById('designation').value = staffDetails.designation 
-			document.getElementById('qualification').value = staffDetails.qualification 
+
+			form.setFieldsValue({
+				staffName: staffDetails.staffName,
+				NIC: staffDetails.NIC,
+				designation: staffDetails.designation,
+				qualification: staffDetails.qualification	
+			})
+
+			document.getElementById('staffID').setAttribute('disabled', 'true')
 		})
 		.catch((e) => console.log(`Error: ${ e }`))
 	};
@@ -88,35 +93,39 @@ const tailLayout = {
 				name="staffID"
 				rules={[{ required: true, message: 'Please input the staff ID!' }]}
 				>
-					<Search placeholder="Enter Staff ID" onSearch={id => searchById(id)} enterButton />
+					<Search placeholder="Enter Staff ID" onSearch={id => searchById(id)} enterButton id="staffID" />
 				</Form.Item>
 		
 				<Form.Item
 				label="Name"
 				name="staffName"
+				style={{cursor: 'not-allowed'}}
 				>
-					<Input disabled="true" id="staffName" />
+					<Input style={{pointerEvents: 'none'}}/>
 				</Form.Item>
 		
 				<Form.Item
 				label="NIC"
 				name="NIC"
+				style={{cursor: 'not-allowed'}}
 				>
-					<Input disabled="true" id="NIC" />
+					<Input style={{pointerEvents: 'none'}}/>
 				</Form.Item>
 		
-				<Form.Item
-				label="Designation"
-				name="designation"
-				>
-					<Input disabled="true" id="designation" />
+				<Form.Item name="designation" label="Designation" style={{cursor: 'not-allowed'}}>
+					<Select allowClear style={{pointerEvents: 'none'}}>
+						<Option value="doctor">Doctor</Option>
+						<Option value="nurse">Nurse</Option>
+						<Option value="allied health professionals">Allied Health Professionals</Option>
+					</Select>
 				</Form.Item>
 		
 				<Form.Item
 				label="Qualification"
 				name="qualification"
+				style={{cursor: 'not-allowed'}}
 				>
-					<Input disabled="true" id="qualification" />
+					<Input style={{pointerEvents: 'none'}}/>
 				</Form.Item>
 
 				<Form.Item name="attendanceType" label="Attendance Type" rules={[{ required: true, message: 'Please select the attendance type' }]}>
