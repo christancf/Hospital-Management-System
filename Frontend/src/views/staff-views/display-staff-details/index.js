@@ -75,9 +75,9 @@ const DisplayStaffDetails = () => {
         if(staffName === name || staffName.includes(name)) {
           searchData.push(d)
         }
-        return
+        return setData(searchData)
       })
-      setData(searchData)
+      if(name === '') return setData(fullData)
     }
 
     return (
@@ -181,7 +181,7 @@ function onChange(pagination, filters, sorter, extra) {
 const ViewMore = ({moreDetails}) => {
 
   const [viewDetails, setViewDetails] = useState(false)
-  const [form] = Form.useForm();
+  const [form] = Form.useForm()
   
   const showModal = () => {
     setViewDetails(true)

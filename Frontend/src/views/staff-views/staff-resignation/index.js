@@ -21,7 +21,7 @@ const showResignationConfirm = (id, name) => {
     confirm({
       title: 'Are you sure you want to mark ' + name + ' as Resigned?',
       icon: <ExclamationCircleOutlined />,
-      content: 'ID: ' + id + ' Staff Name: ' + name,
+      content: 'Staff ID: ' + id,
       okText: 'Yes',
       okType: 'danger',
       cancelText: 'No',

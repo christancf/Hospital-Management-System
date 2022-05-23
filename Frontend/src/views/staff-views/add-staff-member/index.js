@@ -58,7 +58,7 @@ const Demo = () => {
         <Form.Item
           label="Staff ID"
           name="staffID"
-          rules={[{ required: true, message: 'Please input the staff ID!' }]}
+          rules={[{ required: true, message: 'Please input the staff ID!' }, {pattern: "[0-9]+", message: 'Please input a valid staff ID'}]}
         >
           <Input />
         </Form.Item>
@@ -74,7 +74,7 @@ const Demo = () => {
       <Form.Item
           label="NIC"
           name="NIC"
-          rules={[{ required: true, pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$', message: 'Please input a valid NIC!' }]}
+          rules={[{ required: true, message: 'Please input the NIC!'}, {pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$', message: 'Please input a valid NIC!' }]}
         >
           <Input />
         </Form.Item>
@@ -82,7 +82,7 @@ const Demo = () => {
       <Form.Item
           label="E-mail"
           name="email"
-          rules={[{ required: true, pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$", message: 'Please enter a valid email!' }]}
+          rules={[{ required: true, message: 'Please input the email!'}, {pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$", message: 'Please enter a valid email!' }]}
         >
           <Input />
         </Form.Item>
@@ -133,7 +133,7 @@ const Demo = () => {
         <Form.Item
           label="Base Salary"
           name="basicSalary"
-          rules={[{ required: true, message: 'Please input the base salary!' }]}
+          rules={[{ required: true, message: 'Please input the base salary!' }, {pattern: "[0-9]+", message: 'Please input a numerical value!'}]}
         >
         <Input />
         </Form.Item>
@@ -141,7 +141,7 @@ const Demo = () => {
         <Form.Item
           label="Mobile"
           name="mobile"
-          rules={[{ required: true, pattern:'^([0-9]{10}|)$', message: 'Please input valid mobile number!' }]}
+          rules={[{ required: true, message: 'Please input a mobile number!'},  {pattern:'^([0-9]{10}|)$', message: 'Please input valid mobile number!' }]}
         >
         <Input />
         </Form.Item>
@@ -149,7 +149,7 @@ const Demo = () => {
         <Form.Item
           label="Home"
           name="home"
-          rules={[{ required: true, pattern:'^([0-9]{10}|)$', message: 'Please input valid home number!' }]}
+          rules={[{ required: true, message: 'Please input a home numer!'}, {pattern:'^([0-9]{10}|)$', message: 'Please input valid home number!' }]}
         >
         <Input />
         </Form.Item>
