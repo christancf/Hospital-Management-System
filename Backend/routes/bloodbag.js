@@ -29,7 +29,6 @@ router.post('/add-details', function (req, res, next) {
     expireDate: expDate,
     status: 'In Stock',
     volume: '1 pint(450ml)',
-    // status: req.body.status
   });
 
   try {
@@ -203,10 +202,6 @@ router.get('/bagId', function (req, res, next) {
 
 //get patient ID
 router.get('/patient?:id', async (req, res, next) => {
-  // patientModel.findOne({patientId: req.query.patientId, designation: "patient"})
-  // .then((data) => res.json(data))
-  // .catch((e) => console.log(`Error: ${ e }`))
-
   try {
     patientModel.findOne({ patientId: req.query.id, designation: "patient", status: 'true' }).then((data) => {
 
@@ -220,14 +215,6 @@ router.get('/patient?:id', async (req, res, next) => {
 
     }).catch((e) => {
       console.log(`Error: ${e}`)
-      // res.status(400).json(
-      //   {
-      //     succuss: false,
-      //     message: error.message,
-      //     payload: {}
-      //   }
-      // );
-
     });
 
 
@@ -244,7 +231,7 @@ router.get('/patient?:id', async (req, res, next) => {
 
 });
 
-//add fransfusion
+//add transfusion
 router.post('/add-transfusion-details', function (req, res, next) {
 
   const transfusion = new transfusionModel({
@@ -255,8 +242,8 @@ router.post('/add-transfusion-details', function (req, res, next) {
     issueDate: req.body.issueDate,
     bloodGroup: req.body.bloodGroup,
     pbloodGroup: req.body.pbloodGroup,
-    // valume:1,
-    // status: req.body.status
+    status: 'Out Stock',
+    volume: '1 pint(450ml)'
   });
 
   try {
@@ -281,6 +268,7 @@ router.post('/add-transfusion-details', function (req, res, next) {
 
 });
 
+//read transfusion details
 router.get('/details/readTransfusion', async (req, res, next) => {
   try {
     let bloodTransfusionDetail = await transfusionModel.find({}).then((response) => {
@@ -327,9 +315,6 @@ router.put('/update-status', (req, res, next) => {
 router.get('/details/readExpireBag', async (req, res, next) => {
 
   var today = new Date().setHours(24, 0, 0, 0)
-  // exDate = new Date(req.query.expireDate).toLocaleDateString()
-  // console.log(exDate);
-
 
   try {
     let bloodbagDetail = await bloodbagModel.find(

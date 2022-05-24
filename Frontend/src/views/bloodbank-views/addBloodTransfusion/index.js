@@ -95,7 +95,7 @@ const AddBloodTransfusion = () => {
 		  setTimeout(() => {
 			clearInterval(timer);
 			modal.destroy();
-			// window.location.reload(false)
+			window.location.href="../bloodbank/bags-informations";
 		  }, delay * 1000);
 		}
 	
@@ -127,7 +127,7 @@ const AddBloodTransfusion = () => {
 		  issueDate: moment(values.issueDate).valueOf(),
 		  bloodGroup: values.bloodGroup,
 		  pbloodGroup:values.pbloodGroup,
-			// status:values.status,
+			volume:values.volume,
 		}
 		console.log(payload)
 	
@@ -140,31 +140,13 @@ const AddBloodTransfusion = () => {
 
 		
 		bloodBankService.updateStatus(bagId,payload).then((res) => {
-			// ShowModel("Successful!", 5, "Bloody", true)
 			form.resetFields();
 		}).catch((error) => {
-			// ShowModel("Failed!", 5, "Blood", false)
+			console.log(error)
 		})
 	
 		console.log(payload)
 
-
-
-		// const bloodbag = {
-		// 	bagId: bagId,
-		// 	status:values.status,
-		// }
-
-		// const payload2 = { bloodbag: bloodbag }
-
-		// bloodBankService.updateStatus(payload2).then((res) => {
-		// 	ShowModel("Successful!", 5, "Bloody", true)
-		// 	form.resetFields();
-		// }).catch((error) => {
-		// 	ShowModel("Failed!", 5, "Blood", false)
-		// })
-
-		// console.log(payload2)
 
 	  };
 
@@ -233,8 +215,6 @@ const AddBloodTransfusion = () => {
 				</Form.Item>
 				<Form.Item label="Reason" name="reason" style={{ margin: '24px 0' }}>
 					<TextArea
-						// value={value}
-						// onChange={this.onChange}
 						placeholder="Reason of the blood transfusion"
 						autoSize={{ minRows: 3, maxRows: 5 }}
 					/>
@@ -248,9 +228,9 @@ const AddBloodTransfusion = () => {
 				<Form.Item label="Blood Group of Recipient" name="pbloodGroup">
 					<Input disabled={true} id="bloodGroup" />
 				</Form.Item>
-				{/* <Form.Item label="Volume" name="volume" initialValue={data.}>
+				<Form.Item label="Volume" name="volume" initialValue={data.volume}>
 					<Input disabled={true} id="Volume" value={1}/>
-				</Form.Item> */}
+				</Form.Item>
 
 				<Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
 					<Button className="mr-2" htmlType="button" onClick={onReset}>

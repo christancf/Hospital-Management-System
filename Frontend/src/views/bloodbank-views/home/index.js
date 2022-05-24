@@ -262,7 +262,7 @@ const Home = () => {
 					<Doughnut data={myData} width='300'legend={{position:"right"}}/>
 				</div> */}
 				<div >
-					<Row  >
+					<Row  gutter={16}>
 						<Col span={130} display="block">
 							<Card style={{ backgroundColor: '#efefef', width: "700px" }}>
 								<Chart options={options} series={series} height={300} width={600} type="donut" />
@@ -270,12 +270,12 @@ const Home = () => {
 						</Col>
 
 						<Col span={100}  >
-							<Card style={{ backgroundColor: '#efefef', width: "500px", marginLeft: "10px" }}>
+							<Card style={{ backgroundColor: '#efefef', width: "500px", marginLeft: "10px",title:"Card title" }}>
 								<Row>
-									<Row>		
-									<h1 style={{ padding: '26px 800px 16px' ,color: 'blue'}} >Available blood count:{Aailable_value[0].count}</h1>
+									<Col span={20} marginRight='100px'>		
+									<h1 style={{ color: 'blue'}} >Available blood count:{Aailable_value[0].count}</h1>
 									
-									</Row>
+									</Col>
 									
 									<Col span={14}>
 										<Button type="primary" href='/bloodbank/add-details' padding='36px 0px 16px'>Add Blood Bag</Button>

@@ -196,6 +196,10 @@ const UpdateTransfusion = () => {
 					<Input disabled />
 				</Form.Item>
 
+				<Form.Item label="Volume" name="volume" >
+					<Input disabled={true} id="Volume" placeholder='1 pint(450ml)'/>
+				</Form.Item>
+
 				<Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
 					<Button className="mr-2" htmlType="button" href={`../bloodbank/bags-informations`}>
 							Cancel

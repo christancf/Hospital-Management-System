@@ -191,7 +191,7 @@ const AddBloodBag = () => {
         <Form.Item name="donorNIC" label=" Donor's NIC" rules={[{ required: true,pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' , message: 'Enter valid NIC' }]} placeholder="Donor's NIC">
           <Input />
         </Form.Item>
-        <Form.Item label="Donation Number " name="donationNumber" rules={[{ required: true,message:'Enter the donation number' }]} placeholder="Please input Donation Number!">
+        <Form.Item label="Donation Number " name="donationNumber" rules={[{ required: true,pattern:'^[A-Z]{2}-[0-9]{4}$',message:'Enter the valid donation number' }]} placeholder="Please input Donation Number!">
           <Input />
         </Form.Item>
         <Form.Item label="Donated Date & Time" name="donateDate">
@@ -214,6 +214,10 @@ const AddBloodBag = () => {
             ))}
           </Select>
         </Form.Item>
+
+        <Form.Item label="Volume" name="volume" >
+					<Input disabled={true} id="Volume" placeholder='1 pint(450ml)'/>
+				</Form.Item>
 
         <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
           <Button className="mr-2" htmlType="button" onClick={onReset}>
