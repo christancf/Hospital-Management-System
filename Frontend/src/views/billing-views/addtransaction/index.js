@@ -10,7 +10,7 @@ const Home = () => {
 
   const [form] = Form.useForm();
   const [patientLoading, setPatientLoading] = useState(true);
-  const [patientname, setPatientname] = useState(false);
+  const [patientname, setPatientname] = useState([]);
   const [patientError, setPatientError] = useState(false);
   const [patientData, setPatientData] = useState();
 
@@ -76,8 +76,7 @@ const Home = () => {
     }
   ];
 
-  let TransactionListItem = {}
-  let TransactionListRoom = {}
+
 
   function ShowModel(title, delay, innercontent, isSuccess) {
 
@@ -150,65 +149,11 @@ const Home = () => {
 
   }, []);
 
-  const onFinishTransaction = (values) => {
-
-    //console.log(values);
-
-    const sendingObj = {
-      patientId: values.patientid[0],
-      type: values.type,
-      id: values.item_room[0],
-      count: values.count,
-      patientName: values.patientid[1],
-      charge:values.item_room[1]
-    }
-
-    console.log(sendingObj);
-
-    billingService.addTransactions(sendingObj).then((resp) => {
-
-      if (resp.succuss) {
-        ShowModel(
-          "Successfull !",
-          4,
-          "Your Transaction successfully added",
-          true
-        );
-        form.resetFields(['type','item_room','count']);
-        setType()
-        onPatientSearch(form.getFieldValue('patientid'));
-
-      }
-      else {
-        ShowModel(
-          "Unsccessfull !",
-          4,
-          "Your Transaction placement faild",
-          false
-        );
-      }
-
-
-
-    }).catch((error) => {
-
-      ShowModel(
-        "Unsccessfull !",
-        4,
-        "Your Transaction placement faild",
-        false
-      );
-
-    })
-
-  }
-
-  const onPatientSearch = (value) => {
-
-
-    setPatientname(true);
-
-    billingService.getAllTransactionToPatient(value[0]).then((resp) => {
+  useEffect(() => {
+    let TransactionListItem = {}
+    let TransactionListRoom = {}
+    console.log(patientname)
+    billingService.getAllTransactionToPatient(patientname[0]).then((resp) => {
 
       TransactionListItem = resp.payload.filter((t) =>{return t.type==="item"}).map((transaction)=>{
         return {
@@ -235,6 +180,57 @@ const Home = () => {
       setTransactionError(true);
       setTransactionData();
     });
+  },[patientname])
+
+  const onFinishTransaction = (values) => {
+
+    //console.log(values);
+
+    const sendingObj = {
+      patientId: values.patientid[0],
+      type: values.type,
+      id: values.item_room[0],
+      count: values.count,
+      patientName: values.patientid[1],
+      charge:values.item_room[1]
+    }
+
+    console.log(sendingObj);
+
+    billingService.addTransactions(sendingObj).then((resp) => {
+
+      if (resp.succuss) {
+        ShowModel(
+          "Successfull !",
+          4,
+          "Your Transaction successfully added",
+          true
+        );
+        form.resetFields(['type','item_room','count']);
+        setType()
+
+      }
+      else {
+        ShowModel(
+          "Unsccessfull !",
+          4,
+          "Your Transaction placement faild",
+          false
+        );
+      }
+
+
+
+    }).catch((error) => {
+
+      ShowModel(
+        "Unsccessfull !",
+        4,
+        "Your Transaction placement faild",
+        false
+      );
+
+    })
 
   }
 
@@ -293,7 +289,7 @@ const Home = () => {
                       showSearch
                       placeholder="Select a Patient"
                       optionFilterProp="children"
-                      onSelect={onPatientSearch}
+                      onChange={c => {setPatientname(c)}}
                     >
                       {optionList}
                     </Select>
@@ -381,7 +377,7 @@ const Home = () => {
                   </Form.Item> */}
   
                   <Form.Item {...tailLayout}>
-                    <Button shape="round" className="mr-2" htmlType="button" onClick={() => { form.resetFields(); }}>
+                    <Button shape="round" className="mr-2" htmlType="button" onClick={() => { form.resetFields(); setType();setPatientname([]); }}>
                       Clear
                     </Button>
                     <Button shape="round" className="mr-2" type="primary" htmlType="submit">
