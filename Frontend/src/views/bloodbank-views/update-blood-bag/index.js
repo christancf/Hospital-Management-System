@@ -191,7 +191,7 @@ const UpdateBloodBag = () => {
 				<Form.Item name="donorNIC" initialValue={data.donorNIC} label=" Donor's NIC" rules={[{ required: true,pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' , message: 'Enter valid NIC' }]} placeholder="Donor's NIC">
 					<Input />
 				</Form.Item>
-				<Form.Item name="donationNumber" initialValue={data.donationNumber} label=" Donation Number" rules={[{ required: true }]} placeholder="Donation Number">
+				<Form.Item name="donationNumber" initialValue={data.donationNumber} label=" Donation Number" rules={[{ required: true,pattern:'^[A-Z]{2}-[0-9]{4}$',message:'Enter valid donation number' }]} placeholder="Donation Number">
 					<Input />
 				</Form.Item>
 				<Form.Item name="donateDate" initialValue={moment(new Date(data.donateDate))} label="Donate Date" rules={[{ required: true }]} placeholder=" Donate Date">
