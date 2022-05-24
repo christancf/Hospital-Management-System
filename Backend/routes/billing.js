@@ -361,9 +361,9 @@ router.get('/transactions', async (req, res, next) => {
 
     if (resp.length == 0) {
 
-      res.status(400).json(
+      res.status(200).json(
         {
-          succuss: false,
+          succuss: true,
           message: "No Bill created yet",
           payload: []
         }
