@@ -202,6 +202,7 @@ const AddBloodTransfusion = () => {
 
 		const resData = data
 		return (
+			<Card style={{backgroundColor: '#efefef'}}>
 			<Form {...layout} name="add blood transfusion" form={form} onFinish={onFinish} initialValues={{ remember: true }}>
 				<Title>Add Blood Transfusion</Title><br></br>
 				<Form.Item name="bagId" label="Bag Id" initialValue={bagId} placeholder="Bag Id" >
@@ -243,7 +244,7 @@ const AddBloodTransfusion = () => {
 				</Form.Item>
 
 			</Form>
-
+			</Card>
 		)
 	}
 }

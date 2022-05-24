@@ -1,4 +1,4 @@
-import { Form, Input, InputNumber, Button, Cascader, DatePicker, Select, Modal, Spin, Typography } from 'antd';
+import { Form, Input, Card, Button, Cascader, DatePicker, Select, Modal, Spin, Typography } from 'antd';
 import { json } from 'd3-fetch';
 import moment from 'moment';
 import bloodBankService from 'services/BloodBankService';
@@ -179,9 +179,9 @@ const AddBloodBag = () => {
 			return current && current > moment().endOf('day');
 		  }
     return (
-
-      <Form {...layout} name="addBloodBag" onFinish={onFinish} form={form} >
-        <Title>Add Blood Bag</Title><br></br>
+<Card style={{backgroundColor: '#efefef'}}>
+      <Form {...layout} name="addBloodBag" onFinish={onFinish} form={form} style={{ marginLeft: 200, marginBottom: 20 }}>
+        <Title style={{ marginLeft: 270, marginBottom: 20 }}>Add Blood Bag</Title><br></br>
         <Form.Item name="bagId" label="Bag Id" initialValue={data} placeholder="Bag Id" >
           <Input disabled />
         </Form.Item>
@@ -229,6 +229,7 @@ const AddBloodBag = () => {
           </Button>
         </Form.Item>
       </Form>
+      </Card>
     );
   }
 };
