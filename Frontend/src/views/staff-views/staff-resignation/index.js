@@ -77,7 +77,7 @@ const tailLayout = {
 	};
   
 	return (
-		<Card style={{backgroundColor: '#efefef'}}>
+		<Card>
 			<h1 className='text-left' style={{ marginLeft: 450, marginBottom: 20 }}>Staff Resignation</h1>
 			<Form
 			{...layout}

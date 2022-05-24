@@ -89,7 +89,7 @@ const tailLayout = {
 	};
   
 	return (
-		<Card style={{backgroundColor: '#efefef'}}>
+		<Card>
 			<h1 className='text-left' style={{ marginLeft: 460, marginBottom: 20 }}>Staff Attendance</h1>
 			<Form
 				{...layout}

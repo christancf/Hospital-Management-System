@@ -19,7 +19,7 @@ const layout = {
 	wrapperCol: { span: 8 },
   };
 const tailLayout = {
-	wrapperCol: { offset: 10, span: 16 },
+	wrapperCol: { offset: 9, span: 16 },
   };
 
   const Demo = () => {
@@ -61,7 +61,7 @@ const tailLayout = {
 	};
   
 	return (
-		<Card style={{backgroundColor: '#efefef'}}>
+		<Card>
 			<h1 className='text-left' style={{ marginLeft: 430, marginBottom: 20 }}>Staff Salary Bonuses</h1>
 			<Form
 				{...layout}
