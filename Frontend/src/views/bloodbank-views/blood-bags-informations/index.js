@@ -210,7 +210,6 @@ const columns = [
 	{
 		title: "Donor's Name",
 		dataIndex: 'donorName',
-		render: text => <a style={{ color: "darkred" }}>{text}</a>,
 	},
 	{
 		title: 'Donation Number',
@@ -359,7 +358,7 @@ const ViewMore = ({ moreDetails }) => {
 			tags: moreDetails.bloodGroup,
 			volume: moreDetails.volume
 		})
-		
+		console.log(moreDetails);
 	};
 
 	const handleOk = e => {
@@ -381,6 +380,18 @@ const ViewMore = ({ moreDetails }) => {
 				onOk={handleOk}
 				onCancel={handleCancel}
 				width='65%'
+
+				footer={[
+					<Button key="back" onClick={handleCancel}>
+					  Cancel
+					</Button>,
+					<Button key="submit" type="primary" href={`../bloodbank/update-details?bagId=${moreDetails.bagId}`}>
+					Edit Bag Details
+				  </Button>,
+					<Button key="submit" type="primary" href={`../bloodbank/add-transfusion?bagId=${moreDetails.bagId}`}>
+					  Transfusion This Bag
+					</Button>,
+				  ]}
 			>
 				<Form {...layout} name="basic" initialValues={{ remember: true }} form={form} style={{ pointerEvents: 'none' }} >
 					<Row>
@@ -397,15 +408,13 @@ const ViewMore = ({ moreDetails }) => {
 							<Form.Item label="Donation Number" name="donationNumber">
 								<Input />
 							</Form.Item>
-							<Form.Item name="tags"  label="Blood Group" initialValue={viewDetails.tags}>
+							<Form.Item name="tags"  label="Blood Group" initialValue={moreDetails.tags}>
 								<Select
-									// placeholder="Select Blood Group"
 									filterOption={false}
 									showSearch={{ filter }}
 									style={{ width: '100%' }}
 								>
 									{bloodGroup.map(d => (
-										// <Option key={d.value}>{d.label}</Option>
 										<Option key={d.value}>{d.label}</Option>
 										
 									))}
