@@ -1,12 +1,11 @@
 import React from 'react'
-import { Form, Input, Button, DatePicker, message, Card, Select, Row, Col } from 'antd';
+import { Form, Input, Button, DatePicker, Card, Select, Row, Col, Modal } from 'antd';
 import moment from 'moment';
 import {useLocation} from "react-router-dom";
 import staffService from 'services/StaffService';
 import TextArea from 'antd/lib/input/TextArea';
 
 const { Search } = Input;
-const update = 'update'
 const { Option } = Select;
 
 const UpdateStaffDetails = () => {
@@ -33,6 +32,45 @@ const tailLayout = {
 const Demo = () => {
 
   const [form] = Form.useForm();
+
+  function ShowModel(title, delay, innercontent, isSuccess) {
+
+		if (isSuccess) {
+			const modal = Modal.success({
+				title: title,
+				content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+			});
+			const timer = setInterval(() => {
+				delay -= 1;
+				modal.update({
+					content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+				});
+			}, 1000);
+			setTimeout(() => {
+				clearInterval(timer);
+				modal.destroy();
+				window.location.href="../staff/display-staff-details";
+			}, delay * 1000);
+		}
+
+		else {
+			const modal = Modal.error({
+				title: title,
+				content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+			});
+			const timer = setInterval(() => {
+				delay -= 1;
+				modal.update({
+					content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+				});
+			}, 1000);
+			setTimeout(() => {
+				clearInterval(timer);
+				modal.destroy();
+			}, delay * 1000);
+		}
+	}
+
   let staffDetails
 
   const onFinish = values => {
@@ -40,8 +78,8 @@ const Demo = () => {
     values.dateOfBirth = moment(staffDetails.dateOfBirth).valueOf()
   
     staffService.updateStaffDetails(values)
-    .then(() => message.success({content: 'Successfully Updated', update, duration: 2}))
-    .catch((e) => message.error({content: 'Please try again!', update, duration: 2}))
+    .then(() => ShowModel("Successful!", 2, "Staff Member Details updated Sucessfully", true))
+    .catch((e) => ShowModel("Failed!", 2, "Failed to update Staff Member details", false))
     form.resetFields();
   };
 

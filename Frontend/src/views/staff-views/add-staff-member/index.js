@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Form, Input, Button, DatePicker, message, Card, Select, Spin, Row, Col } from 'antd';
+import { Form, Input, Button, DatePicker, Card, Select, Spin, Row, Col, Modal } from 'antd';
 import moment from 'moment';
 import staffService from 'services/StaffService';
 import TextArea from 'antd/lib/input/TextArea';
 
-const add = 'add'
 const { Option } = Select
 
 const AddStaffMember = () => {
@@ -29,7 +28,6 @@ const tailLayout = {
 };
 
 const AddMember = () => {
-  let staffDetails
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
@@ -48,13 +46,52 @@ const AddMember = () => {
     })
   }, [])
 
-  const [form] = Form.useForm();
+  function ShowModel(title, delay, innercontent, isSuccess) {
+
+    if (isSuccess) {
+      const modal = Modal.success({
+        title: title,
+        content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+      });
+      const timer = setInterval(() => {
+        delay -= 1;
+        modal.update({
+          content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+        });
+      }, 1000);
+      setTimeout(() => {
+        clearInterval(timer);
+        modal.destroy();
+        window.location.reload(false)
+      }, delay * 1000);
+    }
+
+    else {
+      const modal = Modal.error({
+        title: title,
+        content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+      });
+      const timer = setInterval(() => {
+        delay -= 1;
+        modal.update({
+          content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+        });
+      }, 1000);
+      setTimeout(() => {
+        clearInterval(timer);
+        modal.destroy();
+      }, delay * 1000);
+    }
+  }
+
+  const [form] = Form.useForm()
+
   const onFinish = values => {
     values.dateOfBirth = values.dateOfBirth['_d'].getTime()
-
+    console.log(values.staffID)
     staffService.addStaffMember(values)
-      .then(() => message.success({content: 'Successfully added new staff member', add, duration: 2}))
-      .catch(() => message.error({content: 'Please try again!', add, duration: 2}))
+      .then(() => ShowModel("Successful!", 5, "Staff Member Added Successfully", true))
+      .catch(() => ShowModel("Failed!", 5, "Failed to add Staff Member", false))
 
       form.resetFields();
   };
@@ -106,9 +143,9 @@ const AddMember = () => {
                 name="staffID"
                 initialValue={data}
                 style={{cursor: 'not-allowed'}}
-                rules={[{ required: true, message: 'Please input the staff ID!' }, {pattern: "[0-9]+", message: 'Please input a valid staff ID'}]}
+                rules={[{ required: true, message: 'Please input the staff ID!' }]}
               >
-              <Input style={{pointerEvents: 'none'}}/>
+              <Input style={{pointerEvents: 'none'}} id="staffID" />
               </Form.Item>
       
               <Form.Item
