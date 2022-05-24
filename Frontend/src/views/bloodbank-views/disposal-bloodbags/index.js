@@ -131,12 +131,7 @@ const DisposaBloodBag = () => {
 			{
 				title: 'Donors Name',
 				dataIndex: 'donorName',
-				// render: text => <a>{text}</a>,
 			},
-			// {
-			// 	title: 'Donation Number',
-			// 	dataIndex: 'donationNumber',
-			// },
 			{
 				title: 'Donate Date',
 				dataIndex: 'donateDate'
@@ -146,10 +141,6 @@ const DisposaBloodBag = () => {
 				dataIndex: 'expireDate',
 				render: text => <a style={{ color: "red" }}>{text}</a>,
 			},
-			// {
-			// 	title: 'Place',
-			// 	dataIndex: 'place'
-			// },
 			{
 				title: 'Blood Group',
 				dataIndex: 'tags',
@@ -205,12 +196,12 @@ const DisposaBloodBag = () => {
 				),
 			},
 			{
-				title: 'Action',
+				title: '',
 				key: 'action',
 				render: (text, record) => (
 					<span>
 						<Row>
-							<Tooltip title="Edit Bag Details">
+							<Tooltip title="Remove this bag">
 								<Col span={6}>
 								<a onClick={() => { deleteExpireBag(record.bagId) }}><DeleteOutlined style={{ fontSize: '1.15rem', color: '#262626' }} /></a>
 								</Col>

@@ -177,7 +177,8 @@ const BloodBags = () => {
 				reason: response.reason,
 				issueDate: response.issueDate,
 				tags: response.bloodGroup,
-				pbloodGroup: response.pbloodGroup
+				pbloodGroup: response.pbloodGroup,
+				volume: response.volume
 			}
 		})
 
@@ -185,7 +186,7 @@ const BloodBags = () => {
 
 		return (
 			<div>
-				<div style={{ padding: '26px 1040px 16px' }}>
+				<div style={{ padding: '26px 1050px 16px' }}>
 					<Button type="primary" href='/bloodbank/add-details'>Add Blood Bag</Button>
 				</div>
 				<Title>Blood Bags Details</Title>
@@ -290,7 +291,7 @@ const columns = [
 		),
 	},
 	{
-		title: 'Action',
+		title: '',
 		key: 'action',
 		render: (text, record) => (
 
@@ -322,12 +323,6 @@ const columns = [
 
 					</Col>
 				</Row>
-				{/* <a href={`../bloodbank/add-transfusion?bagId=${record.bagId}`}>Transfusion </a> */}
-				{/* <a href={`../bloodbank/update-details?bagId=${record.bagId}`}>Edit</a> */}
-				{/* <a onClick={() => { showModal(record.bagId) }}>View More</a> */}
-				{/* <a onClick={showModal}>View More</a> */}
-
-
 			</span>
 		),
 	},
@@ -603,7 +598,7 @@ const column = [
 		),
 	},
 	{
-		title: 'Action',
+		title: '',
 		key: 'action',
 		render: (text, record) => (
 			<span>
@@ -618,28 +613,17 @@ const column = [
 						<Divider type="vertical" />
 					</Col>
 
-					<Tooltip title="Edit Bag Details">
+					<Tooltip title="Edit Transfusion Details">
 						<Col span={6}>
 							<a href={`../bloodbank/update-transfusion?bagId=${record.bagId}`}><EditOutlined style={{ fontSize: '1.15rem', color: '#262626' }} /></a>
 						</Col>
 					</Tooltip>
-					{/* <EyeOutlined onClick={bloodTransfusion} style={{ fontSize: '1.15rem', color: '#262626' }} /> */}
-					{/* <a >View More</a>
-				<a href={`../bloodbank/update-transfusion?bagId=${record.bagId}`}>Edit</a> */}
-					{/* <Divider type="vertical" /> */}
 				</Row>
 			</span>
 		),
 	},
 ];
 
-
-// function onChange(pagination, filters, sorter, extra) {
-// 	console.log('params', pagination, filters, sorter, extra);
-// }
-// function filter(inputValue, path) {
-// 	return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
-// }
 
 const ViewMoreTrance = ({ moreDetailsTrance }) => {
 	const [viewDetails, setViewDetails] = useState(false)
@@ -739,7 +723,7 @@ const ViewMoreTrance = ({ moreDetailsTrance }) => {
 									))}
 								</Select>
 							</Form.Item>
-							
+
 							<Form.Item label="Volume" name="volume" >
 								<Input disabled={true} id="Volume" placeholder='1 pint(450ml)' />
 							</Form.Item>

@@ -160,7 +160,7 @@ const AddBloodTransfusion = () => {
 						name: data.payload.fullName,
 						pbloodGroup: data.payload.bloodGroup,
 					})
-				} else message.error('ID doesn\'t belong to blood bag')
+				} else message.error('ID doesn\'t belong to recipient')
 			}).catch((e) => {
 				console.log(`Error @ update-details: ${e}`)
 			})
@@ -203,8 +203,8 @@ const AddBloodTransfusion = () => {
 		const resData = data
 		return (
 			<Card style={{backgroundColor: '#efefef'}}>
-			<Form {...layout} name="add blood transfusion" form={form} onFinish={onFinish} initialValues={{ remember: true }}>
-				<Title>Add Blood Transfusion</Title><br></br>
+			<Form {...layout} name="add blood transfusion" form={form} onFinish={onFinish} initialValues={{ remember: true }} style={{ marginLeft: 130, marginBottom: 20 }}>
+				<Title style={{ marginLeft: 320, marginBottom: 20 }}>Add Blood Transfusion</Title><br></br>
 				<Form.Item name="bagId" label="Bag Id" initialValue={bagId} placeholder="Bag Id" >
 					<Input disabled />
 				</Form.Item>
@@ -220,7 +220,7 @@ const AddBloodTransfusion = () => {
 						autoSize={{ minRows: 3, maxRows: 5 }}
 					/>
 				</Form.Item>
-				<Form.Item label="Issue Date" name="issueDate">
+				<Form.Item label="Issued Date" name="issueDate">
 					<DatePicker disabledDate={disabledDate2} />
 				</Form.Item>
 				<Form.Item name="bloodGroup" initialValue={data.bloodGroup} label="Blood Group of Bag" >

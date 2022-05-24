@@ -1,4 +1,4 @@
-import { Form, Input, InputNumber, Button, Cascader, DatePicker, Select, Modal, Spin, Typography } from 'antd';
+import { Form, Input, Card, Button, Cascader, DatePicker, Select, Modal, Spin, Typography } from 'antd';
 import moment from 'moment';
 import { useState, useEffect } from 'react';
 import bloodBankService from 'services/BloodBankService';
@@ -169,8 +169,9 @@ const UpdateTransfusion = () => {
 		}
 
 		return (
-			<Form {...layout} name="BloodTransfusionUpdate" onFinish={onFinish} validateMessages={validateMessages}>
-				<Title>Edit Blood Transfusion Details</Title><br></br>
+			<Card style={{backgroundColor: '#efefef'}}>
+			<Form {...layout} name="BloodTransfusionUpdate" onFinish={onFinish} validateMessages={validateMessages} style={{ marginLeft: 200, marginBottom: 20 }}>
+				<Title style={{ marginLeft: 190, marginBottom: 20 }}>Edit Blood Transfusion Details</Title><br></br>
 				<Form.Item name="bagId" label="Bag Id" initialValue={bagId} placeholder="Bag Id" >
 					<Input disabled />
 				</Form.Item>
@@ -186,7 +187,7 @@ const UpdateTransfusion = () => {
 						autoSize={{ minRows: 3, maxRows: 5 }}
 					/>
 				</Form.Item>
-				<Form.Item name="issueDate" initialValue={moment(new Date(data.issueDate))} label="Issue Date" rules={[{ required: true }]} placeholder=" Issue Date">
+				<Form.Item name="issueDate" initialValue={moment(new Date(data.issueDate))} label="Issued Date" rules={[{ required: true }]} placeholder=" Issue Date">
 					<DatePicker disabledDate={disabledDate2} />
 				</Form.Item>
 				<Form.Item name="bloodGroup" initialValue={data.bloodGroup} label="Blood Group of Bag" placeholder="Blood Group of Bag">
@@ -210,6 +211,7 @@ const UpdateTransfusion = () => {
 					</Button>
 				</Form.Item>
 			</Form>
+			</Card>
 		)
 	}
 
