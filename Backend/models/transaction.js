@@ -13,7 +13,7 @@ type: String
 },
 id: {
 required: true,
-type: Number
+type: String
 },
 count: {
 required: true,
