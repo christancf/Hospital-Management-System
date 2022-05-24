@@ -244,7 +244,7 @@ const AddBloodTransfusion = () => {
 				</Form.Item>
 
 			</Form>
-			</Card>
+</Card>
 		)
 	}
 }

@@ -6,6 +6,7 @@ import moment from 'moment';
 
 const { Title } = Typography
 const { Option } = Select
+const { TextArea } = Input;
 const queryParams = new URLSearchParams(window.location.search);
 const bagId = queryParams.get('bagId');
 
@@ -193,15 +194,13 @@ const BloodBags = () => {
 
 				<Title>Blood Transfusion Details</Title>
 				<Table columns={column} dataSource={bloodTransfusion} style={{ padding: '26px 0px 16px' }} />
-
-
-
 			</div>
 		)
 
 	}
 }
 
+//Blood Bag
 const columns = [
 	{
 		title: 'Bag ID',
@@ -355,7 +354,7 @@ const ViewMore = ({ moreDetails }) => {
 			expireDate: moment(moreDetails.expireDate),
 			donateDate: moment(moreDetails.donateDate),
 			place: moreDetails.place,
-			tags: moreDetails.bloodGroup,
+			bloodGroup: moreDetails.bloodGroup,
 			volume: moreDetails.volume
 		})
 		console.log(moreDetails);
@@ -375,7 +374,7 @@ const ViewMore = ({ moreDetails }) => {
 		<div>
 			<EyeOutlined onClick={showModal} style={{ fontSize: '1.15rem', color: '#262626' }} />
 			<Modal
-				title={`Bag ID  ${moreDetails['bagId']}`}
+				title={`Bag ID : ${moreDetails['bagId']}`}
 				visible={viewDetails}
 				onOk={handleOk}
 				onCancel={handleCancel}
@@ -383,15 +382,15 @@ const ViewMore = ({ moreDetails }) => {
 
 				footer={[
 					<Button key="back" onClick={handleCancel}>
-					  Cancel
+						Cancel
 					</Button>,
 					<Button key="submit" type="primary" href={`../bloodbank/update-details?bagId=${moreDetails.bagId}`}>
-					Edit Bag Details
-				  </Button>,
-					<Button key="submit" type="primary" href={`../bloodbank/add-transfusion?bagId=${moreDetails.bagId}`}>
-					  Transfusion This Bag
+						Edit Bag Details
 					</Button>,
-				  ]}
+					<Button key="submit" type="primary" href={`../bloodbank/add-transfusion?bagId=${moreDetails.bagId}`}>
+						Transfusion This Bag
+					</Button>,
+				]}
 			>
 				<Form {...layout} name="basic" initialValues={{ remember: true }} form={form} style={{ pointerEvents: 'none' }} >
 					<Row>
@@ -408,7 +407,7 @@ const ViewMore = ({ moreDetails }) => {
 							<Form.Item label="Donation Number" name="donationNumber">
 								<Input />
 							</Form.Item>
-							<Form.Item name="tags"  label="Blood Group" initialValue={moreDetails.tags}>
+							<Form.Item name="tags" label="Blood Group" initialValue={moreDetails.tags} >
 								<Select
 									filterOption={false}
 									showSearch={{ filter }}
@@ -416,7 +415,7 @@ const ViewMore = ({ moreDetails }) => {
 								>
 									{bloodGroup.map(d => (
 										<Option key={d.value}>{d.label}</Option>
-										
+
 									))}
 								</Select>
 							</Form.Item>
@@ -462,11 +461,11 @@ const column = [
 		dataIndex: 'bagId',
 	},
 	{
-		title: 'Recepient Id',
+		title: 'Recipient Id',
 		dataIndex: 'id',
 	},
 	{
-		title: 'Recepient Name',
+		title: 'Recipient Name',
 		dataIndex: 'name',
 	},
 	{
@@ -474,7 +473,7 @@ const column = [
 		dataIndex: 'reason',
 	},
 	{
-		title: 'Issue Date',
+		title: 'Issued Date',
 		dataIndex: 'issueDate'
 	},
 	{
@@ -541,7 +540,7 @@ const column = [
 		),
 	},
 	{
-		title: 'Blood Group Of Recepient',
+		title: 'Blood Group Of Recipient',
 		dataIndex: 'pbloodGroup',
 		key: 'pbloodGroup',
 		filters: [{ text: 'A positive(A+)', value: 'A+' },
@@ -611,7 +610,7 @@ const column = [
 				<Row>
 					<Tooltip title="View More">
 						<Col span={6}>
-							<ViewMore moreDetails={record} />
+							<ViewMoreTrance moreDetailsTrance={record} />
 						</Col>
 					</Tooltip>
 
@@ -634,6 +633,126 @@ const column = [
 	},
 ];
 
+
+// function onChange(pagination, filters, sorter, extra) {
+// 	console.log('params', pagination, filters, sorter, extra);
+// }
+// function filter(inputValue, path) {
+// 	return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
+// }
+
+const ViewMoreTrance = ({ moreDetailsTrance }) => {
+	const [viewDetails, setViewDetails] = useState(false)
+	const [form] = Form.useForm();
+
+	const showModal = () => {
+		setViewDetails(true)
+		form.setFieldsValue({
+			bagId: moreDetailsTrance.bagId,
+			id: moreDetailsTrance.id,
+			name: moreDetailsTrance.name,
+			reason: moreDetailsTrance.reason,
+			issueDate: moment(moreDetailsTrance.issueDate),
+			bloodGroup: moreDetailsTrance.bloodGroup,
+			pbloodGroup: moreDetailsTrance.pbloodGroup,
+			volume: moreDetailsTrance.volume
+		})
+		console.log(moreDetailsTrance);
+	};
+
+	const handleOk = e => {
+		console.log(e)
+		setViewDetails(false)
+	};
+
+	const handleCancel = e => {
+		console.log(e)
+		setViewDetails(false)
+	};
+
+	return (
+		<div>
+			<EyeOutlined onClick={showModal} style={{ fontSize: '1.15rem', color: '#262626' }} />
+			<Modal
+				title={`Bag ID : ${moreDetailsTrance['bagId']}  ||  Recipient ID : ${moreDetailsTrance['id']}`}
+				visible={viewDetails}
+				onOk={handleOk}
+				onCancel={handleCancel}
+				width='65%'
+
+				footer={[
+					<Button key="back" onClick={handleCancel}>
+						Cancel
+					</Button>,
+					<Button key="submit" type="primary" href={`../bloodbank/update-transfusion?bagId=${moreDetailsTrance.bagId}`}>
+						Edit Transfusion Details
+					</Button>,
+				]}
+			>
+				<Form {...layout} name="basic" initialValues={{ remember: true }} form={form} style={{ pointerEvents: 'none' }} >
+					<Row>
+						<Col span={11}>
+
+							<Form.Item label="Recipient Name" name="name" >
+								<Input />
+							</Form.Item>
+
+							<Form.Item label="Reason" name="reason" style={{ margin: '24px 0' }}>
+								<TextArea
+									placeholder="Reason of the blood transfusion"
+									autoSize={{ minRows: 3, maxRows: 5 }}
+								/>
+							</Form.Item>
+
+							<Form.Item name="tags" label="Blood Group Of Bag" initialValue={moreDetailsTrance.tags} >
+								<Select
+									filterOption={false}
+									showSearch={{ filter }}
+									style={{ width: '100%' }}
+								>
+									{bloodGroup.map(d => (
+										<Option key={d.value}>{d.label}</Option>
+
+									))}
+								</Select>
+							</Form.Item>
+
+						</Col>
+
+						<Col span={13}>
+							<Form.Item label="Issued Date" name="issueDate">
+								<DatePicker
+									placeholder='Select Date'
+									format="YYYY-MM-DD"
+									disabledDate={disabledDate} />
+							</Form.Item>
+
+							<Form.Item name="pbloodGroup" label="Blood Group Of Recipient" initialValue={moreDetailsTrance.pbloodGroup} >
+								<Select
+									filterOption={false}
+									showSearch={{ filter }}
+									style={{ width: '100%' }}
+								>
+									{bloodGroup.map(d => (
+										<Option key={d.value}>{d.label}</Option>
+
+									))}
+								</Select>
+							</Form.Item>
+							
+							<Form.Item label="Volume" name="volume" >
+								<Input disabled={true} id="Volume" placeholder='1 pint(450ml)' />
+							</Form.Item>
+
+						</Col>
+					</Row>
+
+				</Form>
+			</Modal>
+		</div>
+	);
+
+}
 
 export default BloodBags
 

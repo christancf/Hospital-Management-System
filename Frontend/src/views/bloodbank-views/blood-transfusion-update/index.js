@@ -192,7 +192,7 @@ const UpdateTransfusion = () => {
 				<Form.Item name="bloodGroup" initialValue={data.bloodGroup} label="Blood Group of Bag" placeholder="Blood Group of Bag">
 					<Input disabled />
 				</Form.Item>
-				<Form.Item name="bloodGroup" initialValue={data.pbloodGroup} label="Blood Group of Recipient" placeholder="Blood Group of Recipient">
+				<Form.Item name="pbloodGroup" initialValue={data.pbloodGroup} label="Blood Group of Recipient" placeholder="Blood Group of Recipient">
 					<Input disabled />
 				</Form.Item>
 

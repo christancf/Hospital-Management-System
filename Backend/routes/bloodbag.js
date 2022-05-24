@@ -153,7 +153,9 @@ router.put('/update-transfusion', (req, res, next) => {
         "reason": req.body.bloodbag.reason,
         "issueDate": req.body.bloodbag.issueDate,
         "bloodGroup": req.body.bloodbag.bloodGroup,
-        "pbloodGroup": req.body.bloodbag.pbloodGroup
+        "pbloodGroup": req.body.bloodbag.pbloodGroup,
+        "status": 'In Stock',
+        "volume": '1 pint(450ml)',
       }
     })
     .then((result) => {
