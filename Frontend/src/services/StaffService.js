@@ -34,9 +34,9 @@ staffService.readStaffs = function () {
 
 staffService.updateStatus = function (data) {
   return fetch({
-    url: 'staff/update-status',
+    url: 'staff/resign',
     method: 'put',
-    data
+    data: data
   })
 }
 
@@ -53,6 +53,14 @@ staffService.checkOutAttendance = function (data) {
     url: 'staff/attendance/checkout',
     method: 'put',
     data: data
+  })
+}
+
+staffService.addBonus = function (data) {
+  return fetch({
+    url: 'staff/salary/bonus',
+    method: 'post',
+    data
   })
 }
 export default staffService

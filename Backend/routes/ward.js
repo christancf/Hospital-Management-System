@@ -18,6 +18,7 @@ router.post('/details/add', (req, res, next) => {
     id: req.body.id,
     category: req.body.category,
     capacity: req.body.capacity,
+    roomCharge: req.body.roomCharge,
     status: req.body.status
   })
 
@@ -124,9 +125,10 @@ router.get('/nurse/assign/check?:id', (req, res, next) => {
 
 //check status
 router.get('/nurse/status?:id', (req, res, next) => {
-    attendanceModel.findOne({staffID: req.query.id})
-    .then(data => res.json(data))
-    .catch(e => res.json(e))
+    const data = attendanceModel.findOne({staffID: req.query.id})
+    data.sort({staffID: -1})
+    data.then(data => res.json(data))
+        .catch(e => res.json(e))
   
 })
 
