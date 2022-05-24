@@ -52,14 +52,6 @@ const dataSchema = new mongoose.Schema({
     status: {
         required: true,
         type: String
-    },
-    bonus: {
-        required: false,
-        type: Number
-    },
-    totalSalary: {
-        required: false,
-        type: Number
     }
 })
 
