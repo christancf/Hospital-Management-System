@@ -413,7 +413,7 @@ router.get('/transactions', async (req, res, next) => {
 
 router.get('/items', async (req, res, next) => {
   try {
-    const response = await itemModel.find({total_quantity:{$ne:0}}).then((response) => {
+    const response = await itemModel.find({total_quantity:{$gt:0}}).then((response) => {
 
       res.status(200).json(
         {

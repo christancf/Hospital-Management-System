@@ -180,7 +180,7 @@ const Home = () => {
       setTransactionError(true);
       setTransactionData();
     });
-  },[patientname])
+  },[patientname,type])
 
   const onFinishTransaction = (values) => {
 
