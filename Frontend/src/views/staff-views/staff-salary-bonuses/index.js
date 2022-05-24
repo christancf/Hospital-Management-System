@@ -4,7 +4,7 @@ import staffService from 'services/StaffService';
 
 const { Search } = Input;
 const { Option } = Select;
-const bonusAmount = 'bonusAmount'
+const bonus = 'bonus'
 
 const StaffSalaryBonuses = () => {
 	return (
@@ -29,10 +29,13 @@ const tailLayout = {
   
 	const onFinish = values => {
 		let staffID = values.staffID
-		let bonus = values.bonus
-		staffService.incrementBonus({staffID, bonus})
-		.then(() => message.success({content: 'Bonus Added', bonusAmount, duration: 2}))
-		.catch((e) => message.error({content: 'Please try again!', bonusAmount, duration: 2}))
+		let bonusAmount = Number(values.bonus)
+		let addedDate = new Date().getTime()
+		console.log(staffID, bonusAmount, addedDate)
+
+		staffService.addBonus({staffID, bonusAmount, addedDate})
+		.then(() => message.success({content: 'Bonus Added', bonus, duration: 2}))
+		.catch((e) => message.error({content: 'Please try again!', bonus, duration: 2}))
 		form.resetFields();
 	};
   
@@ -111,7 +114,7 @@ const tailLayout = {
 				<Form.Item
 				label="Bonus Amount"
 				name="bonus"
-				rules={[{ required: true, message: 'Please input a valid bonus amount!', pattern: "[0-9]+" }]}
+				rules={[{ required: true, message: 'Please input the bonus amount!'}, {pattern: "[0-9]+", message: 'Please input a numerical value'}]}
 				>
 					<Input id="bonus" />
 				</Form.Item>
