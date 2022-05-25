@@ -252,5 +252,12 @@ router.get('/salary/bonus-calculate?:month', auth, (req, res, next) => {
   })
 })
 
+//read staff details for salary
+router.get('/salary/staffdetails', auth, (req, res, next) => {
+  staffModel.find({status: 'Employed'}, {_id: 0, staffID: 1, staffName: 1, basicSalary: 1})
+  .then((details) => res.json(details))
+  .catch((e) => console.log(`Error: ${ e }`))
+})
+
 
 module.exports = router; 
