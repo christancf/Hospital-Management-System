@@ -2,6 +2,13 @@ import fetch from 'auth/FetchInterceptor'
 
 const staffService = {}
 
+staffService.id = function (){
+  return fetch({
+    url:'/staff/id',
+    method:'get'
+  })
+}
+
 staffService.addStaffMember = function (data) {
   return fetch({
     url: 'staff/add-member',
@@ -60,6 +67,22 @@ staffService.addBonus = function (data) {
   return fetch({
     url: 'staff/salary/bonus',
     method: 'post',
+    data
+  })
+}
+
+staffService.readOTHours = function (data) {
+  return fetch({
+    url: 'staff/salary/othours',
+    method: 'get',
+    data
+  })
+}
+
+staffService.readBonusAmount = function (data) {
+  return fetch({
+    url: 'staff/salary/bonus',
+    method: 'get',
     data
   })
 }

@@ -63,7 +63,14 @@ const showResignationConfirm = (id, name) => {
       cancelText: 'No',
       onOk() {
         staffService.updateStatus({'staffID': id})
- 		.then(() => ShowModel("Successful!", 2, "Staff Member Marked as Resigned Sucessfully", true))
+ 		.then((status) => {
+			 if(status === 'Resigned') {
+				ShowModel("Member is Resigned!", 4, "Cannot resign an already resigned member", false)
+			 }
+			 else{
+				ShowModel("Successful!", 2, "Staff Member Marked as Resigned Sucessfully", true)
+			 }
+		 })
 		.catch((e) => ShowModel("Failed!", 2, "Failed to Mark as Resigned", false))
       },
       onCancel() {

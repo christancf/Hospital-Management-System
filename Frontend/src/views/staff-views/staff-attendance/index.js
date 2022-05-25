@@ -74,7 +74,11 @@ const tailLayout = {
 
 			staffService.checkInAttendance({staffID, checkIn})
 			.then((status) => {
-				if(status) {
+				console.log(status)
+				if(status === 'Resigned') {
+					ShowModel("Member is Resigned!", 4, "Cannot mark attendance of a resigned member", false)
+				}
+				else if(status) {
 					ShowModel("Successful!", 2, "Check In Attendance marked Successfully", true)
 				}
 				else {
@@ -90,7 +94,10 @@ const tailLayout = {
 			console.log(staffID)
 			staffService.checkOutAttendance({staffID, checkOut})
 			.then((status) => {
-				if(status) {
+				if(status === 'Resigned') {
+					ShowModel("Member is Resigned!", 4, "Cannot mark attendance of a resigned member", false)
+				}
+				else if(status) {
 					ShowModel("Successful!", 2, "Check Out Attendance marked Successfully", true)
 				}
 				else {

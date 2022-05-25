@@ -72,7 +72,10 @@ const tailLayout = {
 		console.log(staffID, bonusAmount, addedDate)
 
 		staffService.addBonus({staffID, bonusAmount, addedDate})
-		.then(() => ShowModel("Successful!", 2, "Bonus added Sucessfully", true))
+		.then((value) => {
+			if(value) ShowModel("Successful!", 2, "Bonus added Sucessfully", true)
+			else ShowModel("Member is Resigned!", 4, "Cannot add bonuses to a resigned member", false)
+		})
 		.catch((e) => ShowModel("Failed!", 2, "Failed to add Bonus", false))
 		form.resetFields();
 	};
