@@ -26,6 +26,7 @@ export const PATIENT_ROLE = '';
 export const BLOODBANK_ROLE = '';
 export const MORTUARY_ROLE = '';
 export const STAFF_ROLE = '';
+export const WARD_ROLE = '';
 
 
 export const THEME_CONFIG = {
