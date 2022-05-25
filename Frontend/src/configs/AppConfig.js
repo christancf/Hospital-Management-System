@@ -20,15 +20,15 @@ export const AUTH_PREFIX_PATH = '/auth';
 
 // roles
 
-export const FRONTLINE_CHANNELLING_ROLE = 'doctor';
+export const FRONTLINE_CHANNELLING_ROLE = 'assistant';
 export const DOCTOR_CHANNELLING_ROLE = 'doctor';
-export const INVENTORY_ROLE = '';
-export const BILLING_ROLE = '';
-export const PATIENT_ROLE = '';
-export const BLOODBANK_ROLE = '';
-export const MORTUARY_ROLE = '';
-export const STAFF_ROLE = '';
-export const WARD_ROLE = 'ward';
+export const INVENTORY_ROLE = 'accountant';
+export const BILLING_ROLE = 'accountant';
+export const PATIENT_ROLE = 'assistant';
+export const BLOODBANK_ROLE = 'blood bank technician';
+export const MORTUARY_ROLE = 'mortuary technician';
+export const STAFF_ROLE = 'human resources';
+export const WARD_ROLE = 'nurse';
 
 
 export const THEME_CONFIG = {

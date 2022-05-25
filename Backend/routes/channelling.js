@@ -7,7 +7,7 @@ const auth = require("../middleware/auth");
 
 
 
-router.post('/appointment/add', function (req, res, next) {
+router.post('/appointment/add', auth, function (req, res, next) {
 
   const appointment = new appointmentModel({
     NIC: req.body.NIC,
@@ -44,7 +44,7 @@ router.post('/appointment/add', function (req, res, next) {
 
 });
 
-router.post('/appointment/edit', function (req, res, next) {
+router.post('/appointment/edit', auth, function (req, res, next) {
 
   const id = req.query.id;
 
@@ -97,7 +97,7 @@ router.post('/appointment/edit', function (req, res, next) {
 });
 
 
-router.post('/doctor/appointment/editstatus', function (req, res, next) {
+router.post('/doctor/appointment/editstatus', auth, function (req, res, next) {
 
   const id = req.query.id;
 
@@ -142,7 +142,7 @@ router.post('/doctor/appointment/editstatus', function (req, res, next) {
 
 });
 
-router.post('/appointment/delete', function (req, res, next) {
+router.post('/appointment/delete', auth, function (req, res, next) {
 
   const id = req.query.id;
 
@@ -297,7 +297,7 @@ router.get('/doctors/', auth, async function (req, res, next) {
 });
 
 
-router.get('/doctor/appointments', async function (req, res, next) {
+router.get('/doctor/appointments', auth, async function (req, res, next) {
 
 
   try {
