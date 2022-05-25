@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react";
 import Chart from "react-apexcharts";
 import ReactApexChart from "react-apexcharts";
 import mortuaryService from "services/MortuaryService";
-import { Divider, Button } from "antd";
+import { Divider, Button, DatePicker } from "antd";
 import jsPDF from "jspdf";
 import domtoimage from "dom-to-image";
+import moment from "moment";
+
+const { MonthPicker } = DatePicker;
 
 
 const App = () => {
@@ -18,11 +21,17 @@ const App = () => {
       });
     }
   };
-
+  const [month, setMonth] = useState(null);
+  function onChange(date, dateString) {
+    var m = moment(date).valueOf();
+    console.log(m);
+    setMonth(m);
+  }
   return (
     <div>
       <div className="printing-wrapper">
-        <Home />
+      <h4 style={{ marginLeft: 50 }}>Month: <MonthPicker onChange={onChange} placeholder="Select month" /></h4>
+        <Home month={month}/>
       </div>
 
       <div style={{ textAlign: "right", margin: 20 }}>
@@ -34,7 +43,8 @@ const App = () => {
   );
 };
 
-const Home = () => {
+const Home = ({month}) => {
+  console.log(month)
   const [loading1, setLoading1] = useState(true);
   const [error1, setError1] = useState(false);
   const [key, setKey] = useState(null);
@@ -46,7 +56,11 @@ const Home = () => {
   const [male, setMale] = useState(null);
   const [cod, setCod] = useState(null);
 
+ 
   useEffect(() => {
+    if (month == null) {
+      console.log("null")
+    //from all data
     mortuaryService
       .stat()
       .then((res) => {
@@ -103,7 +117,77 @@ const Home = () => {
         setMale();
         setFemale();
       });
-  }, []);
+    } else {
+      console.log("not null")
+      //according to month
+    mortuaryService
+      .statMonth({month: month})
+      .then((res) => {
+        const myData = res.payload;
+        var key = [];
+        var value = [];
+
+        for (let i = 0; i < myData.length; i++) {
+          key[i] = myData[i]._id;
+          value[i] = myData[i].count;
+        }
+        setKey(key);
+        setValue(value);
+        setLoading1(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading1(false);
+        setError1(true);
+        setKey();
+        setValue();
+      });
+   // graph 2 according to month
+   mortuaryService
+   .stat2Month({month: month})
+   .then((res) => {
+     const myData = res.payload;
+     var male = [];
+     var female = [];
+     var cod = [
+       ...new Set(
+         myData.map((item) => {
+           return item._id.cod;
+         })
+       ),
+     ];
+
+     for (let i = 0; i < myData.length; i++) {
+       if (myData[i]._id.sex == "male") {
+         male[cod.indexOf(myData[i]._id.cod)] = myData[i].count;
+       } else {
+         female[cod.indexOf(myData[i]._id.cod)] = myData[i].count;
+       }
+     }
+     if(male == null) {
+       setMale(0)
+     } else {
+      setMale(male);
+     }
+     if (female == null) {
+       setFemale(0)
+     } else {
+      setFemale(female);
+     }
+     setCod(cod);
+     
+     
+     setLoading2(false);
+   })
+   .catch((err) => {
+     setLoading2(false);
+     setError2(true);
+     setCod();
+     setMale();
+     setFemale();
+   });
+  }
+  }, [month]);
   const series = [
     {
       name: "Number of Deaths",
