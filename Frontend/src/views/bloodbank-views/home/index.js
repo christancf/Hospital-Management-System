@@ -9,41 +9,34 @@ const { Title } = Typography
 
 const App = () => {
 	const printDocument = () => {
-		const input = document.getElementsByClassName("printing-wrapper")[0];
-		const pdf = new jsPDF();
-		if (pdf) {
-			domtoimage.toPng(input).then((imgData) => {
-				pdf.addImage(imgData, "PNG", 10, 10, 0, 210);
-				pdf.save("download.pdf");
-			});
-		}
+	  const input = document.getElementsByClassName("printing-wrapper")[0];
+	  const pdf = new jsPDF();
+	  if (pdf) {
+		domtoimage.toPng(input).then((imgData) => {
+		  pdf.addImage(imgData, "PNG", 10, 10, 0, 210);
+		  pdf.save("download.pdf");
+		});
+	  }
 	};
-
+  
 	return (
-		<div>
-			<div className="printing-wrapper">
-				<Home />
-			</div>
-
-			<div style={{ textAlign: "right", margin: 20 }}>
-				<Button type="primary" onClick={printDocument}>
-					Download PDF
-				</Button>
-			</div>
+	  <div>
+		<div className="printing-wrapper">
+		  <Home />
 		</div>
+  
+		<div style={{ textAlign: "right", margin: 20 }}>
+		  <Button type="primary" onClick={printDocument}>
+			Download PDF
+		  </Button>
+		</div>
+	  </div>
 	);
-};
+  };
 
-// const expireNotification = () => {
-// 	notification.open({
-// 	  message: 'Notification Title',
-// 	  description:
-// 		'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
-// 	  icon: <SmileOutlined style={{ color: '#108ee9' }} />,
-// 	});
-//   };
+  function expireNotification(){
 
-
+  }
 const Home = () => {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
@@ -95,17 +88,7 @@ const Home = () => {
 				Aailable_setKey();
 				Aailable_setValue();
 			});
-
-		bloodBankService.expireBloodCount().then((res) => {
-			notification_value(res.payload);
-			notification_loading(false);
-		})
-			.catch((err) => {
-				console.log(err);
-				notification_loading(false);
-				notification_error(true);
-				notification_value();
-			});
+			
 
 		bloodBankService.transfusionCount().then((res) => {
 			const transfusion_myData = res.payload;
@@ -132,9 +115,9 @@ const Home = () => {
 		bloodBankService.bagCountAsMonth().then((res) => {
 			const bagCountMonth = res.payload;
 			var bagMonthKey = [];
-			var bagMonthValue = [0, 0, 0, 0, 0];
+			var bagMonthValue = [0,0,0,0,0];
 
-			var month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+			var month = [1,2,3,4,5,6,7,8,9,10,11,12]
 			console.log(bagCountMonth)
 			for (let i = 0; i < bagCountMonth.length; i++) {
 				bagMonthValue[month.indexOf(bagCountMonth[i]._id.month)] = bagCountMonth[i].count;
@@ -328,7 +311,7 @@ const Home = () => {
 				curve: 'smooth',
 				width: 3,
 			},
-
+			
 			labels: bagMonth_key,
 
 			colors: ["#7D02EB"],
@@ -371,7 +354,7 @@ const Home = () => {
 				<div >
 					<Row gutter={16}>
 						<Col span={130} display="block">
-							<Card style={{ backgroundColor: '#efefef', width: "700px", marginLeft: "30px" }}>
+							<Card style={{ backgroundColor: '#efefef', width: "700px",marginLeft:"30px" }}>
 								<Chart options={options} series={series} height={300} width={600} type="donut" />
 							</Card>
 						</Col>
@@ -388,7 +371,7 @@ const Home = () => {
 										<Button type="primary" href='/bloodbank/add-details' padding='36px 0px 16px'>Add Blood Bag</Button>
 									</Col>
 									<Col >
-										<Button type="primary" href='/bloodbank/bags-informations' style={{ padding: '36px 10px 16px', marginLeft: '10px' }}>Available Blood Bags</Button>
+										<Button type="primary" href='/bloodbank/bags-informations' style={{padding:'36px 10px 16px' ,marginLeft:'10px'}}>Available Blood Bags</Button>
 									</Col>
 
 								</Row>
