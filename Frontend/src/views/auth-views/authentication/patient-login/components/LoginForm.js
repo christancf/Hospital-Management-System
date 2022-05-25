@@ -61,16 +61,24 @@ export const LoginForm = (props) => {
 
 	const onLogin = values => {
 		showLoading()
-		const fakeToken = 'fakeToken'
 		JwtAuthService.login(values).then(resp => {
-			console.log(resp.payload.token)
-			authenticated(resp.payload.token)
-			localStorage.setItem(AUTH_TOKEN, resp.payload.token);
-			window.location = PATIENT_PREFIX_PATH;
-		}).then(e => {
-			//showAuthMessage(e)
+
+			console.log(resp)
+			if(resp.succuss){
+				authenticated(resp.payload.token)
+				localStorage.setItem(AUTH_TOKEN, resp.payload.token);
+				window.location = PATIENT_PREFIX_PATH;
+			}
+			else{
+				showAuthMessage(resp.message);
+			}
+			
+			
+		}).catch(e => {
+			showAuthMessage("Something wrong please try again !");
 		})
 	};
+
 
 
 	useEffect(() => {
