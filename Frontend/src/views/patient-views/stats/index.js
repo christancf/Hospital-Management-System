@@ -6,6 +6,9 @@ import jsPDF from "jspdf";
 import domtoimage from "dom-to-image";
 import moment from "moment";
 import patientManagementService from "services/PatientManagement";
+import { PATIENT_ROLE , ValidateUser} from 'configs/AppConfig';
+
+ValidateUser(PATIENT_ROLE);
 
 
 const App = () => {

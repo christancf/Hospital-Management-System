@@ -12,6 +12,9 @@ import {
 import moment from "moment";
 import patientManagementService from "services/PatientManagement";
 import { useState, useEffect } from "react";
+import { PATIENT_ROLE , ValidateUser} from 'configs/AppConfig';
+
+ValidateUser(PATIENT_ROLE);
 
 const { Option } = Select;
 const { Search } = Input;
