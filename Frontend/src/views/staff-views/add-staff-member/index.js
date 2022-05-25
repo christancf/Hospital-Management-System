@@ -3,6 +3,9 @@ import { Form, Input, Button, DatePicker, Card, Select, Spin, Row, Col, Modal } 
 import moment from 'moment';
 import staffService from 'services/StaffService';
 import TextArea from 'antd/lib/input/TextArea';
+import { STAFF_ROLE, ValidateUser } from 'configs/AppConfig';
+
+ValidateUser(STAFF_ROLE)
 
 const { Option } = Select
 

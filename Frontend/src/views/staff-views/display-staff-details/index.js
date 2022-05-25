@@ -4,6 +4,9 @@ import { EyeOutlined, EditOutlined } from '@ant-design/icons';
 import staffService from 'services/StaffService';
 import moment from 'moment';
 import TextArea from 'antd/lib/input/TextArea';
+import { STAFF_ROLE, ValidateUser } from 'configs/AppConfig';
+
+ValidateUser(STAFF_ROLE)
 
 const { Title } = Typography
 const { Search } = Input
