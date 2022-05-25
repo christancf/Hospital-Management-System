@@ -143,4 +143,13 @@ bloodBankService.bagCountAsMonth = function () {
   });
 };
 
+bloodBankService.expireBloodCount = function (data){
+
+  return fetch({
+    url: `/bloodbag/expireBloodCount`,
+    method: 'get',
+    data: data
+  })
+}
+
 export default bloodBankService
