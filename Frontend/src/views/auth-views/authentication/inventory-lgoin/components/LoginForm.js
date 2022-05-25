@@ -16,7 +16,7 @@ import JwtAuthService from 'services/JwtAuthService'
 import { useHistory } from "react-router-dom";
 import { motion } from "framer-motion"
 import jwt_decode from "jwt-decode";
-import { DOCTOR_CHANNELLING_PREFIX_PATH, APP_PREFIX_PATH, DOCTOR_CHANNELLING_ROLE } from 'configs/AppConfig'
+import { INVENTORY_PREFIX_PATH, APP_PREFIX_PATH, INVENTORY_ROLE } from 'configs/AppConfig'
 
 const ValidateUser = (role) => {
 
@@ -26,7 +26,7 @@ const ValidateUser = (role) => {
 		var decoded = jwt_decode(mytoken)
 
 		if(decoded.role == role){
-			window.location = DOCTOR_CHANNELLING_PREFIX_PATH;
+			window.location = INVENTORY_PREFIX_PATH;
 		}
 		else{
 			localStorage.clear();
@@ -39,7 +39,7 @@ const ValidateUser = (role) => {
 
 export const LoginForm = (props) => {
 
-	ValidateUser(DOCTOR_CHANNELLING_ROLE);
+	ValidateUser(INVENTORY_ROLE);
 	let history = useHistory();
 
 	const { 
@@ -66,7 +66,7 @@ export const LoginForm = (props) => {
 			console.log(resp.payload.token)
 			authenticated(resp.payload.token)
 			localStorage.setItem(AUTH_TOKEN, resp.payload.token);
-			window.location = DOCTOR_CHANNELLING_PREFIX_PATH;
+			window.location = INVENTORY_PREFIX_PATH;
 		}).then(e => {
 			//showAuthMessage(e)
 		})
@@ -103,7 +103,7 @@ export const LoginForm = (props) => {
 			>
 					<Form.Item 
 					name="role" 
-					initialValue={DOCTOR_CHANNELLING_ROLE}
+					initialValue={INVENTORY_ROLE}
 					>
 					<Input hidden/>
 				</Form.Item>
