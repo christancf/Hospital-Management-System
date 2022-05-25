@@ -3,6 +3,9 @@ import { useState, useEffect } from 'react';
 import channellingService from 'services/FrontlineChannellingService';
 import { useParams } from 'react-router-dom';
 import moment from 'moment';
+import jwt_decode from "jwt-decode";
+import { AUTH_TOKEN } from 'redux/constants/Auth'
+import { DOCTOR_CHANNELLING_PREFIX_PATH, APP_PREFIX_PATH } from 'configs/AppConfig'
 const { Option } = Select;
 
 const queryParams = new URLSearchParams(window.location.search);
@@ -30,9 +33,27 @@ const validateMessages = {
 };
 
 
+const ValidateUser = (role) => {
 
+	var mytoken = localStorage.getItem(AUTH_TOKEN);
+	
+	if(mytoken){
+		var decoded = jwt_decode(mytoken)
+
+		if(decoded.role == role){
+			window.location = DOCTOR_CHANNELLING_PREFIX_PATH;
+		}
+		else{
+			localStorage.clear();
+			window.location = APP_PREFIX_PATH;
+		}
+
+	}
+
+}
 const AddAppointment = () => {
 
+    ValidateUser('doctor')
     const [form] = Form.useForm();
 
 
