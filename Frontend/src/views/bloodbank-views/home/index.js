@@ -5,7 +5,7 @@ import bloodBankService from "services/BloodBankService";
 import jsPDF from "jspdf";
 import domtoimage from "dom-to-image";
 import { DOCTOR_CHANNELLING_PREFIX_PATH, APP_PREFIX_PATH, BLOODBANK_ROLE, ValidateUser } from 'configs/AppConfig'
-import { SmileOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 ValidateUser(BLOODBANK_ROLE);
 
@@ -38,14 +38,7 @@ const App = () => {
 	);
 };
 
-const expireNotification = () => {
-	notification.open({
-	  message: 'Notification Title',
-	  description:
-		'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
-	  icon: <SmileOutlined style={{ color: '#108ee9' }} />,
-	});
-  };
+
 
 const Home = () => {
 	const [loading, setLoading] = useState(true);
@@ -70,7 +63,7 @@ const Home = () => {
 
 	const [notification_loading, notification_setLoading] = useState(true);
 	const [notification_error, notification_setError] = useState(false);
-	const [notification_value, notification_setValue] = useState();
+	const [notification_value, notification_setValue] = useState(null);
 
 
 	useEffect(() => {
@@ -100,7 +93,7 @@ const Home = () => {
 			});
 
 		bloodBankService.expireBloodCount().then((res) => {
-			notification_setError(res.payload);
+			notification_setValue(res.payload);
 			notification_setLoading(false);
 		})
 			.catch((err) => {
@@ -132,6 +125,7 @@ const Home = () => {
 				transfusion_setError(true);
 				transfusion_setValue();
 			});
+			
 
 		bloodBankService.bagCountAsMonth().then((res) => {
 			const bagCountMonth = res.payload;
@@ -208,20 +202,39 @@ const Home = () => {
 			</>
 		);
 	}
-	// else if (notification_loading) {
-	// 	return (
-	// 		<>
-	// 			<p>Data Loading</p>
-	// 		</>
-	// 	);
-	// } else if (notification_error) {
-	// 	return (
-	// 		<>
-	// 			<p>Error:{error}</p>
-	// 		</>
-	// 	);
-	// }
+	else if (notification_loading) {
+		return (
+			<>
+				<p>Data Loading</p>
+			</>
+		);
+	} else if (notification_error) {
+		return (
+			<>
+				<p>Error:{error}</p>
+			</>
+		);
+	}
 	else {
+		console.log(notification_value)
+		const expireNotification = () => {
+			const btn = (
+				<Button type="primary" size="small" href='/bloodbank/disposal-bloodbags'>
+				  View
+				</Button>
+			  );
+			 
+			notification.open({
+			  message: 'Expiration of blood bags',
+			  description:
+				`${notification_value[0].count} bags of blood have expired. `,
+				
+			  icon: <ExclamationCircleOutlined style={{ color: '#EE1739' }} />,
+			  btn,
+			 
+			});
+		  };
+		  
 		const transfusion_series = [
 			{
 				name: "Number of blood bags",
@@ -342,21 +355,6 @@ const Home = () => {
 			legend: {
 				horizontalAlign: 'left'
 			},
-			// yaxis: {
-			// 	title: {
-			// 		text: "Number of Blood Bags",
-			// 		style: {
-			// 			color: undefined,
-			// 			fontSize: "14px",
-			// 			fontFamily: "Helvetica, Arial, sans-serif",
-			// 			fontWeight: 300,
-			// 			cssClass: "apexcharts-yaxis-title",
-			// 		},
-			// 	},
-			// },
-			// xaxis: {
-			// 	type: 'datetime',
-			// },
 			yaxis: {
 				opposite: false
 			},
@@ -369,30 +367,35 @@ const Home = () => {
 			},
 		};
 
+		setTimeout(expireNotification,1000);
 
 		return (
+			// 
 			<div>
 				<div >
+				<Title style={{ padding: '36px 0px 16px' }}>Details of Available Blood Bags</Title>
 					<Row gutter={16}>
+						
 						<Col span={130} display="block">
-							<Card style={{ backgroundColor: '#efefef', width: "700px", marginLeft: "30px" }}>
+							<Card style={{ backgroundColor: '#efefef', width: "700px", marginLeft: "0px" }}>
 								<Chart options={options} series={series} height={300} width={600} type="donut" />
 							</Card>
 						</Col>
 
 						<Col span={100}  >
-							<Card style={{ backgroundColor: '#efefef', width: "400px", marginLeft: "30px", title: "Card title" }}>
+							<Card style={{ backgroundColor: '#efefef', width: "450px", marginLeft: "30px" }}>
 								<Row>
 									<Col span={20} marginRight='100px'>
-										<h3 style={{ color: 'blue' }} >Available blood count:{Aailable_value[0].count}</h3>
+										<h3 style={{ color:"#120D31",marginLeft:"25px" }} >Available Blood Bag Count : {Aailable_value[0].count}</h3>
 									</Col>
 								</Row>
-								<Row>
-									<Col>
-										<Button type="primary" href='/bloodbank/add-details' padding='36px 0px 16px'>Add Blood Bag</Button>
+								{/* <br></br> */}
+								<Row style={{padding:'15px 10px 16px'}}>
+									<Col >
+										<Button type="primary" href='/bloodbank/add-details' style={{padding:'36px 10px 16px',marginLeft:"10px"}}>Add Blood Bag</Button>
 									</Col>
 									<Col >
-										<Button type="primary" href='/bloodbank/bags-informations' style={{ padding: '36px 10px 16px', marginLeft: '10px' }}>Available Blood Bags</Button>
+										<Button type="primary" href='/bloodbank/bags-informations' style={{ padding: '36px 10px 16px', marginLeft: '20px' }}>Available Blood Bags</Button>
 									</Col>
 
 								</Row>
@@ -413,7 +416,7 @@ const Home = () => {
 				<Card style={{ backgroundColor: '#efefef' }}>
 					<Chart options={transfusion_options} series={transfusion_series} type="bar" height={300} />
 				</Card>
-setTimeOut(expireNotification,3000);
+
 
 			</div>
 		)
