@@ -111,9 +111,15 @@ const Home = () => {
 	function ShowModel(title, delay, innercontent, isSuccess) {
   
 	  if (isSuccess) {
+		  
 		const modal = Modal.success({
 		  title: title,
 		  content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+		  onOk: () => {
+
+			window.location = "../billing/billlist";
+	
+		  },
 		});
 		const timer = setInterval(() => {
 		  delay -= 1;
@@ -124,6 +130,7 @@ const Home = () => {
 		setTimeout(() => {
 		  clearInterval(timer);
 		  modal.destroy();
+		  window.location = "../billing/billlist";
 		}, delay * 1000);
 	  }
   
