@@ -1,12 +1,38 @@
 import React, { useState, useEffect, Component } from "react";
 import { Typography, Button, Card, Col, Row } from 'antd';
 import Chart from "react-apexcharts";
-import { COLORS } from 'constants/ChartConstant';
 import bloodBankService from "services/BloodBankService";
-import { Doughnut } from 'react-chartjs-2';
-import { COLOR_1, COLOR_2, COLOR_4, COLOR_1_LIGHT, COLOR_2_LIGHT, COLOR_3_LIGHT, COLOR_4_LIGHT, COLOR_3 } from 'constants/ChartConstant';
+import jsPDF from "jspdf";
+import domtoimage from "dom-to-image";
 
 const { Title } = Typography
+
+const App = () => {
+	const printDocument = () => {
+	  const input = document.getElementsByClassName("printing-wrapper")[0];
+	  const pdf = new jsPDF();
+	  if (pdf) {
+		domtoimage.toPng(input).then((imgData) => {
+		  pdf.addImage(imgData, "PNG", 10, 10, 0, 210);
+		  pdf.save("download.pdf");
+		});
+	  }
+	};
+  
+	return (
+	  <div>
+		<div className="printing-wrapper">
+		  <Home />
+		</div>
+  
+		<div style={{ textAlign: "right", margin: 20 }}>
+		  <Button type="primary" onClick={printDocument}>
+			Download PDF
+		  </Button>
+		</div>
+	  </div>
+	);
+  };
 
 const Home = () => {
 	const [loading, setLoading] = useState(true);
@@ -24,19 +50,14 @@ const Home = () => {
 	const [transfusion_key, transfusion_setKey] = useState(null);
 	const [transfusion_value, transfusion_setValue] = useState(null);
 
+	const [bagMonth_loading, bagMonth_setLoading] = useState(true);
+	const [bagMonth_error, bagMonth_setError] = useState(false);
+	const [bagMonth_key, bagMonth_setKey] = useState(null);
+	const [bagMonth_value, bagMonth_setValue] = useState(null);
+
 
 	useEffect(() => {
 		bloodBankService.bloodBagsCount().then((res) => {
-			// const myData = res.payload;
-			// var key = [];
-			// var value = [];
-
-			// console.log(myData);
-
-			// for (let i = 0; i < myData.length; i++) {
-			// 	key[i] = myData[i]._id;
-			// 	value[i] = myData[i].count;
-			// }
 			setKey(res.payload);
 			setValue(res.payload);
 			setLoading(false);
@@ -50,17 +71,6 @@ const Home = () => {
 			});
 
 		bloodBankService.availableBagCount().then((res) => {
-			// const Available_myData = res.payload;
-			// var Available_key = [];
-			// var Available_value = [];
-
-			// console.log(Available_myData);
-
-			// for (let i = 0; i < Available_myData.length; i++) {
-			// 	Available_key[i] = Available_myData[i]._id;
-			// 	Available_value[i] = Available_myData[i].count;
-			// }
-			// Aailable_setKey(res.payload);
 			Aailable_setValue(res.payload);
 			Aailable_setLoading(false);
 		})
@@ -82,7 +92,6 @@ const Home = () => {
 			for (let i = 0; i < transfusion_myData.length; i++) {
 				transfusion_key[i] = transfusion_myData[i]._id;
 				transfusion_value[i] = transfusion_myData[i].count;
-				// transfusion_value.indexOf(transfusion_myData[i]._id.transfusion_value) = transfusion_myData[i].count;
 			}
 			transfusion_setKey(transfusion_key);
 			transfusion_setValue(transfusion_value);
@@ -92,9 +101,44 @@ const Home = () => {
 				console.log(err);
 				transfusion_setLoading(false);
 				transfusion_setError(true);
-
 				transfusion_setValue();
 			});
+
+		bloodBankService.bagCountAsMonth().then((res) => {
+			const bagCountMonth = res.payload;
+			var bagMonthKey = [];
+			var bagMonthValue = [0,0,0,0,0];
+
+			// var bagMonth_value = [
+			// 	...new Set(
+			// 		myData.map((item) => {
+			// 			return item._id.month;
+			// 		})
+			// 	),
+			// ];
+
+
+			var month = [1,2,3,4,5,6,7,8,9,10,11,12]
+			console.log(bagCountMonth)
+			for (let i = 0; i < bagCountMonth.length; i++) {
+				bagMonthValue[month.indexOf(bagCountMonth[i]._id.month)] = bagCountMonth[i].count;
+				// bagMonthKey[i] = bagCountMonth[i]._id.month;
+				// bagMonthValue[i] = bagCountMonth[i].count;
+			}
+
+			bagMonth_setKey(bagMonthKey);
+			bagMonth_setValue(bagMonthValue);
+			bagMonth_setLoading(false);
+			console.log(bagMonth_key)
+			console.log(bagMonth_value)
+		})
+			.catch((err) => {
+				bagMonth_setLoading(false);
+				bagMonth_setLoading(true);
+				bagMonth_setError(true);
+				bagMonth_setValue();
+			});
+
 	}, []);
 
 
@@ -144,6 +188,18 @@ const Home = () => {
 			</>
 		);
 	} else if (transfusion_error) {
+		return (
+			<>
+				<p>Error:{error}</p>
+			</>
+		);
+	} else if (bagMonth_loading) {
+		return (
+			<>
+				<p>Data Loading</p>
+			</>
+		);
+	} else if (bagMonth_error) {
 		return (
 			<>
 				<p>Error:{error}</p>
@@ -242,9 +298,78 @@ const Home = () => {
 			legend: { offsetX: 10 }
 
 		};
+
+		//series2
+		const series2 = [
+			{
+				name: "Number of Bags",
+				data: bagMonth_value,
+			},
+		];
+
+		const options2 = {
+			chart: {
+				zoom: {
+					enabled: false
+				}
+			},
+			fill: {
+				type: "gradient",
+				gradient: {
+					shadeIntensity: 1,
+					opacityFrom: 0.7,
+					opacityTo: 0.9,
+					stops: [0, 80, 100]
+				}
+			},
+			dataLabels: {
+				enabled: false
+			},
+			stroke: {
+				curve: 'smooth',
+				width: 3,
+			},
+			
+			labels: bagMonth_key,
+
+			colors: ["#7D02EB"],
+			xaxis: {
+				categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+			},
+			legend: {
+				horizontalAlign: 'left'
+			},
+			// yaxis: {
+			// 	title: {
+			// 		text: "Number of Blood Bags",
+			// 		style: {
+			// 			color: undefined,
+			// 			fontSize: "14px",
+			// 			fontFamily: "Helvetica, Arial, sans-serif",
+			// 			fontWeight: 300,
+			// 			cssClass: "apexcharts-yaxis-title",
+			// 		},
+			// 	},
+			// },
+			// xaxis: {
+			// 	type: 'datetime',
+			// },
+			yaxis: {
+				opposite: false
+			},
+			tooltip: {
+				y: {
+					formatter: function (val) {
+						return val + " Bags";
+					},
+				},
+			},
+		};
+
+
 		return (
 			<div>
-{/* 
+				{/* 
 				<div style={{ padding: '26px 800px 16px',color: 'blue' }}>
 					<p >Available blood count:{Aailable_value[0].count}</p>
 				</div>
@@ -262,7 +387,7 @@ const Home = () => {
 					<Doughnut data={myData} width='300'legend={{position:"right"}}/>
 				</div> */}
 				<div >
-					<Row  gutter={16}>
+					<Row gutter={16}>
 						<Col span={130} display="block">
 							<Card style={{ backgroundColor: '#efefef', width: "700px" }}>
 								<Chart options={options} series={series} height={300} width={600} type="donut" />
@@ -270,18 +395,19 @@ const Home = () => {
 						</Col>
 
 						<Col span={100}  >
-							<Card style={{ backgroundColor: '#efefef', width: "500px", marginLeft: "10px",title:"Card title" }}>
+							<Card style={{ backgroundColor: '#efefef', width: "400px", marginLeft: "10px", title: "Card title" }}>
 								<Row>
-									<Col span={20} marginRight='100px'>		
-									<h1 style={{ color: 'blue'}} >Available blood count:{Aailable_value[0].count}</h1>
-									
+									<Col span={20} marginRight='100px'>
+										<h3 style={{ color: 'blue' }} >Available blood count:{Aailable_value[0].count}</h3>
+
 									</Col>
-									
-									<Col span={14}>
+								</Row>
+								<Row>
+									<Col>
 										<Button type="primary" href='/bloodbank/add-details' padding='36px 0px 16px'>Add Blood Bag</Button>
 									</Col>
-									<Col span={10}>
-										<Button type="primary" href='/bloodbank/bags-informations' padding='36px 0px 16px'>Available Blood Bags</Button>
+									<Col >
+										<Button type="primary" href='/bloodbank/bags-informations' style={{padding:'36px 10px 16px' ,marginLeft:'10px'}}>Available Blood Bags</Button>
 									</Col>
 
 								</Row>
@@ -291,7 +417,11 @@ const Home = () => {
 					</Row>
 
 				</div>
+				<Title style={{ padding: '36px 0px 16px' }}>Analysis Of Blood bag </Title>
 
+				<Card style={{ backgroundColor: '#efefef' }}>
+					<Chart options={options2} series={series2} type="area" height={300} />
+				</Card>
 
 				<Title style={{ padding: '36px 0px 16px' }}>Analysis Of Blood Transfusion</Title>
 
@@ -306,4 +436,4 @@ const Home = () => {
 
 }
 
-export default Home
+export default App

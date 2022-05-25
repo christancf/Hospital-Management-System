@@ -408,4 +408,29 @@ router.post("/availaleBloodCount", async function (req, res, next) {
   }
 });
 
+
+//Available blood count group as month
+router.post("/bagCountAsMonth", async function (req, res, next) {
+
+  var today = new Date().setHours(24, 0, 0, 0)
+  var januOne = new Date(1640975400000).setHours(0, 0, 0, 0)
+
+  try {
+    let bagsDetails = await bloodbagModel.aggregate([
+      { $match: { $and: [{ donateDate: { $gte: januOne } }, { donateDate: { $lte: today } }] } },
+      { $addFields: { convertedDate: { $toDate: "$donateDate" } } },
+      { $group: { _id: { month: { $month: "$convertedDate" } }, count: { $sum: 1 } } }]);
+    res.status(200).json({
+      success: true,
+      message: "Successful Retrieval",
+      payload: bagsDetails,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
 module.exports = router;

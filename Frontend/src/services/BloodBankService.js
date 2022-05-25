@@ -37,14 +37,6 @@ bloodBankService.readBloodDetails = async function () {
   })
 }
 
-// bloodBankService.deleteBloodDetails = function(data) {
-//   return fetch({
-//     url: '/bloodbag/bag-delete/:id',
-//     method: 'delete',
-//     data: data
-//   })
-// }
-
 bloodBankService.bloodBagDetails = function (data){
   
   return fetch({
@@ -140,6 +132,13 @@ bloodBankService.transfusionCount = function () {
 bloodBankService.availableBagCount = function () {
   return fetch({
     url: `/bloodbag/availaleBloodCount`,
+    method: "post",
+  });
+};
+
+bloodBankService.bagCountAsMonth = function () {
+  return fetch({
+    url: `/bloodbag/bagCountAsMonth`,
     method: "post",
   });
 };
