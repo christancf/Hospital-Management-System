@@ -95,31 +95,17 @@ router.get('/nurse/read?:id', (req, res, next) => {
 
 //assign nurse
 router.post('/nurse/assign', (req, res, next) => {
-  if(req.body?.role){
-    const assign = new assignNurseModel({
-      nurseID: req.body.id,
-      assignedDate: req.body.assignedDate,
-      reassignDate: req.body.reassignDate,
-      wardCategory: req.body.category,
-      wardID: req.body.wardID,
-      role: req.body.role
-    })
-    assign.save()
-    .then((d) => res.json(d))
-    .catch((e) => console.log(`Error: ${ e }`))
-  }else{
-    const assign = new assignNurseModel({
-      nurseID: req.body.id,
-      assignedDate: req.body.assignedDate,
-      reassignDate: req.body.reassignDate,
-      wardCategory: req.body.category,
-      wardID: req.body.wardID
-    })
-    assign.save()
-    .then((d) => res.json(d))
-    .catch((e) => console.log(`Error: ${ e }`))
-  }
-  
+  const assign = new assignNurseModel({
+    nurseID: req.body.id,
+    assignedDate: req.body.assignedDate,
+    reassignDate: req.body.reassignDate,
+    wardCategory: req.body.category,
+    wardID: req.body.wardID,
+    role: req.body.role
+  })
+  assign.save()
+  .then(() => res.json({message: "Nurse assigned successfully"}))
+  .catch((e) => console.log(`Error: ${ e }`))
 })
 
 //read all assigned nurses
@@ -134,6 +120,52 @@ router.get('/nurse/details', (req, res, next) => {
   }])
   .then((resp) => res.json(resp))
   .catch((e) => res.json(e))
+})
+
+//read all nurses who does't have assignment
+router.get('/nurse/read/all-unassigned', (req, res, next) => {
+  staffModel.aggregate([
+    {
+      $lookup: {
+        from: "assignednurses",
+        localField: "staffID",
+        foreignField: "nurseID",
+        as: 'data'
+      },
+    },
+    {
+      $match: {
+        "data.user": {
+          $exists: false
+        },
+        "designation": "nurse"
+      }
+    },
+    {
+      $project: {
+        "_id": 0,
+        "NIC": 0,
+        "email": 0,
+        "dateOfBirth": 0, 
+        "gender": 0, 
+        "address": 0, 
+        "basicSalary": 0, 
+        "mobile": 0, 
+        "home": 0, 
+        "status": 0, 
+        "__v": 0
+      }
+    }
+  ])
+  .then(data => {
+    data = data.filter(v => {
+      if(v.data.length === 0){
+        delete v.data
+        return v
+      } 
+    })
+    res.json(data)
+  })
 })
 
 //check whether a nurse assigned
@@ -184,8 +216,12 @@ router.get('/category/read/all', (req, res, next) => {
   .catch(e => console.log(`Error Add: ${e}`))
 })
 
-
-
+//read all ward details
+router.get('/details/read/all', (req, res, next) => {
+  wardModel.find()
+  .then(data => res.json(data))
+  .catch(e => console.log(`Error: ${e}`))
+})
 
 
 module.exports = router;
