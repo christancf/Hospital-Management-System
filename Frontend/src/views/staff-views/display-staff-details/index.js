@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Spin, Table, Tag, Typography, Divider, Input, Modal, Button, Form, Select, DatePicker, Row, Col } from 'antd';
+import { Spin, Table, Tag, Typography, Divider, Input, Modal, Form, Select, DatePicker, Row, Col } from 'antd';
 import { EyeOutlined, EditOutlined } from '@ant-design/icons';
 import staffService from 'services/StaffService';
 import moment from 'moment';
+import TextArea from 'antd/lib/input/TextArea';
 
 const { Title } = Typography
 const { Search } = Input
@@ -127,7 +128,11 @@ const columns = [
   {
     title: 'Basic Salary',
     dataIndex: 'basicSalary',
-    key: 'basicSalary'
+    key: 'basicSalary',
+    sorter: {
+      compare: (a, b) => a.basicSalary - b.basicSalary,
+      multiple: 1,
+    }
   },
   {
     title: 'Status',
@@ -222,9 +227,6 @@ const ViewMore = ({moreDetails}) => {
   
     return (
       <div>
-        {/* <Button type='primary'  size='12'>
-          View More
-        </Button> */}
         <EyeOutlined onClick={showModal} style={{fontSize: '1.15rem', color: '#262626'}}/>
         <Modal
           title={`Staff ID ${moreDetails['staffID']}`}
@@ -310,11 +312,11 @@ const ViewMore = ({moreDetails}) => {
           label="Address"
           name="address"
         >
-        <Input />
+        <TextArea style={{height: 15}} />
         </Form.Item>
 
         <Form.Item
-          label="Base Salary"
+          label="Basic Salary"
           name="basicSalary"
         >
         <Input />

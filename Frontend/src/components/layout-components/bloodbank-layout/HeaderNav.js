@@ -8,7 +8,7 @@ import NavSearch  from './NavSearch';
 import { toggleCollapsedNav, onMobileNavToggle } from 'redux/actions/Theme';
 import { NAV_TYPE_TOP, SIDE_NAV_COLLAPSED_WIDTH, SIDE_NAV_WIDTH } from 'constants/ThemeConstant';
 import utils from 'utils'
-import NavProfile from "../app-layout/NavProfile";
+import NavProfile from "./NavProfile";
 
 const { Header } = Layout;
 
