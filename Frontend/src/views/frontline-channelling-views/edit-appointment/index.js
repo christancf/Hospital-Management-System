@@ -3,8 +3,10 @@ import { useState, useEffect } from 'react';
 import channellingService from 'services/FrontlineChannellingService';
 import { useParams } from 'react-router-dom';
 import moment from 'moment';
+import { FRONTLINE_CHANNELLING_ROLE, ValidateUser } from 'configs/AppConfig';
 const { Option } = Select;
 
+ValidateUser(FRONTLINE_CHANNELLING_ROLE);
 const queryParams = new URLSearchParams(window.location.search);
 const appointmentId = queryParams.get('appointmentId');
 

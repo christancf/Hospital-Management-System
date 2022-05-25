@@ -5,11 +5,9 @@ import {
   Button,
   DatePicker,
   Cascader,
-  Col,
   Radio,
   Card,
   Modal,
-  Row,
   Divider,
 } from "antd";
 import moment from "moment";
@@ -133,6 +131,7 @@ const Demo = () => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
+
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -159,6 +158,11 @@ const Demo = () => {
         setData();
       });
   }, []);
+  //demo button
+  // const demoButton = () => {
+
+  // };
+
   if (loading) {
     return (
       <>
@@ -268,14 +272,15 @@ const Demo = () => {
                 showTime={{
                   defaultValue: moment("00:00:00", "HH:mm:ss"),
                   disabledHours: () => {
-                    var chosenDate = new Date(moment(selectedDate).valueOf()).toLocaleDateString()
-                    var now = new Date().toLocaleDateString()
+                    var chosenDate = new Date(
+                      moment(selectedDate).valueOf()
+                    ).toLocaleDateString();
+                    var now = new Date().toLocaleDateString();
                     if (chosenDate == now) {
                       const now = new Date();
                       let hour = now.getHours();
                       return range(hour, 24);
                     }
-                    
                   },
                 }}
               />
@@ -303,6 +308,26 @@ const Demo = () => {
             <Form.Item {...tailLayout}>
               <Button type="primary" htmlType="submit">
                 Submit
+              </Button>
+            </Form.Item>
+            <Form.Item {...tailLayout}>
+              <Button
+                onClick={() => {
+                  form.setFieldsValue({
+                    id: data,
+                    nic: "201083900407",
+                    name: "Lahiru Weerasinghe",
+                    sex: "male",
+                    address: "63, Main Street, Colombo 04.",
+                    dob: moment("2010-05-04"),
+                    dod: moment("2022-04-19"),
+                    cod: ["Suicide"],
+                    sod: "Depression",
+                  });
+                }}
+                danger
+              >
+                Demo
               </Button>
             </Form.Item>
           </Form>

@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Form,
-  Input,
-  Button,
-  DatePicker,
-  Cascader,
-  Radio,
-  Modal,
-  Select,
-} from "antd";
+import { Form, Input, Button, Modal, Select, Card } from "antd";
 import moment from "moment";
 import mortuaryService from "services/MortuaryService";
 const { Option } = Select;
@@ -19,17 +10,17 @@ const id = queryParams.get("id");
 const Home = () => {
   return (
     <div>
-      <h1>Release Corpse</h1>
+      <h2 style={{ width: "100%", textAlign: "center" }}>Release Corpse</h2>
       <Demo />
     </div>
   );
 };
 const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
+  labelCol: { span: 7 },
+  wrapperCol: { span: 10 },
 };
 const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
+  wrapperCol: { offset: 7, span: 16 },
 };
 function disabledDate(current) {
   // Can not select days before today and today
@@ -106,7 +97,7 @@ const Demo = () => {
     mortuaryService
       .release(id, payload)
       .then((res) => {
-        if (res.succuss) {
+        if (res.success) {
           ShowModel(
             "Successful !",
             3,
@@ -115,21 +106,11 @@ const Demo = () => {
           );
           form.resetFields();
         } else {
-          ShowModel(
-            "Unsuccessful !",
-            3,
-            "Your corpse release failed",
-            false
-          );
+          ShowModel("Unsuccessful !", 3, "Your corpse release failed", false);
         }
       })
       .catch((error) => {
-        ShowModel(
-          "Unsuccessful !",
-          3,
-          "Your corpse release failed",
-          false
-        );
+        ShowModel("Unsuccessful !", 3, "Your corpse release failed", false);
       });
   };
   const onFinishFailed = (errorInfo) => {
@@ -173,65 +154,82 @@ const Demo = () => {
     });
     const currentDate = new Date();
     return (
-      <Form
-        {...layout}
-        form={form}
-        name="basic"
-        initialValues={{ remember: true }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        style={{ width: "50%" }}
-      >
-        <Form.Item label="CorpseID" name="id" initialValue={data}>
-          <Input placeholder={data} disabled />
-        </Form.Item>
-        <Form.Item label="NIC" name="nic" initialValue={data}>
-          <Input placeholder={data} disabled />
-        </Form.Item>
-
-        <Form.Item label="Name" name="name" initialValue={data}>
-          <Input placeholder={data} disabled />
-        </Form.Item>
-
-        <Form.Item
-          label="Receiver Name"
-          name="receiverName"
-          rules={[{ required: true }]}
+      <Card style={{ width: "60%", margin: "auto", marginTop: "20px", paddingTop: "25px" }}>
+        <Form
+          {...layout}
+          form={form}
+          name="basic"
+          initialValues={{ remember: true }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          style={{ width: "100%", marginLeft: 100 }}
+          labelAlign="left"
         >
-          <Input />
-        </Form.Item>
+          <Form.Item label="CorpseID" name="id" initialValue={data}>
+            <Input placeholder={data} disabled />
+          </Form.Item>
+          <Form.Item label="NIC" name="nic" initialValue={data}>
+            <Input placeholder={data} disabled />
+          </Form.Item>
 
-        <Form.Item
-          label="Receiver Type"
-          name="receiverType"
-          rules={[{ required: true }]}
-        >
-          <Select
-            placeholder="Select Receiver Type"
-            filterOption={false}
-            style={{ width: "50%" }}
+          <Form.Item label="Name" name="name" initialValue={data}>
+            <Input placeholder={data} disabled />
+          </Form.Item>
+
+          <Form.Item
+            label="Receiver Name"
+            name="receiverName"
+            rules={[{ required: true }]}
           >
-            {receiverType}
-          </Select>
-        </Form.Item>
+            <Input />
+          </Form.Item>
 
-        <Form.Item label="Receiver Description" name="receiverDescription">
-          <Input.TextArea />
-        </Form.Item>
-        <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Form.Item>
+          <Form.Item
+            label="Receiver Type"
+            name="receiverType"
+            rules={[{ required: true }]}
+          >
+            <Select
+              placeholder="Select Receiver Type"
+              filterOption={false}
+              style={{ width: "50%" }}
+            >
+              {receiverType}
+            </Select>
+          </Form.Item>
 
-        <Form.Item
-          label="Date of Release"
-          name="dor"
-          initialValue={currentDate}
-        >
-          <Input placeholder={currentDate} disabled />
-        </Form.Item>
-      </Form>
+          <Form.Item label="Receiver Description" name="receiverDescription">
+            <Input.TextArea />
+          </Form.Item>
+
+          <Form.Item
+            label="Date of Release"
+            name="dor"
+            initialValue={currentDate}
+          >
+            <Input placeholder={currentDate} disabled />
+          </Form.Item>
+          <Form.Item {...tailLayout}>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form.Item>
+          <Form.Item {...tailLayout}>
+              <Button
+                onClick={() => {
+                  form.setFieldsValue({
+                    receiverName: "Manoj Perera",
+                    receiverType: "Medical Faculty",
+                    receiverDescription: "Released to Medical Faculty of University of Colombo for educational purposes."
+                  });
+                }}
+                danger
+              >
+                Demo
+              </Button>
+            </Form.Item>
+        </Form>
+      </Card>
     );
   }
 };

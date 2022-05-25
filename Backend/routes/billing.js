@@ -10,8 +10,8 @@ const auth = require("../middleware/auth");
 
 const insertTransaction = async (req, res,next,billId) => {
 
-  total = req.body.count * req.body.charge
-  type  = req.body.type
+  const total = req.body.count * req.body.charge;
+  const type  = req.body.type;
   transactionModel.findOne({
     billId:billId,
     type:req.body.type,
@@ -19,7 +19,7 @@ const insertTransaction = async (req, res,next,billId) => {
   }).then((resp) => {
     if (resp == null){
 
-      const bill = new transactionModel({
+      const transaction = new transactionModel({
         patientId: req.body.patientId,
         type: req.body.type,
         id: req.body.id,
@@ -32,9 +32,9 @@ const insertTransaction = async (req, res,next,billId) => {
     
       try {
     
-        bill.save().then(async () => {
+        transaction.save().then(async () => {
     
-          if(req.body.type=="room"){
+          if(type=="room"){
             billModel.findOneAndUpdate(
               {
                 _id: billId
@@ -58,7 +58,7 @@ const insertTransaction = async (req, res,next,billId) => {
                 res.status(400).json(
                   {
                     succuss: false,
-                    message: "62"+Error.message,
+                    message: Error.message,
                     payload: {}
                   }
                 );
@@ -101,7 +101,7 @@ const insertTransaction = async (req, res,next,billId) => {
                 res.status(400).json(
                   {
                     succuss: false,
-                    message: "105"+billError.message,
+                    message: billError.message,
                     payload: {}
                   }
                 );
@@ -129,7 +129,7 @@ const insertTransaction = async (req, res,next,billId) => {
           res.status(400).json(
             {
               succuss: false,
-              message: "133"+error.message,
+              message: error.message,
               payload: {}
             }
           );
@@ -138,7 +138,7 @@ const insertTransaction = async (req, res,next,billId) => {
         res.status(400).json(
           {
             succuss: false,
-            message: "142"+error.message,
+            message: error.message,
             payload: {}
           }
         );
@@ -180,7 +180,7 @@ const insertTransaction = async (req, res,next,billId) => {
               res.status(400).json(
                 {
                   succuss: false,
-                  message: "184"+Error.message,
+                  message: Error.message,
                   payload: {}
                 }
               );
@@ -293,6 +293,16 @@ router.post('/add-details', async (req, res, next) => {
       newBill.save().then((response) => {
 
         insertTransaction(req, res, next, response._id.toString());
+      }).catch((erro) => {
+
+        res.status(400).json(
+          {
+            succuss: false,
+            message: erro.message,
+            payload: {}
+          }
+        );
+    
       });
 
     }
@@ -413,7 +423,7 @@ router.get('/transactions', async (req, res, next) => {
 
 router.get('/items', async (req, res, next) => {
   try {
-    const response = await itemModel.find({total_quantity:{$ne:0}}).then((response) => {
+    const response = await itemModel.find({total_quantity:{$gt:0}}).then((response) => {
 
       res.status(200).json(
         {
@@ -486,8 +496,9 @@ router.get('/rooms', async (req, res, next) => {
 
 router.get('/bills', async (req, res, next) => {
   try {
-    const response = await billModel.find({
-      patient_id: req.query.patient
+    const response = await billModel.findOne({
+      patient_id: req.query.patient,
+      status:"pending"
     }).then((response) => {
 
       res.status(200).json(
@@ -527,7 +538,6 @@ router.get('/all-bills', async (req, res, next) => {
 
   try {
     const response = await billModel.find({
-      status: 'pending'
     }).then((response) => {
 
       res.status(200).json(
@@ -602,6 +612,39 @@ router.post('/transaction/add', async (req, res, next) => {
   }
 
 });
+
+
+router.get('/paid',async (req,res,next)=>{
+  billModel.findOneAndUpdate({
+  patient_id: req.query.id,
+  status:"pending"
+  },{$set:{status:"paid"}}).then((response) => {
+  
+  
+  
+  res.status(200).json(
+  {
+  succuss: true,
+  message: 'Update succussfull',
+  payload: {}
+  }
+  );
+  
+  
+  
+  }).catch((error) => {
+  res.status(400).json(
+  {
+  succuss: false,
+  message: error.message,
+  payload: {}
+  }
+  );
+  
+  
+  
+  });
+  })
 
 
 module.exports = router;
