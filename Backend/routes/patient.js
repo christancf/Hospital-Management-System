@@ -9,7 +9,7 @@ const patientModel = require('../models/patient');
 // replace patientModel with your model, patientId with the unique id filed in your collection,'/id' with a route path you want
 // it returns  one added to highest id already in the collection only works if the unique id is in number format . if it is a
 // string return payload without+1 and add one in frontend  
-router.get('/id', function(req,res,next){
+router.get('/id',auth, function(req,res,next){
   patientModel.find().sort({patientId : -1}).limit(1)
   .then((id) => {
     res.status(200).json({
@@ -24,7 +24,7 @@ router.get('/id', function(req,res,next){
 });
 
 //patient admittance function
-router.post('/admittance' , function(req,res,next){
+router.post('/admittance' ,auth, function(req,res,next){
     const patient =new patientModel({
         patientId:req.body.patient.id,
         fullName:req.body.patient.fullName,
@@ -52,7 +52,7 @@ router.post('/admittance' , function(req,res,next){
     }
 });
 //read details of patient given patient id 
-router.get('/read', function(req,res,next){
+router.get('/read',auth, function(req,res,next){
     patientModel.find({patientId:req.query.id})
     .then((patientDetails) => {
         res.status(200).json({
@@ -65,7 +65,7 @@ router.get('/read', function(req,res,next){
     })
 });
 // change patient status to false given patient id 
-router.delete('/checkout', (req,res,next) => {
+router.delete('/checkout',auth, (req,res,next) => {
     patientModel.updateOne({patientId:req.query.id},{$set:{"status":false}})
     .then((result) => {
         res.json({
@@ -78,7 +78,7 @@ router.delete('/checkout', (req,res,next) => {
       })
 })
 // update patient details given patient id
-router.put('/update', (req, res, next) => {
+router.put('/update',auth, (req, res, next) => {
 
     patientModel.updateOne({"patientId":req.body.patient.id,},
       {$set: {"fullName":req.body.patient.fullName,
@@ -103,7 +103,7 @@ router.put('/update', (req, res, next) => {
 
 
   //get details of every patients with status:true
-  router.get('/patientlist', async (req, res, next) => {
+  router.get('/patientlist',auth, async (req, res, next) => {
 
 
 
@@ -144,7 +144,7 @@ router.put('/update', (req, res, next) => {
   });
 
   //number of patients grouped by ward category male female seperate
-  router.get("/stat", async function (req, res, next) {
+  router.get("/stat",auth, async function (req, res, next) {
     try {
       let patientDetails = await patientModel.aggregate([
         { $group: { 
