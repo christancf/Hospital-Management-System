@@ -1,4 +1,4 @@
-import { Form, Input, Card, Button, Cascader, DatePicker, Select, Modal, Spin, Typography } from 'antd';
+import { Form, Input, Card, Button, Row, Col, DatePicker, Select, Modal, Spin, Typography } from 'antd';
 import { json } from 'd3-fetch';
 import moment from 'moment';
 import bloodBankService from 'services/BloodBankService';
@@ -13,6 +13,10 @@ function toTimestamp(strDate) {
   var datum = Date.parse(strDate);
   return datum / 1000;
 }
+
+const tailLayout = {
+  wrapperCol: { offset: 7, span: 16 },
+};
 
 const layout = {
   labelCol: { span: 5 },
@@ -121,6 +125,7 @@ const AddBloodBag = () => {
     }
   }
 
+
   function filter(inputValue, path) {
     return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
   }
@@ -178,60 +183,81 @@ const AddBloodBag = () => {
   else {
 
     function disabledDate2(current) {
-			// Can not select days before today and today
-			return current && current > moment().endOf('day');
-		  }
+      // Can not select days before today and today
+      return current && current > moment().endOf('day');
+    }
     return (
-<Card style={{backgroundColor: '#efefef'}}>
-      <Form {...layout} name="addBloodBag" onFinish={onFinish} form={form} style={{ marginLeft: 200, marginBottom: 20 }}>
-        <Title style={{ marginLeft: 270, marginBottom: 20 }}>Add Blood Bag</Title><br></br>
-        <Form.Item name="bagId" label="Bag Id" initialValue={data} placeholder="Bag Id" >
-          <Input disabled />
-        </Form.Item>
-        <Form.Item name="donorName" label="Donor's Name" placeholder="Donor's Name" >
-          <Input />
-        </Form.Item>
-        <Form.Item name="donorNIC" label=" Donor's NIC" rules={[{ required: true,pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' , message: 'Enter valid NIC' }]} placeholder="Donor's NIC">
-          <Input />
-        </Form.Item>
-        <Form.Item label="Donation Number " name="donationNumber" rules={[{ required: true,pattern:'^[A-Z]{2}-[0-9]{4}$',message:'Enter valid donation number' }]} placeholder="Please input Donation Number!">
-          <Input />
-        </Form.Item>
-        <Form.Item label="Donated Date & Time" name="donateDate">
-          <DatePicker disabledDate={disabledDate2}/>
-        </Form.Item>
-        <Form.Item name="place" label="Place" placeholder="Place" >
-          <Input />
-        </Form.Item>
+      <Card style={{ backgroundColor: '#efefef' }}>
+        <Form {...layout} name="addBloodBag" onFinish={onFinish} form={form} style={{ marginLeft: 200, marginBottom: 20 }}>
+          <Title style={{ marginLeft: 270, marginBottom: 20 }}>Add Blood Bag</Title><br></br>
+          <Form.Item name="bagId" label="Bag Id" initialValue={data} placeholder="Bag Id" >
+            <Input disabled />
+          </Form.Item>
+          <Form.Item name="donorName" label="Donor's Name" placeholder="Donor's Name" >
+            <Input />
+          </Form.Item>
+          <Form.Item name="donorNIC" label=" Donor's NIC" rules={[{ required: true, pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$', message: 'Enter valid NIC' }]} placeholder="Donor's NIC">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Donation Number " name="donationNumber" rules={[{ required: true, pattern: '^[A-Z]{2}-[0-9]{4}$', message: 'Enter valid donation number' }]} placeholder="Please input Donation Number!">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Donated Date & Time" name="donateDate">
+            <DatePicker disabledDate={disabledDate2} />
+          </Form.Item>
+          <Form.Item name="place" label="Place" placeholder="Place" >
+            <Input />
+          </Form.Item>
 
-        <Form.Item name="bloodGroup" label="Blood Group" rules={[{ required: true }]}>
-          <Select
-            labelInValue
-            placeholder="Select Blood Group"
-            filterOption={false}
-            showSearch={{ filter }}
-            style={{ width: '100%' }}
-          >
-            {bloodGroup.map(d => (
-              <Option key={d.value}>{d.label}</Option>
-            ))}
-          </Select>
-        </Form.Item>
+          <Form.Item name="bloodGroup" label="Blood Group" rules={[{ required: true }]}>
+            <Select
+              labelInValue
+              placeholder="Select Blood Group"
+              filterOption={false}
+              showSearch={{ filter }}
+              style={{ width: '100%' }}
+            >
+              {bloodGroup.map(d => (
+                <Option key={d.value}>{d.label}</Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-        <Form.Item label="Volume" name="volume" >
-					<Input disabled={true} id="Volume" placeholder='1 pint(450ml)'/>
-				</Form.Item>
+          <Form.Item label="Volume" name="volume" >
+            <Input disabled={true} id="Volume" placeholder='1 pint(450ml)' />
+          </Form.Item>
 
-        <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-          <Button className="mr-2" htmlType="button" onClick={onReset}>
-            Reset
-          </Button>
+          <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+            <Button className="mr-2" htmlType="button" onClick={onReset}>
+              Reset
+            </Button>
 
-          <Button type="primary" htmlType="submit">
-            Add Blood Bag
-          </Button>
-        </Form.Item>
-      </Form>
+            <Button type="primary" htmlType="submit">
+              Add Blood Bag
+            </Button>
+
+            <Form.Item {...tailLayout}>
+              <div  style={{padding:'16px 20px 0px'}}>
+                <Button 
+                onClick={() => {
+                  form.setFieldsValue({
+                    donorName: "Thumila Thathulka",
+                    donorNIC: "789067344V",
+                    donationNumber: "AN-0010",
+                    donateDate: moment("2022-05-09"),
+                    place: "Anuradhapura - Main Hospital",
+                    bloodGroup:"A+",
+                  });
+                }}
+                danger
+              >
+                Demo
+              </Button>
+              </div>
+              
+            </Form.Item>
+          </Form.Item>
+        </Form>
       </Card>
     );
   }
