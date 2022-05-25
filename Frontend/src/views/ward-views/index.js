@@ -7,7 +7,8 @@ export const AppViews = () => {
   return (
     <Suspense fallback={<Loading cover="content"/>}>
       <Switch>
-        <Route path={`${WARD_PREFIX_PATH}/home`} component={lazy(() => import(`./home`))} />
+        <Route path={`${WARD_PREFIX_PATH}/home`} component={lazy(() => import(`./wards`))} />
+        <Route path={`${WARD_PREFIX_PATH}/category/add`} component={lazy(() => import(`./add-ward-category`))} />
         <Route path={`${WARD_PREFIX_PATH}/details/add`} component={lazy(() => import(`./add-ward-details`))} />
         <Route path={`${WARD_PREFIX_PATH}/details/edit`} component={lazy(() => import(`./update-ward-details`))} />
         <Route path={`${WARD_PREFIX_PATH}/nurse/details`} component={lazy(() => import(`./assigned-nurse-details`))} />

@@ -80,4 +80,19 @@ wardService.checkAssignedNurse = id => {
   })
 }
 
+wardService.addWardCategory = data => {
+  return fetch({
+    url: 'ward/category/add',
+    method: 'post',
+    data
+  })
+}
+
+wardService.readAllWardCategory = () => {
+  return fetch({
+    url: 'ward/category/read/all',
+    method: 'get'
+  })
+}
+
 export default wardService
