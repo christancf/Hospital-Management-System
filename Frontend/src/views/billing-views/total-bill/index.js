@@ -66,6 +66,42 @@ const Home = () => {
 		key: 'total',
 	  }
 	];
+
+	const markPaid = () =>{
+		billingService.paid(patientname[0]).then((resp) => {
+
+			if (resp.succuss) {
+			  ShowModel(
+				"Successfull !",
+				4,
+				"Bill marks as paid",
+				true
+			  );
+			  setPatientname([])
+	  
+			}
+			else {
+			  ShowModel(
+				"Unsccessfull !",
+				4,
+				"Bill marking as paid failed",
+				false
+			  );
+			}
+	  
+	  
+	  
+		  }).catch((error) => {
+	  
+			ShowModel(
+			  "Unsccessfull !",
+			  4,
+			  "Bill marking as paid failed",
+			  false
+			);
+	  
+		  })
+	}
   
 	function ShowModel(title, delay, innercontent, isSuccess) {
   
@@ -176,13 +212,12 @@ const Home = () => {
 			  
 		
 				  
-				<Col span={12}> <Card style={{ width: 1225, height: 800,}}>
+				<Card >
 				<h2 className='text-center'>Patient Bill</h2>
 
-				<Form>
-					<Form.Item name="patientid" 
-					  label="Patient ID" rules={[{ required: true }]}>
-					  <Select style={{ width: 300}}
+				
+					
+					  <Select style={{ width: 300,}}
 						showSearch
 						placeholder="Select a Patient"
 						optionFilterProp="children"
@@ -190,8 +225,8 @@ const Home = () => {
 					  >
 						{optionList}
 					  </Select>
-					</Form.Item>
-				  </Form>
+					
+				  
 	
 				  {!transactionLoading ? <>
 					<Table columns={itemColumns} dataSource={transactionData[0]} />
@@ -199,25 +234,24 @@ const Home = () => {
 						
 				  </> : <></>}
 
-				{!billLoading ? console.log(billData) && <>
+				{billData!==null &&
 				
-					{/* <Descriptions title="  ">
+					<Descriptions title="  ">
 						<Descriptions.Item label="Total Before Tax">{billData.item_charges + billData.room_charges}  </Descriptions.Item>
-						<Descriptions.Item label="Tax"> {billData.item_charges + billData.room_charges}/10 </Descriptions.Item>
-						<Descriptions.Item label="Total">{billData.item_charges + billData.room_charges} +  {billData.item_charges + billData.room_charges}/10 </Descriptions.Item>
-					</Descriptions> */}
-				 </> : <></>}
+						<Descriptions.Item label="Tax"> {(billData.item_charges + billData.room_charges)/10} </Descriptions.Item>
+						<Descriptions.Item label="Total">{(billData.item_charges + billData.room_charges) + (billData.item_charges + billData.room_charges)/10}  </Descriptions.Item>
+					</Descriptions>
+				}
 			
 					
-				  <Button  shape="round" className="mr-2" type="primary" htmlType="submit" style={{ marginRight: 30 }}>
+				  <Button  shape="round" className="mr-2" type="primary" style={{ marginRight: 30 }}>
                       print
                     </Button>
 
-					<Button shape="round" className="mr-2" type="primary" htmlType="submit">
+					<Button shape="round" className="mr-2" type="primary" onClick={markPaid}>
                       Paid
                     </Button>
-				</Card>
-				</Col>	
+				</Card>	
 			
 			</>
 		  )
