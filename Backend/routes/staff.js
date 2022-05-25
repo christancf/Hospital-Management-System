@@ -114,25 +114,40 @@ router.post('/attendance/checkin', function (req, res, next) {
       res.json("Resigned")
     }
     else {
-      attendanceModel.findOne({staffID: Number(req.body.staffID)}).sort({_id: -1})
-      .then((data) => {
-        if(data?.checkOut?true:false) {
+      attendanceModel.countDocuments({staffID: Number(req.body.staffID)})
+      .then((value) => {
+        console.log(value)
+        if(value != 0) {
+          attendanceModel.findOne({staffID: Number(req.body.staffID)}).sort({_id: -1})
+          .then((data) => {
+            console.log(data.checkOut)
+            if(data?.checkOut?true:false) {
+              const attendance = new attendanceModel({
+                staffID: Number(req.body.staffID),
+                checkIn: req.body.checkIn
+              });
+            
+              attendance.save()
+              .then(() => res.json("marked"))
+              .catch((e) => console.log(`Error: ${ e }`))
+            }
+            else {
+              res.json("not_marked")
+            }
+          }).catch((e) => console.log(`Error: ${ e }`))
+        }else {
           const attendance = new attendanceModel({
             staffID: Number(req.body.staffID),
             checkIn: req.body.checkIn
           });
-        
+
           attendance.save()
-          .then(() => res.json(true))
+          .then(() => res.json("marked"))
           .catch((e) => console.log(`Error: ${ e }`))
         }
-        else {
-          res.json(false)
-        }
-      }).catch((e) => console.log(`Error: ${ e }`))
+      })
     }
-  })
-  .catch((e) => console.log(`Error: ${ e }`))
+  }).catch((e) => console.log(`Error: ${ e }`))
 });
 
 //update checkout attendance
@@ -143,17 +158,24 @@ router.put('/attendance/checkout', function (req, res, next) {
       res.json('Resigned')
     }
     else {
-      attendanceModel.findOne({staffID: Number(req.body.staffID)}).sort({_id: -1})
-      .then((data) => {
-        if(data?.checkOut?false:true) {
-          attendanceModel.updateOne({_id: data._id}, {$set: {checkOut: req.body.checkOut}})
-          .then(() => res.json(true)) 
-          .catch((e) => console.log(`Error ${ e }`))
+      attendanceModel.countDocuments({staffID: Number(req.body.staffID)})
+      .then((value) => {
+        if(value != 0) {
+          attendanceModel.findOne({staffID: Number(req.body.staffID)}).sort({_id: -1})
+          .then((data) => {
+            if(data?.checkOut?false:true) {
+              attendanceModel.updateOne({_id: data._id}, {$set: {checkOut: req.body.checkOut}})
+              .then(() => res.json("marked")) 
+              .catch((e) => console.log(`Error ${ e }`))
+            }
+            else {
+              res.json("not_marked")
+            }
+          }).catch((e) => console.log(`Error: ${e}`))
+        } else {
+          res.json("not_marked")
         }
-        else {
-          res.json(false)
-        }
-      }).catch((e) => console.log(`Error: ${e}`))
+      })
     }
   }).catch((e) => console.log(`Error: ${e}`))
 });
@@ -178,68 +200,62 @@ router.post('/salary/bonus', function (req, res, next) {
 });
 
 //calculate ot hours
-router.get('/salary/othours', (req, res, next) => {
+router.get('/salary/othours?:month', (req, res, next) => {
 
-  const monthlyWorkingHours = 160
+  const monthlyWorkingHours = 10
   let currentYear = new Date().getFullYear()
-  let startDate = String(currentYear) + '-' + String(req.body.month) + '-' + '26'
-  let endDate = String(currentYear) + '-' + String(Number(req.body.month) + 1) + '-' + '25 23:59'  
-  let totalWorkHours = 0
+  let startDate = String(currentYear) + '-' + String(req.query.month) + '-' + '26'
+  let endDate = String(currentYear) + '-' + String(Number(req.query.month) + 1) + '-' + '25 23:59'  
   startDate = new Date(startDate).getTime()
   endDate = new Date(endDate).getTime()
 
-  attendanceModel.aggregate( [
+  attendanceModel.aggregate([
+    // First Stage
     {
-      $match: {
-        checkIn: { $gte:startDate, $lte:endDate }
-      }
+      $match : { "checkIn": { $gte: startDate, $lte: endDate } }
     },
+    // Second Stage
     {
-      $group: {
-         _id: "$staffID",
-         workHours: { $sum: {$subtract: ["$checkOut", "$checkIn"]} }
-      }
-    }
-  ] )
-  .then(r => {
+      $group : {_id:"$staffID" , count:{$sum: {$subtract: ["$checkOut", "$checkIn"]}}}
+    },
+  ])
+  .then((r) => {
     r.map(d => {
-    
-      totalWorkHours = Math.floor(d.workHours / (1000 * 3600))
-      d.otHours = totalWorkHours > monthlyWorkingHours? totalWorkHours - monthlyWorkingHours:0
-  })
+      d.count = (Math.floor(d.count/(1000 * 3600)))
+      if(d.count > monthlyWorkingHours) {
+        d.othrs = d.count - monthlyWorkingHours
+      } else {
+        d.othrs = 0
+      }
+    })
     res.json(r)
   })
-  
-  // attendanceModel.find({checkIn: { $gte:startDate, $lte:endDate }}, {_id:0, staffID:1, checkIn:1, checkOut:1}).sort({staffID:0})
-  // .then(r => {
-  //    res.json({r})
-    // let sum = 0
-    // r.map(d => (
-    //   sum += d.checkOut - d.checkIn
-    // ))
-    // let totalWorkHours = Math.floor(sum / (1000 * 3600))
-    // let OThours = totalWorkHours > monthlyWorkingHours? totalWorkHours - monthlyWorkingHours:0
-    // res.json({"othours": OThours})
-  })
-// })
+})
 
 //calculate bonus
-router.get('/salary/bonus', (req, res, next) => {
-
+router.get('/salary/bonus-calculate?:month', (req, res, next) => {
+  console.log('month', req.query.month)
   let currentYear = new Date().getFullYear()
-  let startDate = String(currentYear) + '-' + String(req.body.month) + '-' + '26'
-  let endDate = String(currentYear) + '-' + String(Number(req.body.month) + 1) + '-' + '25 23:59'  
+  let startDate = String(currentYear) + '-' + String(req.query.month) + '-' + '26'
+  let endDate = String(currentYear) + '-' + String(Number(req.query.month) + 1) + '-' + '25 23:59'  
 
   startDate = new Date(startDate).getTime()
   endDate = new Date(endDate).getTime()
-  bonusModel.find({staffID: req.body.id, dateAdded: { $gte:startDate, $lte:endDate }}, {_id:0, bonusAmount: 1, dateAdded: 1})
-  .then(r => {
-    let bonusSum = 0
-    r.map(d => (
-      bonusSum += d.bonusAmount
-    ))
-    res.json({"bonusAmount":bonusSum})
+  
+  bonusModel.aggregate([
+    // First Stage
+    {
+      $match : { "addedDate": { $gte: startDate, $lte: endDate } }
+    },
+    // Second Stage
+    {
+      $group : {_id:"$staffID", count:{$sum:"$bonusAmount"}}
+    },
+  ])
+  .then((r) => {
+    res.json(r)
   })
 })
+
 
 module.exports = router; 

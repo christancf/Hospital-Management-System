@@ -41,7 +41,6 @@ const tailLayout = {
 			setTimeout(() => {
 				clearInterval(timer);
 				modal.destroy();
-				window.location.href="../staff/display-staff-details";
 			}, delay * 1000);
 		}
 
