@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Chart from "react-apexcharts";
 import ReactApexChart from "react-apexcharts";
-import { Divider, Button, DatePicker,Spin } from "antd";
+import { Divider, Button, DatePicker,Spin,Card,Statistic, Row } from "antd";
 import jsPDF from "jspdf";
 import domtoimage from "dom-to-image";
 import moment from "moment";
@@ -45,6 +45,10 @@ const Home = () => {
 	const [categoryMale, setCategoryMale] = useState(null);
 	const [category, setCategory] = useState(null);
 
+	const[countLoading,setCountLoading] =useState(true);
+	const[countError,setCountError] = useState(false);
+	const[count,setCount] = useState([]);
+
 	useEffect(()=>{
 		patientManagementService
 		.categoryStat()
@@ -79,6 +83,27 @@ const Home = () => {
 			setCategory();
 			setCategoryMale();
 			setCategoryFemale();
+		  });
+
+		  patientManagementService
+		.patientCount()
+		.then((res) => {
+			const data =res.payload;
+			const arr =[];
+			for(let i=0;i<data.length;i++){
+				if(data[i]._id.status){
+					arr[0]=data[i].count
+				}else{
+					arr[1]=data[i].count
+				}
+			}
+			setCount(arr)
+			setCountLoading(false);
+		  })
+		  .catch((err) => {
+			setCountLoading(false);
+			setCountError(true);
+			setCount();
 		  });
 		
 	},[])
@@ -142,7 +167,7 @@ const Home = () => {
 		},
 	  };
 
-	if(categoryLoading){
+	if(categoryLoading||countLoading){
 		return (
 			<>
 				<center>
@@ -152,7 +177,7 @@ const Home = () => {
 			</>
 		)
 	}
-	else if(categoryError){
+	else if(categoryError||countError){
 		return (
 			<>
 			  <p>Error{categoryError.message}</p>
@@ -160,8 +185,29 @@ const Home = () => {
 		  );
 	}
 	else{
+		console.log(count)
 		return(
 			<div style={{ marginLeft: 50, marginRight: 70 }}>
+				<Divider style={{ marginTop: 10 }}>
+          			<h3>Number of patients</h3>
+					 <Row>
+					<Card>
+					<Statistic
+						title="Currently Admitted Patients"
+						value={count[0]}
+						valueStyle={{ color: '#3f8600' }}
+					/>
+					
+        			</Card>
+					<Card>
+					<Statistic
+						title="Total Number of Patients"
+						value={count[0]+count[1]}
+						
+					/>
+        			</Card>
+					</Row> 
+        		</Divider>
 				<Divider style={{ marginTop: 10 }}>
           			<h3>Number of patients vs Ward Category</h3>
         		</Divider>

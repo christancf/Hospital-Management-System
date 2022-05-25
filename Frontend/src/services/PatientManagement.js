@@ -68,4 +68,11 @@ patientManagementService.categoryList = function(){
   })
 }
 
+patientManagementService.patientCount = function(){
+  return fetch({
+    url: `/patient/stat1`,
+    method: 'get',
+  })
+}
+
 export default patientManagementService
