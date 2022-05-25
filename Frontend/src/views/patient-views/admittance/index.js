@@ -2,6 +2,9 @@ import { Form, Input, InputNumber, Button, Cascader, DatePicker,Select,Modal,Spi
 import moment from 'moment';
 import patientManagementService from 'services/PatientManagement';
 import { useState, useEffect } from 'react';
+import { PATIENT_ROLE , ValidateUser} from 'configs/AppConfig';
+
+ValidateUser(PATIENT_ROLE);
 
 const { Option } = Select;
 
@@ -149,8 +152,19 @@ const PatientAdmittance = () => {
 		return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
 	}
 
-
-	const onFinish = values => {
+	const demo = () =>{
+		form.setFieldsValue({
+			fullName:"saman Perera",
+			nic:"992281558V",
+			dateOfBirth:moment("1981-05-29"), 
+			sex:"Male",
+			mobile:"0716688822",
+			address:"12/42E,3rd Street,Nugegoda",
+			bloodGroup:"A+",
+			category:"General"
+		})
+	};
+	const onFinish = (values) => {
 
 		const patient =  {
 			id:values.id,
@@ -226,7 +240,6 @@ const PatientAdmittance = () => {
 			</Form.Item>
 			<Form.Item name="sex" label="Sex" rules={[{required:true}]}>
 			<Select
-				labelInValue
 				placeholder="Select users"
 				filterOption={true}
 				showSearch={{ filter }}
@@ -246,7 +259,6 @@ const PatientAdmittance = () => {
 			</Form.Item>
 			<Form.Item name="bloodGroup" label="bloodGroup" rules={[{required:true}]}>
 			<Select
-				labelInValue
 				placeholder="Select Blood Group"
 				filterOption={true}
 				showSearch={{ filter }}
@@ -259,7 +271,6 @@ const PatientAdmittance = () => {
 			</Form.Item>
 			<Form.Item name="category" label="category" rules={[{required:true}]}>
 			<Select
-				labelInValue
 				placeholder="Select Category"
 				filterOption={true}
 				style={{ width: '100%' }}
@@ -273,6 +284,9 @@ const PatientAdmittance = () => {
 			<Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
 				<Button type="primary" htmlType="submit">
 				Admit 
+				</Button>
+				<Button type="primary" onClick={demo} style={{marginLeft:30}}>
+					Demo
 				</Button>
 			</Form.Item>
 		</Form>
