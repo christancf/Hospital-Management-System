@@ -30,11 +30,11 @@ router.post('/admittance' , function(req,res,next){
         fullName:req.body.patient.fullName,
         nic:req.body.patient.nic,
         dateOfBirth:req.body.patient.dateOfBirth, 
-        sex:req.body.patient.sex.value,
+        sex:req.body.patient.sex,
         mobile:req.body.patient.mobile,
         address:req.body.patient.address,
-        bloodGroup:req.body.patient.bloodGroup.value,
-        category:req.body.patient.category.value,
+        bloodGroup:req.body.patient.bloodGroup,
+        category:req.body.patient.category,
         status:true
     });
 
