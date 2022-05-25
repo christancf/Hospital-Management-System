@@ -3,7 +3,7 @@ import { AUTH_TOKEN } from 'redux/constants/Auth';
 import { env } from './EnvironmentConfig'
 import jwt_decode from "jwt-decode";
 
-export const APP_NAME = 'Emilus';
+export const APP_NAME = 'MedStar';
 export const API_BASE_URL = env.API_ENDPOINT_URL || 'http://localhost:3000'
 export const APP_PREFIX_PATH = '/app';
 export const WARD_PREFIX_PATH = '/ward';
