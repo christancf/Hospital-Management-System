@@ -3,8 +3,11 @@ import { json } from 'd3-fetch';
 import moment from 'moment';
 import bloodBankService from 'services/BloodBankService';
 import { useState, useEffect } from 'react';
+import { DOCTOR_CHANNELLING_PREFIX_PATH, APP_PREFIX_PATH, BLOODBANK_ROLE, ValidateUser } from 'configs/AppConfig'
 const { Title } = Typography
 const { Option } = Select;
+
+ValidateUser(BLOODBANK_ROLE);
 
 function toTimestamp(strDate) {
   var datum = Date.parse(strDate);
@@ -191,7 +194,7 @@ const AddBloodBag = () => {
         <Form.Item name="donorNIC" label=" Donor's NIC" rules={[{ required: true,pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' , message: 'Enter valid NIC' }]} placeholder="Donor's NIC">
           <Input />
         </Form.Item>
-        <Form.Item label="Donation Number " name="donationNumber" rules={[{ required: true,pattern:'^[A-Z]{2}-[0-9]{4}$',message:'Enter the valid donation number' }]} placeholder="Please input Donation Number!">
+        <Form.Item label="Donation Number " name="donationNumber" rules={[{ required: true,pattern:'^[A-Z]{2}-[0-9]{4}$',message:'Enter valid donation number' }]} placeholder="Please input Donation Number!">
           <Input />
         </Form.Item>
         <Form.Item label="Donated Date & Time" name="donateDate">
