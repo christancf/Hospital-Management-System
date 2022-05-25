@@ -3,36 +3,16 @@ import { useState, useEffect } from 'react';
 import doctorChannellingService from 'services/DoctorChannellingService';
 import jwt_decode from "jwt-decode";
 import { AUTH_TOKEN } from 'redux/constants/Auth'
-import { DOCTOR_CHANNELLING_PREFIX_PATH, APP_PREFIX_PATH } from 'configs/AppConfig'
+import { DOCTOR_CHANNELLING_PREFIX_PATH, APP_PREFIX_PATH, DOCTOR_CHANNELLING_ROLE, ValidateUser } from 'configs/AppConfig'
 import { 
     PlusOutlined, 
     EllipsisOutlined, 
     StopOutlined, 
   } from '@ant-design/icons';
 const { confirm } = Modal;
-
-
-
 const { Option } = Select;
 
-const ValidateUser = (role) => {
-
-	var mytoken = localStorage.getItem(AUTH_TOKEN);
-	
-	if(mytoken){
-		var decoded = jwt_decode(mytoken)
-
-		if(decoded.role == role){
-			window.location = DOCTOR_CHANNELLING_PREFIX_PATH;
-		}
-		else{
-			localStorage.clear();
-			window.location = APP_PREFIX_PATH;
-		}
-
-	}
-
-}
+ValidateUser(DOCTOR_CHANNELLING_ROLE);
 
 const openNotification = (title, content) => {
     notification.open({
@@ -118,7 +98,6 @@ const updateAppointmentStatus = (id, status) => {
 
 const ViewAppointment = () => {
 
-    ValidateUser('doctor');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [data, setData] = useState();
