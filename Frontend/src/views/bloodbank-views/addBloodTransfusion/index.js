@@ -3,6 +3,9 @@ import { Form, Input, Button, Checkbox, Card, Select, DatePicker, message, Spin,
 import { fromPairs } from 'lodash';
 import bloodBankService from 'services/BloodBankService';
 import moment from 'moment';
+import { DOCTOR_CHANNELLING_PREFIX_PATH, APP_PREFIX_PATH, BLOODBANK_ROLE, ValidateUser } from 'configs/AppConfig'
+
+ValidateUser(BLOODBANK_ROLE);
 
 const { Title } = Typography
 const { TextArea } = Input;

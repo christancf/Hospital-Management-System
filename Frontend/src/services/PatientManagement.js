@@ -54,5 +54,11 @@ patientManagementService.patientDetails = function (data){
   })
 }
 
+patientManagementService.category = function(){
+  return fetch({
+    url: `/patient/stat`,
+    method: 'get',
+  })
+}
 
 export default patientManagementService

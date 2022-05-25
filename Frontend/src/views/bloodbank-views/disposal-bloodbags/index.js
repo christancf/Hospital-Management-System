@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Table, Typography, Spin, Button, Divider, Tag, Modal, notification, Row, Col, Tooltip  } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import bloodBankService from 'services/BloodBankService'
+import { DOCTOR_CHANNELLING_PREFIX_PATH, APP_PREFIX_PATH, BLOODBANK_ROLE, ValidateUser } from 'configs/AppConfig'
+
+ValidateUser(BLOODBANK_ROLE);
 
 const { confirm } = Modal;
 const { Title } = Typography
