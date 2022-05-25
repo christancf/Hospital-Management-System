@@ -16,10 +16,19 @@ doctorChannellingService.getAppointmentList = function (email){
   doctorChannellingService.updateAppointmentStatus = function (id, body){
 
     return fetch({
-      url: `/channelling/doctor/appointment/editstatus?is=${id}`,
+      url: `/channelling/doctor/appointment/editstatus?id=${id}`,
       method: 'post',
       data: body
   
+    })
+  }
+
+
+  doctorChannellingService.deleteAppointment = function (id){
+
+    return fetch({
+      url: `/channelling/appointment/delete?id=${id}`,
+      method: 'post'
     })
   }
   
