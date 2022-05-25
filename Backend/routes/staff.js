@@ -8,7 +8,7 @@ const staff = require('../models/staff');
 const e = require('express');
 
 //staff ID auto increment
-router.get('/id', function (req, res, next) {
+router.get('/id', auth, function (req, res, next) {
   staffModel.find().sort({staffID : -1}).limit(1)
   .then((id) => {
     res.status(200).json({
@@ -23,7 +23,7 @@ router.get('/id', function (req, res, next) {
 });
 
 //add new staff member
-router.post('/add-member', function (req, res, next) {
+router.post('/add-member', auth, function (req, res, next) {
 
   const staff = new staffModel({
     staffID: req.body.staffID,
@@ -47,27 +47,22 @@ router.post('/add-member', function (req, res, next) {
 
 });
 
-
-router.get('/', (req, res, next) => {
-  res.send("IT works")
-})
-
 //read staff member details by id
-router.get('/read-details?:id', (req, res, next) => {
+router.get('/read-details?:id', auth, (req, res, next) => {
   staffModel.find({staffID: req.query.id})
   .then((staffDetails) => res.json(staffDetails))
   .catch((e) => console.log(`Error: ${ e }`))
 });
 
 //read all staff details
-router.get('/read-staffs', (req, res, next) => {
+router.get('/read-staffs', auth, (req, res, next) => {
   staffModel.find()
   .then((details) => res.json(details))
   .catch((e) => console.log(`Error: ${ e }`))
 })
 
 //update staff details
-router.put('/update-details', (req, res, next) => {
+router.put('/update-details', auth, (req, res, next) => {
   staffModel.updateOne({staffID: req.body.staffID},
     {$set: 
       {
@@ -90,7 +85,7 @@ router.put('/update-details', (req, res, next) => {
 })
 
 //resign member
-router.put('/resign', (req, res, next) => {
+router.put('/resign', auth, (req, res, next) => {
   staffModel.findOne({staffID: Number(req.body.staffID)}, {_id: 0})
   .then((r) => {
     if(r.status == 'Resigned') {
@@ -107,7 +102,7 @@ router.put('/resign', (req, res, next) => {
 })
 
 //insert checkIn attendance
-router.post('/attendance/checkin', function (req, res, next) {
+router.post('/attendance/checkin', auth, function (req, res, next) {
   staffModel.findOne({staffID: Number(req.body.staffID)}, {_id: 0})
   .then((r) => {
     if(r.status == 'Resigned') {
@@ -151,7 +146,7 @@ router.post('/attendance/checkin', function (req, res, next) {
 });
 
 //update checkout attendance
-router.put('/attendance/checkout', function (req, res, next) {
+router.put('/attendance/checkout', auth, function (req, res, next) {
   staffModel.findOne({staffID: Number(req.body.staffID)}, {_id: 0})
   .then((r) => {
     if(r.status == 'Resigned') {
@@ -181,7 +176,7 @@ router.put('/attendance/checkout', function (req, res, next) {
 });
 
 //insert bonuses
-router.post('/salary/bonus', function (req, res, next) {
+router.post('/salary/bonus', auth, function (req, res, next) {
   const bonus = new bonusModel({
     staffID: Number(req.body.staffID),
     bonusAmount: req.body.bonusAmount,
@@ -200,7 +195,7 @@ router.post('/salary/bonus', function (req, res, next) {
 });
 
 //calculate ot hours
-router.get('/salary/othours?:month', (req, res, next) => {
+router.get('/salary/othours?:month', auth, (req, res, next) => {
 
   const monthlyWorkingHours = 10
   let currentYear = new Date().getFullYear()
@@ -233,7 +228,7 @@ router.get('/salary/othours?:month', (req, res, next) => {
 })
 
 //calculate bonus
-router.get('/salary/bonus-calculate?:month', (req, res, next) => {
+router.get('/salary/bonus-calculate?:month', auth, (req, res, next) => {
   console.log('month', req.query.month)
   let currentYear = new Date().getFullYear()
   let startDate = String(currentYear) + '-' + String(req.query.month) + '-' + '26'
