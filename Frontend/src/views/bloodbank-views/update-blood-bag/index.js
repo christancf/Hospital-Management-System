@@ -62,9 +62,6 @@ const bloodGroup = [
 
 
 const UpdateBloodBag = () => {
-	// const onReset = () => {
-	// 	form.resetFields();
-	// };
 
 	const [form] = Form.useForm();
 
@@ -179,11 +176,8 @@ const UpdateBloodBag = () => {
 	else {
 
 		function disabledDate2(current) {
-			// Can not select days before today and today
 			return current && current > moment().endOf('day');
 		  }
-		// var myDate = new Date(data.dateOfBirth);
-		// myDate.toLocaleString();
 
 		return (
 			<Form {...layout} name="BloodBagUpdate" onFinish={onFinish} validateMessages={validateMessages}>
@@ -217,6 +211,10 @@ const UpdateBloodBag = () => {
 							<Option key={d.value}>{d.label}</Option>
 						))}
 					</Select>
+				</Form.Item>
+
+				<Form.Item label="Volume" name="volume" initialValue={data.volume}>
+					<Input disabled={true} id="Volume" value={1}/>
 				</Form.Item>
 
 				<Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>

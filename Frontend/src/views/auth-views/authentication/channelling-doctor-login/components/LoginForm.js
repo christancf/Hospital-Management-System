@@ -16,17 +16,21 @@ import JwtAuthService from 'services/JwtAuthService'
 import { useHistory } from "react-router-dom";
 import { motion } from "framer-motion"
 import jwt_decode from "jwt-decode";
-import { DOCTOR_CHANNELLING_PREFIX_PATH } from 'configs/AppConfig'
+import { DOCTOR_CHANNELLING_PREFIX_PATH, APP_PREFIX_PATH, DOCTOR_CHANNELLING_ROLE } from 'configs/AppConfig'
 
-const ValidateUser = () => {
+const ValidateUser = (role) => {
 
 	var mytoken = localStorage.getItem(AUTH_TOKEN);
 	
 	if(mytoken){
 		var decoded = jwt_decode(mytoken)
 
-		if(decoded.role == 'doctor'){
+		if(decoded.role == role){
 			window.location = DOCTOR_CHANNELLING_PREFIX_PATH;
+		}
+		else{
+			localStorage.clear();
+			window.location = APP_PREFIX_PATH;
 		}
 
 	}
@@ -35,7 +39,7 @@ const ValidateUser = () => {
 
 export const LoginForm = (props) => {
 
-	ValidateUser();
+	ValidateUser(DOCTOR_CHANNELLING_ROLE);
 	let history = useHistory();
 
 	const { 
@@ -99,7 +103,7 @@ export const LoginForm = (props) => {
 			>
 					<Form.Item 
 					name="role" 
-					initialValue="doctor"
+					initialValue={DOCTOR_CHANNELLING_ROLE}
 					>
 					<Input hidden/>
 				</Form.Item>
