@@ -496,8 +496,9 @@ router.get('/rooms', async (req, res, next) => {
 
 router.get('/bills', async (req, res, next) => {
   try {
-    const response = await billModel.find({
-      patient_id: req.query.patient
+    const response = await billModel.findOne({
+      patient_id: req.query.patient,
+      status:"pending"
     }).then((response) => {
 
       res.status(200).json(

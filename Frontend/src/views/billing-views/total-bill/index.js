@@ -16,6 +16,10 @@ const Home = () => {
 	const [transactionLoading, setTransactionLoading] = useState(true);
 	const [transactionError, setTransactionError] = useState(false);
 	const [transactionData, setTransactionData] = useState();
+
+	const [billLoading, setBillLoading] = useState(true);
+	const [billError, setBillError] = useState(false);
+	const [billData, setBillData] = useState({});
   
   
 	const itemColumns = [
@@ -146,6 +150,17 @@ const Home = () => {
 		setTransactionError(true);
 		setTransactionData();
 	  });
+
+	  billingService.getBills(patientname[0]).then((resp) => {
+		setBillData(resp.payload);
+		setBillLoading(false);
+  
+	  }).catch((err) => {
+		setBillLoading(false);
+		setBillError(true);
+		setBillData();
+	  });
+
 	},[patientname])	
   
 	if (!patientLoading) {
@@ -181,24 +196,26 @@ const Home = () => {
 				  {!transactionLoading ? <>
 					<Table columns={itemColumns} dataSource={transactionData[0]} />
 					<Table columns={roomColumns} dataSource={transactionData[1]} />	
-					
-					<Descriptions title="  ">
-						<Descriptions.Item label="Total Before Tax">  </Descriptions.Item>
-						<Descriptions.Item label="Tax">  </Descriptions.Item>
-						<Descriptions.Item label="Total">  </Descriptions.Item>
-					</Descriptions>
+						
 				  </> : <></>}
 
+				{!billLoading ? console.log(billData) && <>
+				
+					{/* <Descriptions title="  ">
+						<Descriptions.Item label="Total Before Tax">{billData.item_charges + billData.room_charges}  </Descriptions.Item>
+						<Descriptions.Item label="Tax"> {billData.item_charges + billData.room_charges}/10 </Descriptions.Item>
+						<Descriptions.Item label="Total">{billData.item_charges + billData.room_charges} +  {billData.item_charges + billData.room_charges}/10 </Descriptions.Item>
+					</Descriptions> */}
+				 </> : <></>}
 			
-
-					<Form.Item>
+					
 				  <Button  shape="round" className="mr-2" type="primary" htmlType="submit" style={{ marginRight: 30 }}>
                       print
                     </Button>
 
 					<Button shape="round" className="mr-2" type="primary" htmlType="submit">
                       Paid
-                    </Button></Form.Item>
+                    </Button>
 				</Card>
 				</Col>	
 			
