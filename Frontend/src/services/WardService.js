@@ -108,4 +108,11 @@ wardService.readAllWardDetails = () => {
     method: 'get'
   })
 }
+
+wardService.CategoryVsNurseStat = () => {
+  return fetch({
+    url: 'ward/nurse/details/stats',
+    method: 'get'
+  })
+}
 export default wardService
