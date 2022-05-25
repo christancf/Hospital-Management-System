@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Typography, Table, Select, Spin } from 'antd';
 import staffService from 'services/StaffService';
+import { STAFF_ROLE, ValidateUser } from 'configs/AppConfig';
+
+ValidateUser(STAFF_ROLE)
 
 const { Title } = Typography
 const { Option } = Select
