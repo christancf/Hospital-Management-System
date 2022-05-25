@@ -13,7 +13,6 @@ router.get('/', (req, res, next) => {
 })
 
 const setWardId = id => {
-  const maxDigitLen = 3
   id += 1
   id = String(id)
   
@@ -21,6 +20,7 @@ const setWardId = id => {
   if(id.length === 2) return "0" + id
   return id
 }
+
 //add ward details
 router.post('/details/add', auth, (req, res, next) => {
   //get previous ward id
@@ -64,7 +64,13 @@ router.get('/details/read?:id', auth, (req, res, next) => {
 //update ward details
 router.put('/details/update', auth, (req, res, next) => {
   wardModel.updateOne({id: req.body.id},
-    {$set: {"capacity": req.body.capacity, "status": req.body.status}})
+    {
+      $set: {
+        "capacity": req.body.capacity, 
+        "roomCharge": req.body.roomCharge, 
+        "status": req.body.status
+      }
+    })
     .then(() => {
       res.json(`Successfully Updated!`)
     }).catch((e) => {
@@ -109,7 +115,7 @@ router.post('/nurse/assign', auth, (req, res, next) => {
 })
 
 //read all assigned nurses
-router.get('/nurse/details', auth, (req, res, next) => {
+router.get('/nurse/details', (req, res, next) => {
   assignNurseModel.aggregate([{
     $lookup: {
       from: "staffs",
@@ -120,6 +126,26 @@ router.get('/nurse/details', auth, (req, res, next) => {
   }])
   .then((resp) => res.json(resp))
   .catch((e) => res.json(e))
+})
+
+router.get('/nurse/details/stats', (req, res, next) => {
+  assignNurseModel.aggregate([
+    {
+      $group:{_id:'$wardCategory', nurseCount: {$sum:1}}
+    }
+  ]).then(r => {
+    let series = []
+    let label = []
+    r.forEach(d => {
+      series.push(d.nurseCount)
+      label.push(d._id)
+    })
+    res.json({
+      series,
+      label
+    })
+  })
+  .catch(e => console.log('Error', e))
 })
 
 //read all nurses who does't have assignment
@@ -217,11 +243,13 @@ router.get('/category/read/all', auth, (req, res, next) => {
 })
 
 //read all ward details
-router.get('/details/read/all', auth, (req, res, next) => {
+router.get('/details/read/all', (req, res, next) => {
   wardModel.find()
   .then(data => res.json(data))
   .catch(e => console.log(`Error: ${e}`))
 })
+
+
 
 
 module.exports = router;
