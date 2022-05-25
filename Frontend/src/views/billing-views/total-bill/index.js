@@ -235,22 +235,23 @@ const Home = () => {
 				  </> : <></>}
 
 				{billData!==null &&
-				
-					<Descriptions title="  ">
-						<Descriptions.Item label="Total Before Tax">{billData.item_charges + billData.room_charges}  </Descriptions.Item>
-						<Descriptions.Item label="Tax"> {(billData.item_charges + billData.room_charges)/10} </Descriptions.Item>
-						<Descriptions.Item label="Total">{(billData.item_charges + billData.room_charges) + (billData.item_charges + billData.room_charges)/10}  </Descriptions.Item>
-					</Descriptions>
+					<div>
+					<Descriptions>
+						<Descriptions.Item label="Total Before Tax">Rs. {billData.item_charges + billData.room_charges} </Descriptions.Item>
+						<Descriptions.Item label="Tax"> Rs. {(billData.item_charges + billData.room_charges)/10} </Descriptions.Item>
+						<Descriptions.Item label="Total">Rs. {(billData.item_charges + billData.room_charges) + (billData.item_charges + billData.room_charges)/10}</Descriptions.Item>
+					</Descriptions></div>
 				}
 			
-					
-				  <Button  shape="round" className="mr-2" type="primary" style={{ marginRight: 30 }}>
+			<div style={{ textAlign: "right", margin: 20 }}>
+				    <Button  shape="round" className="mr-2" type="primary" style={{ marginRight: 30 }}>
                       print
                     </Button>
 
 					<Button shape="round" className="mr-2" type="primary" onClick={markPaid}>
                       Paid
                     </Button>
+			</div>
 				</Card>	
 			
 			</>
