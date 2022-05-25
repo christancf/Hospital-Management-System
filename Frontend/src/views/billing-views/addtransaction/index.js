@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
-import { Form, Input, InputNumber, Button, Select, DatePicker, Card, Spin, Modal, Row, Col, Table } from 'antd';
+import { Form, InputNumber, Button, Select, Card, Spin, Modal, Row, Col, Table } from 'antd';
 import billingService from 'services/BillingService';
 
 const { Option } = Select;
@@ -180,7 +180,9 @@ const Home = () => {
       setTransactionError(true);
       setTransactionData();
     });
-  },[patientname])
+  },[patientname,type])
+
+  
 
   const onFinishTransaction = (values) => {
 
@@ -355,26 +357,6 @@ const Home = () => {
                       </Form.Item>
                     </>
                     } 
-                  {/* <Form.Item name="item_room"
-                    label="Item Name" rules={[{ required: true }]}>
-                    <Select
-                      showSearch
-                      placeholder="Select a Item"
-                      optionFilterProp="children"
-                      onChange={()=> {}}
-                      onSelect={onItemSelect}
-  
-                    >
-                      {itemoptionList}
-                    </Select>
-  
-                  </Form.Item>
-                  <Form.Item name="count"
-                    label="Item Quantity" rules={[{ required: true }]}
-                  >
-                    <InputNumber min={0} max={remainingCount}/>
-  
-                  </Form.Item> */}
   
                   <Form.Item {...tailLayout}>
                     <Button shape="round" className="mr-2" htmlType="button" onClick={() => { form.resetFields(); setType();setPatientname([]); }}>
