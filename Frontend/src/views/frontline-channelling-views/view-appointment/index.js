@@ -1,8 +1,10 @@
 import { Table, Divider, Tag, Spin, Modal, notification  } from 'antd';
+import { FRONTLINE_CHANNELLING_ROLE, ValidateUser } from 'configs/AppConfig';
 import { useState, useEffect } from 'react';
 import channellingService from 'services/FrontlineChannellingService';
 const { confirm } = Modal;
 
+ValidateUser(FRONTLINE_CHANNELLING_ROLE);
 const openNotification = (title, content) => {
     notification.open({
       message: title,
