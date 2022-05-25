@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import {message, Input, Button, Modal, Form, DatePicker, Row, Col, Result} from 'antd';
 import moment from 'moment';
 import { DeleteOutlined, EyeOutlined, ExclamationCircleOutlined} from '@ant-design/icons';
-import wardService from 'services/WardService';
+import wardService from 'services/WardService'
 import './index.css'
+import { ValidateUser, WARD_ROLE } from 'configs/AppConfig';
 
 const { Search } = Input;
 const { confirm } = Modal
@@ -13,6 +14,8 @@ const layout = {
 	labelCol: { span: 8 },
 	wrapperCol: { span: 12 },
 };
+
+ValidateUser(WARD_ROLE)
 
 function disabledDate(current) {
 	return current && current > moment().endOf('day');
@@ -156,7 +159,7 @@ const ViewMore = ({moreDetails}) => {
       staffName: staffDetails.staffName,
       NIC: staffDetails.NIC,
       email: staffDetails.email,
-      role: `${capitalize(moreDetails.role)} Nurse`,
+      role: capitalize(moreDetails.role),
       qualification: staffDetails.qualification,
       assignedDate: moment(moreDetails.assignedDate),
       reassignDate: moment(moreDetails.reassignDate),

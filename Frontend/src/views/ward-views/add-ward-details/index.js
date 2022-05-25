@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { Form, Input, Button, Card, Select, Spin, Modal} from 'antd'
 import wardService from 'services/WardService'
 import { capitalize } from '../assigned-nurse-details'
+import { ValidateUser, WARD_ROLE } from 'configs/AppConfig';
 
 const { Option } = Select
 const key = 'add'
@@ -14,6 +15,7 @@ const tailLayout = {
   wrapperCol: { offset: 15, span: 16 },
 }
 
+ValidateUser(WARD_ROLE)
 
 const AddWard = () => {
   return (

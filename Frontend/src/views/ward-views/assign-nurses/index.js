@@ -3,6 +3,7 @@ import { Form, Input, Button, Card, Select, DatePicker, message, Spin, Modal, Po
 import wardService from 'services/WardService'
 import { capitalize } from '../assigned-nurse-details'
 import moment from 'moment'
+import { ValidateUser, WARD_ROLE } from 'configs/AppConfig';
 
 const { Search } = Input
 const { Option } = Select
@@ -13,18 +14,17 @@ const layout = {
 const tailLayout = {
   wrapperCol: { offset: 15, span: 16 },
 }
-const key = 'assign'
 
-const validateMessages = {
-	required: 'This field is required!',
-	types: {
-		email: 'Not a validate email!',
-		number: 'Not a validate number!',
-	},
-	number: {
-		range: 'Must be between ${min} and ${max}',
-	},
-};
+const POPOVER_MESSAGE = {
+	'nurse-unit-manager': 'Runs the ward',
+	'associate nurse unit manager':'Acts as the manager when the nurse unit manager is off site',
+	'nurse practitioner':'Highly skiled nurses with an advanced level of training',
+	'registered nurse': 'Provide a high level of day-to-day care',
+	'enrolled nurse': 'Provide basic medical care under the supervision of more senior nurses'
+}
+
+ValidateUser(WARD_ROLE)
+
 
 function disabledDate(current) {
 	return current < moment().endOf('day');
@@ -130,8 +130,6 @@ const AssignNursesForm = () => {
 		})
 	}, [category])
   const onFinish = values => {
-		values.role = ""
-		if(checked) values.role = "head"
 		delete values.name
 		delete values.qualification
 		values.assignedDate = (new Date()).getTime()
@@ -145,7 +143,8 @@ const AssignNursesForm = () => {
         "Category added successfully",
         true
       )
-      form.resetFields()
+      // form.resetFields()
+			setCategory()
 		})
 		.catch(() => {
 			ShowModal(
@@ -266,16 +265,30 @@ const AssignNursesForm = () => {
 				<Form.Item label="Role" name="role" rules={[{ required: true, message: 'Please select a role' }]}>
 					<Select placeholder='Select a role' id="role" >
 						<Option value='nurse unit manager'>
-							<div style={{left: '20%'}}>
-								<Popover placement="left" title={'hahah'} content={'hmmmm'} trigger="hover" >
-									Nurse Unit Manager
-								</Popover>
-							</div>
+							<Popover placement="left" content={POPOVER_MESSAGE['nurse-unit-manager']} trigger="hover">
+								Nurse Unit Manager
+							</Popover>
 						</Option>
-						<Option value='associate nurse unit manager'>Associate Nurse Unit Manager</Option>
-						<Option value='nurse practitioner'>Nurse Practitioner</Option>
-						<Option value='registered nurse'>Registered Nurse</Option>
-						<Option value='enrolled nurse'>Enrolled Nurse</Option>
+						<Option value='associate nurse unit manager'>
+							<Popover placement="left" content={POPOVER_MESSAGE['associate nurse unit manager']} trigger="hover">
+								Associate Nurse Unit Manager
+							</Popover>
+						</Option>
+						<Option value='nurse practitioner'>
+							<Popover placement="left" content={POPOVER_MESSAGE['nurse practitioner']} trigger="hover">	
+								Nurse Practitioner
+							</Popover>
+						</Option>
+						<Option value='registered nurse'>
+							<Popover placement="left" content={POPOVER_MESSAGE['registered nurse']} trigger="hover">	
+								Registered Nurse
+							</Popover>
+						</Option>
+						<Option value='enrolled nurse'>
+							<Popover placement="left" content={POPOVER_MESSAGE['enrolled nurse']} trigger="hover">
+								Enrolled Nurse
+							</Popover>
+						</Option>
 					</Select>
 				</Form.Item>
 				<Form.Item {...tailLayout}>

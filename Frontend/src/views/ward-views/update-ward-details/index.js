@@ -4,6 +4,8 @@ import wardService from 'services/WardService'
 import { ShowModal } from '../add-ward-details'
 import { numberValidation } from '../add-ward-details'
 import { capitalize } from '../assigned-nurse-details'
+import { ValidateUser, WARD_ROLE } from 'configs/AppConfig';
+
 const { Search } = Input
 const { Option } = Select
 
@@ -15,7 +17,7 @@ const tailLayout = {
   wrapperCol: { offset: 15, span: 16 },
 }
 
-const key = 'update'
+ValidateUser(WARD_ROLE)
 
 const UpdateWard = () => {
   return (
