@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Form, Input, Button, Checkbox, Card, Select, DatePicker, message, Spin, Modal} from 'antd'
+import { Form, Input, Button, Card, Select, DatePicker, message, Spin, Modal, Popover} from 'antd'
 import wardService from 'services/WardService'
 import { capitalize } from '../assigned-nurse-details'
 import moment from 'moment'
@@ -85,38 +85,53 @@ const ShowModal = (title, delay, innercontent, isSuccess) => {
 
 const AssignNursesForm = () => {
 	const [form] = Form.useForm()
-	const [loading, setLoading] = useState(true)
-	const [error, setError] = useState(false)
-	const [data, setData] = useState()
+	const [categoryLoading, setCategoryLoading] = useState(true)
+	const [categoryError, setCategoryError] = useState(false)
+	const [categoryData, setCategoryData] = useState()
 	const [category, setCategory] = useState()
-	const [options, setOptions] = useState()
+	const [categoryOptions, setCategoryOptions] = useState()
+	const [checked, setChecked] = useState(false)
+	const [nurseData, setNurseData] = useState()
+	const [nurseDataLoading, setNurseDataLoading] = useState(true)
+	const [nurseDataError, setNurseDataError] = useState(false)
 
 	useEffect(() => {
+		wardService.getAllUnassignedNurseDetails()
+		.then(res => {
+			setNurseData(res)
+			setNurseDataLoading(false)
+		}).catch((err) => {
+			setNurseDataLoading(false)
+			setNurseDataError(true)
+			setNurseData()
+		})
 		wardService.readWardCategory()
 		.then((res) => {
 			console.log('Category')
 			console.log(res)
-			setData(res)
-			setLoading(false)
+			setCategoryData(res)
+			setCategoryLoading(false)
 
 		}).catch((err) => {
-			setLoading(false)
-			setError(true)
-			setData()
+			setCategoryLoading(false)
+			setCategoryError(true)
+			setCategoryData()
 		})
 		console.log('Use Effect')
 		wardService.readWardCategoryIDs(category)
 		.then((res) => {
 			console.log('Options')
 			console.log(res)
-			setOptions(res)
+			setCategoryOptions(res)
 		})
 		.catch((e) => {
-			setOptions()
+			setCategoryOptions()
 			console.log(`Error: ${ e }`)
 		})
 	}, [category])
   const onFinish = values => {
+		values.role = ""
+		if(checked) values.role = "head"
 		delete values.name
 		delete values.qualification
 		values.assignedDate = (new Date()).getTime()
@@ -142,11 +157,18 @@ const AssignNursesForm = () => {
 		})
 
 		form.resetFields()
-  };
+  }
 
   const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo);
-  };
+  }
+
+	const handleCheckBox = e => {
+		setChecked(prevChecked => {
+			if(prevChecked) return prevChecked = false
+			return prevChecked = true
+		})
+	}
   
 	const searchById = (id) => {
     wardService.getNurseDetails(id)
@@ -177,22 +199,35 @@ const AssignNursesForm = () => {
 		}).catch(e => console.log(`Error: ${e}`))
 	}
 
-	if (loading) {
+	const setDetails = id => {
+    nurseData.map(d => {
+      if(id === d.staffID){
+        form.setFieldsValue({
+          name: d.staffName,
+					qualification: d.qualification
+        })
+        return
+      }
+    })
+    document.getElementById("nurseId").setAttribute('disabled', 'true')
+  }
+
+	if (nurseDataLoading || categoryLoading) {
 		return (
 			<>
 				<center>
-					<Spin size="large" tip="Loading..." delay={500} spinning={loading} />
+					<Spin size="large" tip="Loading..." delay={500} spinning={nurseDataLoading && categoryLoading} />
 				</center>
 
 			</>
 		)
 	}
-	else if (error) {
+	else if (nurseDataError || categoryError) {
 
 		return (
 			<>
 				<center>
-					<Spin size="large" tip="Loading..." delay={500} spinning={loading} />
+					<Spin size="large" tip="Loading..." delay={500} spinning={nurseDataLoading && categoryLoading} />
 				</center>
 
 			</>
@@ -203,7 +238,11 @@ const AssignNursesForm = () => {
 		return (
 			<Form {...layout} name="Assign Nurses" form={form} onFinish={onFinish} initialValues={{ remember: true }}>
 				<Form.Item label="Nurse ID" name="id" rules={[{ required: true, message: 'Please input ward ID!' }]}>
-					<Search placeholder="Nurse ID" id="id" onSearch={id => searchById(id)} enterButton />
+				<Select showSearch allowClear id="nurseId" placeholder='Select a category' onChange={setDetails}>
+            { nurseData.map(d => (
+              <Option value={d.staffID}>{`${d.staffID} - ${d.staffName}`}</Option>
+            ))}
+          </Select>
 				</Form.Item>
 				<Form.Item label="Name" name="name" rules={[{ required: true }]}>
 					<Input disabled={true} id="name" />
@@ -215,18 +254,28 @@ const AssignNursesForm = () => {
 					<DatePicker disabledDate={disabledDate}/>
 				</Form.Item>
 				<Form.Item label="Category" name="category" rules={[{ required: true, message: 'Please select ward category' }]}>
-					<Select id="category" onChange={c => setCategory(c)} showSearch allowClear>
-						{data.map(d => (<Option value={d._id}>{capitalize(d._id)}</Option>))}
+					<Select id="category" onChange={setCategory} showSearch allowClear>
+						{categoryData.map(d => (<Option value={d._id}>{capitalize(d._id)}</Option>))}
 					</Select>
 				</Form.Item>
 				<Form.Item label="Ward ID" name="wardID" rules={[{ required: true, message: 'Please select ward id' }]}>
 					<Select placeholder='Ward ID' id="wardId" >
-						{options? options.map(d => (<Option value={d.id}>{d.id}</Option>)): console.log('undefined')}
+						{categoryOptions? categoryOptions.map(d => (<Option value={d.id}>{d.id}</Option>)): console.log('undefined')}
 					</Select>
 				</Form.Item>
-				<Form.Item label="Role" name="role">
-					<Select allowClear>
-						<Option value="head">Head Nurse</Option>
+				<Form.Item label="Role" name="role" rules={[{ required: true, message: 'Please select a role' }]}>
+					<Select placeholder='Select a role' id="role" >
+						<Option value='nurse unit manager'>
+							<div style={{left: '20%'}}>
+								<Popover placement="left" title={'hahah'} content={'hmmmm'} trigger="hover" >
+									Nurse Unit Manager
+								</Popover>
+							</div>
+						</Option>
+						<Option value='associate nurse unit manager'>Associate Nurse Unit Manager</Option>
+						<Option value='nurse practitioner'>Nurse Practitioner</Option>
+						<Option value='registered nurse'>Registered Nurse</Option>
+						<Option value='enrolled nurse'>Enrolled Nurse</Option>
 					</Select>
 				</Form.Item>
 				<Form.Item {...tailLayout}>

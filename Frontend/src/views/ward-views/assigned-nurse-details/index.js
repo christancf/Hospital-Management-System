@@ -111,7 +111,7 @@ const AssignedNurseDetails= () => {
               <div>
                 <span className='title'>Staff ID: </span><span className='value'>{d.nurseID}</span><br/>
                 <span className='title'>Staff Name: </span><span className='value'>{d.details[0].staffName}</span><br/>
-                <span className='title'>Ward: </span><span className='value'>{(d.wardCategory === 'icu')? d.wardCategory.toUpperCase() : d.wardCategory[0].toUpperCase() + d.wardCategory.substring(1)}</span><br/>
+                <span className='title'>Ward: </span><span className='value'>{capitalize(d.wardCategory)}</span><br/>
                 <span className='title'>Ward Unit: </span><span className='value'>{d.wardID}</span><br/>      
                 <GetStatus id={d.nurseID}/>
                 <Button className="bin" htmlType="button" onClick={() => showDeleteConfirm(d.nurseID, d.details[0].staffName)} icon={<DeleteOutlined id="delete"/>}></Button>
@@ -156,7 +156,7 @@ const ViewMore = ({moreDetails}) => {
       staffName: staffDetails.staffName,
       NIC: staffDetails.NIC,
       email: staffDetails.email,
-      role: capitalize(moreDetails.role || 'normal'),
+      role: `${capitalize(moreDetails.role)} Nurse`,
       qualification: staffDetails.qualification,
       assignedDate: moment(moreDetails.assignedDate),
       reassignDate: moment(moreDetails.reassignDate),
