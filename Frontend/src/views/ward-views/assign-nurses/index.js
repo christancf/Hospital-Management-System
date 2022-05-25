@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Form, Input, Button, Checkbox, Card, Select, DatePicker, message, Spin} from 'antd';
-import wardService from 'services/WardService';
-import { fromPairs } from 'lodash';
+import { Form, Input, Button, Checkbox, Card, Select, DatePicker, message, Spin, Modal} from 'antd'
+import wardService from 'services/WardService'
+import { capitalize } from '../assigned-nurse-details'
+import moment from 'moment'
+
 const { Search } = Input
 const { Option } = Select
 const layout = {
@@ -24,6 +26,10 @@ const validateMessages = {
 	},
 };
 
+function disabledDate(current) {
+	return current < moment().endOf('day');
+}
+
 const AssignNurses = () => {
   return (
     <>
@@ -34,6 +40,48 @@ const AssignNurses = () => {
 		</>
   )
 }
+
+const ShowModal = (title, delay, innercontent, isSuccess) => {
+
+  if (isSuccess) {
+    const modal = Modal.success({
+      title: title,
+      content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+      closable: true,
+      maskClosable: true,
+      okText: 'Go to Assigned nurses page',
+      onOk: () => {window.location ='../nurse/details'}
+    });
+    const timer = setInterval(() => {
+      delay -= 1;
+      modal.update({
+        content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+      });
+    }, 1000);
+    setTimeout(() => {
+      clearInterval(timer);
+      modal.destroy()
+    }, delay * 1000)
+  }
+  else {
+    const modal = Modal.error({
+      title: title,
+      content: `${innercontent}.This popup will close in ${delay} seconds.`,
+    });
+    const timer = setInterval(() => {
+      delay -= 1;
+      
+      modal.update({
+        content: `${innercontent}.This popup will close in ${delay} seconds.`,
+      });
+    }, 1000);
+    setTimeout(() => {
+      clearInterval(timer);
+      modal.destroy();
+    }, delay * 1000);
+  }
+}
+
 
 const AssignNursesForm = () => {
 	const [form] = Form.useForm()
@@ -69,15 +117,29 @@ const AssignNursesForm = () => {
 		})
 	}, [category])
   const onFinish = values => {
-		message.loading({content: 'Please wait...', key})
 		delete values.name
 		delete values.qualification
 		values.assignedDate = (new Date()).getTime()
 		values.reassignDate = values.reassignDate._d.getTime()
     console.log(values)
     wardService.assignNurse(values)
-		.then(() => message.success({content: `Nurse ${values.id} has been successfully assigned`, key, duration:2}))
-		.catch(() => message.error({content: `Nurse ${values.id} could not be assigned`, key, duration:2}))
+		.then(() => {
+			ShowModal(
+        "Successful!",
+        4,
+        "Category added successfully",
+        true
+      )
+      form.resetFields()
+		})
+		.catch(() => {
+			ShowModal(
+        "Try again!",
+        4,
+        "There was an unexpected error. Try again later.",
+        true
+      )
+		})
 
 		form.resetFields()
   };
@@ -150,23 +212,16 @@ const AssignNursesForm = () => {
 					<Input disabled={true} id="qualification" />
 				</Form.Item>
 				<Form.Item label="Reassign Date" name="reassignDate" rules={[{ required: true, message: 'Please select reassign date' }]}>
-					<DatePicker/>
+					<DatePicker disabledDate={disabledDate}/>
 				</Form.Item>
 				<Form.Item label="Category" name="category" rules={[{ required: true, message: 'Please select ward category' }]}>
-					<Select id="category" onChange={c => setCategory(c)} allowClear>
-						{data.map(d => (
-							<Option value={d._id}>{(d._id === 'icu')? d._id.toUpperCase() : d._id[0].toUpperCase()+d._id.substring(1)}</Option>
-						))}
+					<Select id="category" onChange={c => setCategory(c)} showSearch allowClear>
+						{data.map(d => (<Option value={d._id}>{capitalize(d._id)}</Option>))}
 					</Select>
 				</Form.Item>
 				<Form.Item label="Ward ID" name="wardID" rules={[{ required: true, message: 'Please select ward id' }]}>
 					<Select placeholder='Ward ID' id="wardId" >
-						{/*options.map(d => (
-							<Option value={d.id}>{d.id}</Option>
-						))*/
-							console.log('Options inside select')}{
-							options? options.map(d => (<Option value={d.id}>{d.id}</Option>)): console.log('undefined')
-						}
+						{options? options.map(d => (<Option value={d.id}>{d.id}</Option>)): console.log('undefined')}
 					</Select>
 				</Form.Item>
 				<Form.Item label="Role" name="role">
