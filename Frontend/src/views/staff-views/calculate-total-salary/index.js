@@ -34,8 +34,7 @@ const CalculateTotalSalary = () => {
 	const [bonusData, setBonusData] = useState()	
 	const [otData, setOtData] = useState()
 	const [staffData, setStaffData] = useState()
-	const [monthData, setMonthData] = useState(setDefaultMonth() + 1)
-
+	const [monthData, setMonthData] = useState(setDefaultMonth())
 
 	useEffect(() => {
 
@@ -57,7 +56,7 @@ const CalculateTotalSalary = () => {
 				setBonusData()
 			})
 
-			staffService.getOThours({'month': monthData})
+			staffService.getOThours({month: monthData})
 			.then((ot) => {
 				console.log('ot', ot)
 				setOtData(ot)
@@ -77,6 +76,21 @@ const CalculateTotalSalary = () => {
 
 
 	}, [monthData])
+
+	const setOnChangeMonth = e => {
+
+		// setBonusData()
+		// setOtData()
+		// setStaffData()
+
+		setBonusLoading(true)
+		setOtLoading(true)
+		setStaffLoading(true)
+
+		
+		setMonthData(e.key)
+
+	}
 
 
 	const columns = [
@@ -143,16 +157,23 @@ const CalculateTotalSalary = () => {
 	  } else {
 
 		staffData.map(staff => {
-			//console.log('staff staff', staff)
+		
 			otData.map(ot => {
-				if(staff.othrs == null) {
+
+				try {
+					if(!staff?.othrs) {
+						(ot._id === staff.staffID) ? staff.othrs = ot.othrs : staff.othrs = 0
+					}
+				} catch (error) {
 					staff.othrs = 0
+					console.log('catch error')
 				}
-				if(!staff?.othrs) {
-					(ot._id === staff.staffID) ? staff.othrs = ot.othrs : staff.othrs = 0
-				}
+
+				return null						
 			})
+
 			bonusData.map(bonus => {
+
 				if(!staff?.bonuses) {
 					(bonus._id === staff.staffID) ? staff.bonuses = bonus.count : staff.bonuses = 0
 				}
@@ -175,6 +196,7 @@ const CalculateTotalSalary = () => {
 		console.log(staffData)
 		
 			const year = new Date().getFullYear()
+			console.log('month data bbbbb', monthData)
 			return (
 				<div>
 					<Title>Staff Salary - { year }</Title>
@@ -183,8 +205,9 @@ const CalculateTotalSalary = () => {
 						style={{ width: 300}}
 						placeholder="Select a month"
 						labelInValue
-						defaultValue={{key: setDefaultMonth()}}
-						onChange={v => setMonthData(v.key)}
+						defaultValue={{key: monthData}}
+						onChange={setOnChangeMonth}
+						
 					>
 						<Option value={0}>December 26 - January 25</Option>
 						<Option value={1}>January 26 - February 25</Option>
