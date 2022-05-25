@@ -14,7 +14,7 @@ const Home = () => {
 			title: 'Bill ID',
 			dataIndex: 'billId',
 			key: 'billId',
-			render: text => <a>{text}</a>,
+		
 		},
 		{
 			title: 'Patient Name',
@@ -103,9 +103,6 @@ const Home = () => {
 				patientName : item.patient_name,
 				roomCharge: item.room_charges,
 				itemCharge : item.item_charges,
-				doctorCharge : item.doctor_charges,
-				tax: item.tax,
-				total: item.total,
 				status: item.status
 			}
 		});

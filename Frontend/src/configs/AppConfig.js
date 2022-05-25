@@ -16,6 +16,19 @@ export const MORTUARY_PREFIX_PATH = '/mortuary';
 export const STAFF_PREFIX_PATH = '/staff';
 export const AUTH_PREFIX_PATH = '/auth';
 
+// roles
+
+export const FRONTLINE_CHANNELLING_ROLE = '';
+export const DOCTOR_CHANNELLING_ROLE = 'doctor';
+export const INVENTORY_ROLE = '';
+export const BILLING_ROLE = '';
+export const PATIENT_ROLE = '';
+export const BLOODBANK_ROLE = '';
+export const MORTUARY_ROLE = '';
+export const STAFF_ROLE = '';
+export const WARD_ROLE = '';
+
+
 export const THEME_CONFIG = {
 	"navType": "SIDE",
 	"sideNavTheme": "SIDE_NAV_LIGHT",

@@ -128,7 +128,7 @@ const Home = () => {
 
     return (
       <>
-        <center><h1>Mortuary Space Allocation</h1></center>
+        <center><h1 style={{marginBottom: "30px", fontWeight: "bold"}}>Mortuary Space Allocation</h1></center>
         <GridList data={cabinetArray}></GridList>
       </>
     )

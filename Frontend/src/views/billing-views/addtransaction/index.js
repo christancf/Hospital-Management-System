@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
-import { Form, Input, InputNumber, Button, Select, DatePicker, Card, Spin, Modal, Row, Col, Table } from 'antd';
+import { Form, InputNumber, Button, Select, Card, Spin, Modal, Row, Col, Table } from 'antd';
 import billingService from 'services/BillingService';
 
 const { Option } = Select;
@@ -10,7 +10,7 @@ const Home = () => {
 
   const [form] = Form.useForm();
   const [patientLoading, setPatientLoading] = useState(true);
-  const [patientname, setPatientname] = useState(false);
+  const [patientname, setPatientname] = useState([]);
   const [patientError, setPatientError] = useState(false);
   const [patientData, setPatientData] = useState();
 
@@ -24,17 +24,17 @@ const Home = () => {
   
   const [roomLoading, setRoomLoading] = useState(true);
   const [roomData, setRoomData] = useState();
-
+  const [type,setType]=useState();
   const[remainingCount,setRemainingCount] = useState();
   
 
 
   
 
-  const columns = [
+  const itemColumns = [
     {
       title: 'Item ID',
-      dataIndex: 'itemId',
+      dataIndex: 'id',
       key: 'itemId',
     },
     {
@@ -53,8 +53,30 @@ const Home = () => {
       key: 'total',
     }
   ];
+  const roomColumns = [
+    {
+      title: 'Room ID',
+      dataIndex: 'id',
+      key: 'itemId',
+    },
+    {
+      title: 'Hours',
+      dataIndex: 'count',
+      key: 'qty',
+    },
+    {
+      title: 'Price per Hour',
+      dataIndex: 'charge',
+      key: 'charge',
+    },
+    {
+      title: 'Total',
+      dataIndex: 'total',
+      key: 'total',
+    }
+  ];
 
-  let TransactionList = {}
+
 
   function ShowModel(title, delay, innercontent, isSuccess) {
 
@@ -127,6 +149,41 @@ const Home = () => {
 
   }, []);
 
+  useEffect(() => {
+    let TransactionListItem = {}
+    let TransactionListRoom = {}
+    console.log(patientname)
+    billingService.getAllTransactionToPatient(patientname[0]).then((resp) => {
+
+      TransactionListItem = resp.payload.filter((t) =>{return t.type==="item"}).map((transaction)=>{
+        return {
+          id: transaction.id,
+          count: transaction.count,
+          charge: transaction.charge,
+          total: transaction.total
+        }
+      })
+      TransactionListRoom = resp.payload.filter((t) =>{return t.type==="room"}).map((transaction)=>{
+        return {
+          id: transaction.id,
+          count: transaction.count,
+          charge: transaction.charge,
+          total: transaction.total
+        }
+      })
+      
+      setTransactionData([TransactionListItem,TransactionListRoom]);
+      setTransactionLoading(false);
+
+    }).catch((err) => {
+      setTransactionLoading(false);
+      setTransactionError(true);
+      setTransactionData();
+    });
+  },[patientname,type])
+
+  
+
   const onFinishTransaction = (values) => {
 
     //console.log(values);
@@ -134,10 +191,10 @@ const Home = () => {
     const sendingObj = {
       patientId: values.patientid[0],
       type: values.type,
-      id: values.item[0],
+      id: values.item_room[0],
       count: values.count,
       patientName: values.patientid[1],
-      charge:values.item[1]
+      charge:values.item_room[1]
     }
 
     console.log(sendingObj);
@@ -151,8 +208,8 @@ const Home = () => {
           "Your Transaction successfully added",
           true
         );
-        form.resetFields(['type','item','count']);
-        onPatientSearch(form.getFieldValue('patientid'));
+        form.resetFields(['type','item_room','count']);
+        setType()
 
       }
       else {
@@ -179,32 +236,6 @@ const Home = () => {
 
   }
 
-  const onPatientSearch = (value) => {
-
-
-    setPatientname(true);
-
-    billingService.getAllTransactionToPatient(value[0]).then((resp) => {
-
-      TransactionList = resp.payload.map((transaction) => {
-        return {
-          itemId: transaction.id,
-          count: transaction.count,
-          charge: transaction.charge,
-          total: transaction.total
-        }
-      });
-      setTransactionData(TransactionList);
-      setTransactionLoading(false);
-
-    }).catch((err) => {
-      setTransactionLoading(false);
-      setTransactionError(true);
-      setTransactionData();
-    });
-
-  }
-
   const onItemSelect = (value) => {
     setRemainingCount(value[2])
   }
@@ -226,123 +257,169 @@ const Home = () => {
       )
     })
 
-    if (!itemLoading) {
+    if(!roomLoading){
 
-      const itemoptionList = itemData.map((item) => {
+      const roomOptionList = roomData.map((room) => {
         return (
-          <Option value={[item.id,item.unit_price,item.total_quantity]}>{item.item_name} - {item.id}</Option>
+          <Option value={[room.id,room.roomCharge]}>{room.id}</Option>
         )
       })
 
-      return (
-        <>
-          <Row>
-            <Col span={12}> <Card style={{ width: 600, height: 600 }}>
-              <h2 className='text-center'>Add Transaction</h2>
-              <Form
-                {...formLayout}
-                form={form}
-                onFinish={onFinishTransaction}
-              >
 
-                <Form.Item name="patientid"
-                  label="Patient ID" rules={[{ required: true }]}>
-                  <Select
-                    showSearch
-                    placeholder="Select a Patient"
-                    optionFilterProp="children"
-                    onSelect={onPatientSearch}
-                  >
-                    {optionList}
-                  </Select>
+      if (!itemLoading) {
 
-                </Form.Item>
-
-                <Form.Item
-                  name="type"
-                  label="Type" rules={[{ required: true }]}
+        const itemoptionList = itemData.map((item) => {
+          return (
+            <Option value={[item.id,item.unit_price,item.total_quantity]}>{item.item_name} - {item.id}</Option>
+          )
+        })
+  
+        return (
+          <>
+            <Row>
+              <Col span={12}> <Card style={{ width: 600, height: 600 }}>
+                <h2 className='text-center'>Add Transaction</h2>
+                <Form
+                  {...formLayout}
+                  form={form}
+                  onFinish={onFinishTransaction}
                 >
-                  <Select
-                    placeholder="Select Type"
-                    filterOption={false}
-                    style={{ width: '100%' }}
+  
+                  <Form.Item name="patientid"
+                    label="Patient ID" rules={[{ required: true }]}>
+                    <Select
+                      showSearch
+                      placeholder="Select a Patient"
+                      optionFilterProp="children"
+                      onChange={c => {setPatientname(c)}}
+                    >
+                      {optionList}
+                    </Select>
+  
+                  </Form.Item>
+  
+                  <Form.Item
+                    name="type"
+                    label="Type" rules={[{ required: true }]}
                   >
-                    <Option key="item">Item Charges</Option>
-                    <Option key="room">Room Charges</Option>
-                  </Select>
-                </Form.Item>
+                    <Select
+                      placeholder="Select Type"
+                      filterOption={false}
+                      style={{ width: '100%' }}
+                      onChange={c=>{setType(c)}}
+                    >
+                      <Option key="item">Item Charges</Option>
+                      <Option key="room">Room Charges</Option>
+                    </Select>
+                  </Form.Item>
+  
+                   {type==="item"&&
+                    <>
+                      <Form.Item name="item_room"
+                      label="Item Name" rules={[{ required: true }]}>
+                      <Select
+                        showSearch
+                        placeholder="Select a Item"
+                        optionFilterProp="children"
+                        onChange={() => { } }
+                        onSelect={onItemSelect}
 
+                      >
+                        {itemoptionList}
+                      </Select>
 
-                <Form.Item name="item"
-                  label="Item Name" rules={[{ required: true }]}>
-                  <Select
-                    showSearch
-                    placeholder="Select a Item"
-                    optionFilterProp="children"
-                    onChange={()=> {}}
-                    onSelect={onItemSelect}
+                      </Form.Item>
+                      <Form.Item name="count"
+                      label="Item Quantity" rules={[{ required: true }]}
+                    >
+                        <InputNumber min={0} max={remainingCount} />
 
-                  >
-                    {itemoptionList}
-                  </Select>
+                      </Form.Item>
+                    </>
+                    }
+                    {type==="room"&&
+                    <>
+                      <Form.Item name="item_room"
+                      label="Room ID" rules={[{ required: true }]}>
+                      <Select
+                        showSearch
+                        placeholder="Select a Room"
+                        optionFilterProp="children"
+                      >
+                        {roomOptionList}
+                      </Select>
 
-                </Form.Item>
-                <Form.Item name="count"
-                  label="Item Quantity" rules={[{ required: true }]}
-                >
-                  <InputNumber min={0} max={remainingCount}/>
-
-                </Form.Item>
-
-                <Form.Item {...tailLayout}>
-                  <Button shape="round" className="mr-2" htmlType="button" onClick={() => { form.resetFields(); }}>
-                    Clear
-                  </Button>
-                  <Button shape="round" className="mr-2" type="primary" htmlType="submit">
-                    Add / Update
-                  </Button>
-
-                  <Button shape="round" className="mr-2" type="primary" onClick={() => {
-                    window.location = '../billing/billlist';
-                  }}>
-                    Finish
-                  </Button>
-                </Form.Item>
-
-
-              </Form>
-
-
-            </Card>
-            </Col>
-            <Col span={12}> <Card style={{ width: 600, height: 600 }}>
-
-              {!transactionLoading ? <>
-                <Table columns={columns} dataSource={transactionData} />
-              </> : <></>}
-
-
-
-            </Card>
-            </Col>
-          </Row>
-
-
-
-        </>
-      )
-
+                      </Form.Item>
+                      <Form.Item name="count"
+                      label="Hours" rules={[{ required: true }]}
+                    >
+                        <InputNumber min={1}/>
+                      </Form.Item>
+                    </>
+                    } 
+  
+                  <Form.Item {...tailLayout}>
+                    <Button shape="round" className="mr-2" htmlType="button" onClick={() => { form.resetFields(); setType();setPatientname([]); }}>
+                      Clear
+                    </Button>
+                    <Button shape="round" className="mr-2" type="primary" htmlType="submit">
+                      Add / Update
+                    </Button>
+  
+                    <Button shape="round" className="mr-2" type="primary" onClick={() => {
+                      window.location = '../billing/billlist';
+                    }}>
+                      Finish
+                    </Button>
+                  </Form.Item>
+  
+  
+                </Form>
+  
+  
+              </Card>
+              </Col>
+              <Col span={12}> <Card style={{ width: 600, height: 600 }}>
+  
+                {!transactionLoading ? <>
+                  <Table columns={itemColumns} dataSource={transactionData[0]} />
+                  <Table columns={roomColumns} dataSource={transactionData[1]} />
+                </> : <></>}
+  
+  
+  
+              </Card>
+              </Col>
+            </Row>
+  
+  
+  
+          </>
+        )
+  
+      }
+      else {
+        return (
+          <>
+            <center>
+              <Spin size="large" tip="Loading..." delay={500} spinning={patientLoading} />
+            </center>
+  
+          </>
+        )
+      }
     }
     else {
       return (
         <>
           <center>
-            <Spin size="large" tip="Loading..." delay={500} spinning={patientLoading} />
+            <Spin size="large" tip="Loading..." delay={500} spinning={roomLoading} />
           </center>
-
+  
         </>
       )
     }
+    
 
 
 
