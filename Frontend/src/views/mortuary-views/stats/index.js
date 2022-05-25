@@ -24,7 +24,6 @@ const App = () => {
   const [month, setMonth] = useState(null);
   function onChange(date, dateString) {
     var m = moment(date).valueOf();
-    console.log(m);
     setMonth(m);
   }
   return (
@@ -44,7 +43,6 @@ const App = () => {
 };
 
 const Home = ({month}) => {
-  console.log(month)
   const [loading1, setLoading1] = useState(true);
   const [error1, setError1] = useState(false);
   const [key, setKey] = useState(null);
@@ -59,7 +57,6 @@ const Home = ({month}) => {
  
   useEffect(() => {
     if (month == null) {
-      console.log("null")
     //from all data
     mortuaryService
       .stat()
@@ -118,7 +115,6 @@ const Home = ({month}) => {
         setFemale();
       });
     } else {
-      console.log("not null")
       //according to month
     mortuaryService
       .statMonth({month: month})
