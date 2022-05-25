@@ -7,8 +7,9 @@ export const DoctorChannellingViews = () => {
   return (
     <Suspense fallback={<Loading cover="content"/>}>
       <Switch>
-        <Route path={`${DOCTOR_CHANNELLING_PREFIX_PATH}/home`} component={lazy(() => import(`./home`))} />
-        <Redirect from={`${DOCTOR_CHANNELLING_PREFIX_PATH}`} to={`${DOCTOR_CHANNELLING_PREFIX_PATH}/home`} />
+        <Route path={`${DOCTOR_CHANNELLING_PREFIX_PATH}/list`} component={lazy(() => import(`./view-appointment`))} />
+        <Route path={`${DOCTOR_CHANNELLING_PREFIX_PATH}/reports`} component={lazy(() => import(`./reports`))} />
+        <Redirect from={`${DOCTOR_CHANNELLING_PREFIX_PATH}`} to={`${DOCTOR_CHANNELLING_PREFIX_PATH}/list`} />
       </Switch>
     </Suspense>
   )

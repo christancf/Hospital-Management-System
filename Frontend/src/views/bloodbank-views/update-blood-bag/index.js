@@ -62,9 +62,6 @@ const bloodGroup = [
 
 
 const UpdateBloodBag = () => {
-	// const onReset = () => {
-	// 	form.resetFields();
-	// };
 
 	const [form] = Form.useForm();
 
@@ -133,7 +130,7 @@ const UpdateBloodBag = () => {
 			donorName: values.donorName,
 			donorNIC: values.donorNIC,
 			donationNumber: values.donationNumber,
-			donateDate: moment(values.donateDate).format("X"),
+			donateDate: moment(values.donateDate).valueOf(),
 			place: values.place,
 			bloodGroup: values.bloodGroup,
 		}
@@ -179,11 +176,8 @@ const UpdateBloodBag = () => {
 	else {
 
 		function disabledDate2(current) {
-			// Can not select days before today and today
 			return current && current > moment().endOf('day');
 		  }
-		// var myDate = new Date(data.dateOfBirth);
-		// myDate.toLocaleString();
 
 		return (
 			<Form {...layout} name="BloodBagUpdate" onFinish={onFinish} validateMessages={validateMessages}>
@@ -200,7 +194,7 @@ const UpdateBloodBag = () => {
 				<Form.Item name="donationNumber" initialValue={data.donationNumber} label=" Donation Number" rules={[{ required: true }]} placeholder="Donation Number">
 					<Input />
 				</Form.Item>
-				<Form.Item name="donateDate" initialValue={moment(new Date(data.donateDate * 1000))} label="Donate Date" rules={[{ required: true }]} placeholder=" Donate Date">
+				<Form.Item name="donateDate" initialValue={moment(new Date(data.donateDate))} label="Donate Date" rules={[{ required: true }]} placeholder=" Donate Date">
 					<DatePicker disabledDate={disabledDate2} />
 				</Form.Item>
 				<Form.Item name="place" initialValue={data.place} label="Place" rules={[{ required: true }]} placeholder="Place">
@@ -219,10 +213,14 @@ const UpdateBloodBag = () => {
 					</Select>
 				</Form.Item>
 
+				<Form.Item label="Volume" name="volume" initialValue={data.volume}>
+					<Input disabled={true} id="Volume" value={1}/>
+				</Form.Item>
+
 				<Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-					{/* <Button className="mr-2" htmlType="button" onClick={onReset}>
-						Reset
-					</Button> */}
+				<Button className="mr-2" htmlType="button" href={`../bloodbank/bags-informations`}>
+							Cancel
+						</Button>
 
 					<Button type="primary" htmlType="submit">
 						Update

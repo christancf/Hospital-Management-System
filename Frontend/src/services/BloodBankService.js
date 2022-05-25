@@ -21,6 +21,15 @@ bloodBankService.updateBloodDetails = function(data) {
   })
 }
 
+bloodBankService.updateBloodTransfusion = function(data) {
+  return fetch({
+    url: '/bloodbag/update-transfusion',
+    method: 'put',
+    data: data
+  })
+}
+
+
 bloodBankService.readBloodDetails = async function () {
   return await fetch({
     url: '/bloodbag/details/read',
@@ -40,6 +49,15 @@ bloodBankService.bloodBagDetails = function (data){
   
   return fetch({
     url: `/bloodbag/read?id=${data}`,
+    method: 'get',
+
+  })
+}
+
+bloodBankService.bloodTransfusionDetails = function (data){
+  
+  return fetch({
+    url: `/bloodbag/readTransfusion?id=${data}`,
     method: 'get',
 
   })
@@ -95,5 +113,35 @@ bloodBankService.updateStatus = function (id,data){
     data: data
   })
 }
+
+bloodBankService.expireBagDetails = function (data){
+
+  return fetch({
+    url: `/bloodbag/details/readExpireBag`,
+    method: 'get',
+    data: data
+  })
+}
+
+bloodBankService.bloodBagsCount = function () {
+  return fetch({
+    url: `/bloodbag/bloodBagsCount`,
+    method: "post",
+  });
+};
+
+bloodBankService.transfusionCount = function () {
+  return fetch({
+    url: `/bloodbag/transfusionCount`,
+    method: "post",
+  });
+};
+
+bloodBankService.availableBagCount = function () {
+  return fetch({
+    url: `/bloodbag/availaleBloodCount`,
+    method: "post",
+  });
+};
 
 export default bloodBankService

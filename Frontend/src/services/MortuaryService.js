@@ -110,4 +110,30 @@ mortuaryService.stat = function () {
     method: "post",
   });
 };
+
+//statMonth
+mortuaryService.statMonth = function (params) {
+  return fetch({
+    url: `/mortuary/statMonth`,
+    method: "post",
+    data: params
+  });
+};
+
+//stat 2
+mortuaryService.stat2 = function () {
+  return fetch({
+    url: `/mortuary/stat2`,
+    method: "post",
+  });
+};
+
+//stat 2 month
+mortuaryService.stat2Month = function (params) {
+  return fetch({
+    url: `/mortuary/stat2Month`,
+    method: "post",
+    data: params
+  });
+};
 export default mortuaryService;

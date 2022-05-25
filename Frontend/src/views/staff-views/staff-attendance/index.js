@@ -1,10 +1,8 @@
 import React from 'react'
-import { Form, Input, Button, message, Card, Select } from 'antd';
+import { Form, Input, Button, Card, Select, Modal } from 'antd';
 import staffService from 'services/StaffService';
 
 const { Search } = Input;
-const checkin = 'checkin'
-const checkout = 'checkout'
 const { Option } = Select
 
 const StaffAttendance = () => {
@@ -25,32 +23,89 @@ const tailLayout = {
 
   const Demo = () => {
 	const [form] = Form.useForm();
+
+	function ShowModel(title, delay, innercontent, isSuccess) {
+
+		if (isSuccess) {
+			const modal = Modal.success({
+				title: title,
+				content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+			});
+			const timer = setInterval(() => {
+				delay -= 1;
+				modal.update({
+					content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+				});
+			}, 1000);
+			setTimeout(() => {
+				clearInterval(timer);
+				modal.destroy();
+				//window.location.href="../staff/display-staff-details";
+			}, delay * 1000);
+		}
+
+		else {
+			const modal = Modal.error({
+				title: title,
+				content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+			});
+			const timer = setInterval(() => {
+				delay -= 1;
+				modal.update({
+					content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+				});
+			}, 1000);
+			setTimeout(() => {
+				clearInterval(timer);
+				modal.destroy();
+			}, delay * 1000);
+		}
+	}
+
 	let staffDetails
 
 	const onFinish = values => {
 
 		let staffID = values.staffID
+
 		if(String(values.attendanceType) === 'check in') {
 
-			//message.loading({content: 'Please wait...', checkin})
 			let checkIn = new Date().getTime();
 
 			staffService.checkInAttendance({staffID, checkIn})
-			.then(() => {
-				message.success({content: 'Successfully Marked Attendance', checkin, duration: 2})
+			.then((status) => {
+				console.log(status)
+				if(status === 'Resigned') {
+					ShowModel("Member is Resigned!", 4, "Cannot mark attendance of a resigned member", false)
+				}
+				else if(status === 'marked') {
+					ShowModel("Successful!", 2, "Check In Attendance marked Successfully", true)
+				}
+				else {
+					ShowModel("Failed!", 4, " Previous Check Out Attendance of this member is not marked", false)
+				}
+			
 			})
 			.catch(() => 
-				message.error({content: 'Please Try Again!', checkIn, duration: 2}))
+			ShowModel("Failed!", 2, "Failed to Mark Check In Attendance", false))
 		}
 		else {
-			//message.loading({content: 'Please wait...', checkout})
 			let checkOut = new Date().getTime();
+			console.log(staffID)
 			staffService.checkOutAttendance({staffID, checkOut})
-			.then(() => {
-				message.success({content: 'Successfully Marked Attendance', checkout, duration: 2})
+			.then((status) => {
+				if(status === 'Resigned') {
+					ShowModel("Member is Resigned!", 4, "Cannot mark attendance of a resigned member", false)
+				}
+				else if(status === 'marked') {
+					ShowModel("Successful!", 2, "Check Out Attendance marked Successfully", true)
+				}
+				else {
+					ShowModel("Failed!", 4, "Check In Attendance of this member is not marked", false)
+				}
 			})
 			.catch(() => 
-				message.error({content: 'Please Try Again!', checkout, duration: 2}))
+			ShowModel("Failed!", 2, "Failed to Mark Check Out Attendance", false))
 		}
 		form.resetFields();
 	};
@@ -64,16 +119,21 @@ const tailLayout = {
 		staffService.readStaffDetails(id)
 		.then((details) => {
 			staffDetails = details[0]
-			document.getElementById('staffName').value = staffDetails.staffName 
-			document.getElementById('NIC').value = staffDetails.NIC
-			document.getElementById('designation').value = staffDetails.designation 
-			document.getElementById('qualification').value = staffDetails.qualification 
+
+			form.setFieldsValue({
+				staffName: staffDetails.staffName,
+				NIC: staffDetails.NIC,
+				designation: staffDetails.designation,
+				qualification: staffDetails.qualification	
+			})
+
+			document.getElementById('staffID').setAttribute('disabled', 'true')
 		})
 		.catch((e) => console.log(`Error: ${ e }`))
 	};
   
 	return (
-		<Card style={{backgroundColor: '#efefef'}}>
+		<Card>
 			<h1 className='text-left' style={{ marginLeft: 460, marginBottom: 20 }}>Staff Attendance</h1>
 			<Form
 				{...layout}
@@ -88,38 +148,42 @@ const tailLayout = {
 				name="staffID"
 				rules={[{ required: true, message: 'Please input the staff ID!' }]}
 				>
-					<Search placeholder="Enter Staff ID" onSearch={id => searchById(id)} enterButton />
+					<Search placeholder="Enter Staff ID" onSearch={id => searchById(id)} enterButton id="staffID" />
 				</Form.Item>
 		
 				<Form.Item
 				label="Name"
 				name="staffName"
+				style={{cursor: 'not-allowed'}}
 				>
-					<Input disabled="true" id="staffName" />
+					<Input style={{pointerEvents: 'none'}}/>
 				</Form.Item>
 		
 				<Form.Item
 				label="NIC"
 				name="NIC"
+				style={{cursor: 'not-allowed'}}
 				>
-					<Input disabled="true" id="NIC" />
+					<Input style={{pointerEvents: 'none'}}/>
 				</Form.Item>
 		
-				<Form.Item
-				label="Designation"
-				name="designation"
-				>
-					<Input disabled="true" id="designation" />
+				<Form.Item name="designation" label="Designation" style={{cursor: 'not-allowed'}}>
+					<Select allowClear style={{pointerEvents: 'none'}}>
+						<Option value="doctor">Doctor</Option>
+						<Option value="nurse">Nurse</Option>
+						<Option value="allied health professionals">Allied Health Professionals</Option>
+					</Select>
 				</Form.Item>
 		
 				<Form.Item
 				label="Qualification"
 				name="qualification"
+				style={{cursor: 'not-allowed'}}
 				>
-					<Input disabled="true" id="qualification" />
+					<Input style={{pointerEvents: 'none'}}/>
 				</Form.Item>
 
-				<Form.Item name="attendanceType" label="Attendance Type" >
+				<Form.Item name="attendanceType" label="Attendance Type" rules={[{ required: true, message: 'Please select the attendance type' }]}>
 					<Select allowClear>
 						<Option value="check in">Check In</Option>
 						<Option value="check out">Check Out</Option>

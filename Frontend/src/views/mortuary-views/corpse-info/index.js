@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { List } from "antd";
+import { List, Card } from "antd";
 import mortuaryService from "services/MortuaryService";
+import { TagsOutlined } from "@ant-design/icons";
+import Icon from "components/util-components/Icon";
+import Flex from "components/shared-components/Flex";
 
 const queryParams = new URLSearchParams(window.location.search);
 const userID = queryParams.get("id");
@@ -23,12 +26,28 @@ const Demo = () => {
       .readForOccupiedCorpsePage(userID)
       .then((res) => {
         const mydata = res.payload[0];
+        Object.keys(mydata).forEach((key) => {
+          if (
+            mydata[key] === null ||
+            mydata[key] == false ||
+            mydata[key] == true ||
+            mydata[key] == ""
+          ) {
+            delete mydata[key];
+          }
+        });
+
         mydata.date_of_birth = new Date(
           mydata.date_of_birth
         ).toLocaleDateString();
         mydata.date_time_of_death = new Date(
           mydata.date_time_of_death
         ).toLocaleString();
+        if (mydata.date_of_release != null) {
+          mydata.date_of_release = new Date(
+            mydata.date_of_release
+          ).toLocaleString();
+        }
         setData(mydata);
         setLoading(false);
       })
@@ -52,39 +71,69 @@ const Demo = () => {
       </>
     );
   } else {
-    let dataset = Object.entries(data)
-    dataset[1][0] = 'Name'
-    dataset[2][0] = 'Sex'
-    dataset[3][0] = 'Address'
-    dataset[4][0] = 'Date of Birth'
-    dataset[5][0] = 'Date & Time of Death'
-    dataset[6][0] = 'Cause of Death'
-    dataset[7][0] = 'Specifics of Death'
-    dataset[8][0] = 'Cabinet Number'
-    // dataset.pop() //remove cabinet number 
+    let dataset = Object.entries(data);
+    function capitalize(s) {
+      s = s.replaceAll("_", " ");
+      const arr = s.split(" ");
+      for (var i = 0; i < arr.length; i++) {
+        arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1);
+      }
+      const str2 = arr.join(" ");
+      return str2;
+    }
+    for (let i = 1; i < dataset.length; i++) {
+      dataset[i][0] = capitalize(dataset[i][0]);
+    }
+    dataset[2][1] = capitalize(dataset[2][1]);
 
-    // for(var i = 0; i < 9; i++) {
-    //   if(dataset[i][1] == "") {
-    //     dataset.pop(i); //remove blank fields
-    //   }
-    // }
-    
-
+    var newData = [];
+    for (let i = 0; i < dataset.length; i++) {
+      let data = {
+        title: dataset[i][0],
+        icon: TagsOutlined,
+        desc: dataset[i][1],
+      };
+      newData.push(data);
+    }
+    console.log(newData);
     return (
       <div>
-        <h1>Data of Corpse {dataset[1][1]}</h1>
-        <List
-          itemLayout="horizontal"
-          dataSource={dataset}
-          renderItem={(item) => (
-            <List.Item>
-              <List.Item.Meta
-                title={item[0]}
-                description={item[1]}
-              />
-            </List.Item>
-          )}
-        />
+        <h3 style={{ width: "100%", textAlign: "center" }}>
+          Data of Corpse : {dataset[1][1]}
+        </h3>
+        <Card
+          style={{
+            width: "50%",
+            margin: "auto",
+            marginTop: "20px",
+            textAlign: "left",
+          }}
+        >
+          <List
+            itemLayout="horizontal"
+            dataSource={newData}
+            renderItem={(item) => (
+              // <List.Item>
+              //   <List.Item.Meta title={item[0]} description={item[1]} />
+              // </List.Item>
+              <List.Item>
+                <Flex
+                  justifyContent="between"
+                  alignItems="center"
+                  // className="w-100"
+                >
+                  <div className="d-flex align-items-center">
+                    <Icon className="h1 mb-0 text-primary" type={item.icon} />
+                    <div className="ml-3">
+                      <h4 className="mb-0">{item.title}</h4>
+                      <p>{item.desc}</p>
+                    </div>
+                  </div>
+                </Flex>
+              </List.Item>
+            )}
+          />
+        </Card>
       </div>
     );
   }

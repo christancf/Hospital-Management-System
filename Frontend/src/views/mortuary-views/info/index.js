@@ -13,7 +13,7 @@ import {
 } from "antd";
 import moment from "moment";
 import mortuaryService from "services/MortuaryService";
-import { filter } from "lodash";
+
 const { Search } = Input;
 const { Option } = Select;
 
@@ -43,16 +43,14 @@ const Home = () => {
             form={form}
             layout="inline"
             onFinish={(values) => {
-              if(values.dod == undefined) {
+              if (values.dod == undefined) {
                 filter(values);
-              form.resetFields();
+                form.resetFields();
               } else {
                 values.dod = moment(values.dod).valueOf();
                 filter(values);
-              form.resetFields();
+                form.resetFields();
               }
-              
-              
             }}
             onFinishFailed={(errorInfo) => {
               console.log("Failed:", errorInfo);
@@ -117,7 +115,7 @@ const Home = () => {
           </Form>
           {/* <Filter onFilter={filter}/> */}
         </Col>
-        <Col >
+        <Col>
           <Search
             placeholder="Search Name..."
             value={selectedVal}
@@ -125,7 +123,7 @@ const Home = () => {
               search(value);
               setSelectedVal();
             }}
-            style={{ width: 300,  }}
+            style={{ width: 300 }}
             enterButton
           />
         </Col>
@@ -152,28 +150,28 @@ const columns = [
   {
     title: "Cause of Death",
     dataIndex: "cause_of_death",
-    render: tag => (
+    render: (tag) => (
       <span>
-        {tag=='Natural' && 
-            <Tag color="green" key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          }
-          {tag=='Suicide' && 
-            <Tag color="gold" key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          }
-          {tag=='Homicide' && 
-            <Tag color="purple" key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          }
-          {tag=='Accident' && 
-            <Tag color="volcano" key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          }
+        {tag == "Natural" && (
+          <Tag color="green" key={tag}>
+            {tag.toUpperCase()}
+          </Tag>
+        )}
+        {tag == "Suicide" && (
+          <Tag color="gold" key={tag}>
+            {tag.toUpperCase()}
+          </Tag>
+        )}
+        {tag == "Homicide" && (
+          <Tag color="purple" key={tag}>
+            {tag.toUpperCase()}
+          </Tag>
+        )}
+        {tag == "Accident" && (
+          <Tag color="volcano" key={tag}>
+            {tag.toUpperCase()}
+          </Tag>
+        )}
       </span>
     ),
   },
@@ -192,18 +190,18 @@ const columns = [
   {
     title: "Status",
     dataIndex: "status",
-    render: tag => (
+    render: (tag) => (
       <span>
-        {tag=='Released' && 
-            <Tag color="green" key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          }
-          {tag=='In Mortuary' && 
-            <Tag color="volcano" key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          }
+        {tag == "Released" && (
+          <Tag color="green" key={tag}>
+            {tag.toUpperCase()}
+          </Tag>
+        )}
+        {tag == "In Mortuary" && (
+          <Tag color="volcano" key={tag}>
+            {tag.toUpperCase()}
+          </Tag>
+        )}
       </span>
     ),
   },
@@ -216,17 +214,20 @@ const columns = [
           Edit
         </Button>
         <Divider type="vertical" />
-        <Button type="link" href={`/mortuary/release?id=${record.id}`}>
-          Release
-        </Button>
-        <Divider type="vertical" />
         <Button type="link" href={`/mortuary/corpse-info?id=${record.id}`}>
           More Info
         </Button>
+        <Divider type="vertical" />
+        {record.status == "In Mortuary" && (
+          <Button type="link" href={`/mortuary/release?id=${record.id}`}>
+            Release
+          </Button>
+        )}
       </span>
     ),
   },
 ];
+
 
 const SearchCorpse = ({ value, filterDataset }) => {
   const [loading, setLoading] = useState(true);
@@ -357,7 +358,7 @@ const SearchCorpse = ({ value, filterDataset }) => {
   } else {
     return (
       <div>
-        <Table columns={columns} dataSource={data} style={{ marginTop: 30}} />
+        <Table columns={columns} dataSource={data} style={{ marginTop: 30 }} />
       </div>
     );
   }

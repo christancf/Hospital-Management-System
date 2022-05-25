@@ -4,7 +4,7 @@ const billingService = {}
 
 
 billingService.getBills = function (patientId){
-
+  //bills for a patient id paid or pending
   return fetch({
     url: `/billing/bills?patient=${patientId}`,
     method: 'get'
@@ -12,7 +12,7 @@ billingService.getBills = function (patientId){
 }
 
 billingService.getAllBills = function (){
-
+  //every bill with status "pending" 
   return fetch({
     url: `/billing/all-bills`,
     method: 'get'
@@ -20,7 +20,7 @@ billingService.getAllBills = function (){
 }
 
 billingService.getAllPatients = function (){
-
+  // list of currently admitted patient
   return fetch({
     url: `/billing/patient`,
     method: 'get'
@@ -28,7 +28,7 @@ billingService.getAllPatients = function (){
 }
 
 billingService.addTransactions = function (jsonbody){
-
+  //add a transaction
   return fetch({
     url: `/billing/add-details`,
     method: 'post',
@@ -37,7 +37,7 @@ billingService.addTransactions = function (jsonbody){
 }
 
 billingService.getAllTransactionToPatient = function (patientId){
-
+  //every transaction on current pending bill
   return fetch({
     url: `/billing/transactions?patientId=${patientId}`,
     method: 'get'
@@ -45,11 +45,26 @@ billingService.getAllTransactionToPatient = function (patientId){
 }
 
 billingService.getAllItems = function (){
-
+  //get list of items
   return fetch({
     url: `/billing/items`,
     method: 'get'
   })
 }
+
+billingService.getAllRooms = function (){
+  //get list of wards
+  return fetch({
+    url: `/billing/rooms`,
+    method: 'get'
+  })
+}
+
+billingService.paid = function (id){
+  return fetch({
+  url:`/billing/paid?id=${id}`,
+  method:'get'
+  })
+  }
 
 export default billingService

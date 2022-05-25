@@ -1,6 +1,9 @@
 import React from 'react'
 import { Form, Input, Button, Card, Select, message} from 'antd';
-import wardService from 'services/WardService';
+import wardService from 'services/WardService'
+import { ShowModal } from '../add-ward-details'
+import { numberValidation } from '../add-ward-details'
+import { capitalize } from '../assigned-nurse-details'
 const { Search } = Input
 const { Option } = Select
 
@@ -30,12 +33,22 @@ const UpdateWardForm = () => {
   let wardDetails;
 
   const onFinish = values => {
-    message.loading({content:'Please Wait...', key})
+    values.category = values.category.key
     wardService.updateWardDetails(values)
-      .then((result)=>{
-        message.success({content:'Updated Successfully!', key, duration: 2})
-      }).catch((e)=>{
-        message.error({content: 'Please Try Again!', key, duration: 2})
+    .then((result)=>{
+      ShowModal(
+        "Successful!",
+        4,
+        "Category added successfully",
+        true
+      )
+    }).catch((e)=>{
+      ShowModal(
+        "Try again!",
+        4,
+        "There was an unexpected error. Try again later.",
+        true
+      )
     })
     form.resetFields()
   }
@@ -48,8 +61,9 @@ const UpdateWardForm = () => {
       console.log(wardDetails)      
       
       form.setFieldsValue({
-        category: wardDetails.category,
+        category: {key: wardDetails.category, label: capitalize(wardDetails.category)},
         capacity: wardDetails.capacity,
+        roomCharge: wardDetails.roomCharge,
         status: wardDetails.status
       })
     }).catch((e)=>{
@@ -62,15 +76,15 @@ const UpdateWardForm = () => {
         <Search placeholder="Ward ID" id="id" onSearch={id => searchById(id)} enterButton />
       </Form.Item>
       <Form.Item name="category" label="Category" >
-        <Select allowClear disabled>
-          <Option value="accident">Accident</Option>
-          <Option value="general">General</Option>
-          <Option value="icu">ICU</Option>
+        <Select labelInValue allowClear style={{pointerEvents:"none"}}>
         </Select>
       </Form.Item>
       <Form.Item label="Ward Capacity" name="capacity">
-        <Input placeholder='Capacity' id="capacity" onFocus={console.log("Focus")} onFocusOut={console.log("Focus out")}/>
+        <Input placeholder='Capacity' id="capacity"  onInput={numberValidation}/>
       </Form.Item>
+      <Form.Item label="Room Charge/day" name="roomCharge">
+          <Input placeholder='Room Charge' onInput={numberValidation} />
+        </Form.Item>
       <Form.Item name="status" label="Status">
         <Select placeholder="Select the current status of the ward" allowClear>
           <Option value="available">Available</Option>

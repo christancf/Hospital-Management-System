@@ -14,7 +14,7 @@ const Home = () => {
 			title: 'Bill ID',
 			dataIndex: 'billId',
 			key: 'billId',
-			render: text => <a>{text}</a>,
+		
 		},
 		{
 			title: 'Patient Name',
@@ -32,19 +32,25 @@ const Home = () => {
 			key: 'itemCharge',
 		},
 		{
-			title: 'Doctor Charge',
-			dataIndex: 'doctorCharge',
-			key: 'doctorCharge',
+			title: 'Total Before Tax',
+			key: 'totalBeforeTax',
+			render: (record) => (
+				record.itemCharge + record.roomCharge
+            ),
 		},
 		{
 			title: 'Tax',
-			dataIndex: 'tax',
 			key: 'tax',
+			render: (record) => (
+				(record.itemCharge + record.roomCharge)/10
+            ),
 		},
 		{
 			title: 'Total',
-			dataIndex: 'total',
 			key: 'total',
+			render: (record) => (
+				(record.itemCharge + record.roomCharge) + (record.itemCharge + record.roomCharge)/10
+            ),
 		},
 		{
 			title: 'Status',
@@ -97,9 +103,6 @@ const Home = () => {
 				patientName : item.patient_name,
 				roomCharge: item.room_charges,
 				itemCharge : item.item_charges,
-				doctorCharge : item.doctor_charges,
-				tax: item.tax,
-				total: item.total,
 				status: item.status
 			}
 		});
