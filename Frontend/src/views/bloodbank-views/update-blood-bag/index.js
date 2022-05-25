@@ -2,6 +2,10 @@ import { Form, Input, InputNumber, Button, Cascader, DatePicker, Select, Modal, 
 import moment from 'moment';
 import { useState, useEffect } from 'react';
 import bloodBankService from 'services/BloodBankService';
+import { DOCTOR_CHANNELLING_PREFIX_PATH, APP_PREFIX_PATH, BLOODBANK_ROLE, ValidateUser } from 'configs/AppConfig'
+
+ValidateUser(BLOODBANK_ROLE);
+
 const { Title } = Typography
 const { Option } = Select;
 

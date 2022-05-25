@@ -3,8 +3,11 @@ import { json } from 'd3-fetch';
 import moment from 'moment';
 import bloodBankService from 'services/BloodBankService';
 import { useState, useEffect } from 'react';
+import { DOCTOR_CHANNELLING_PREFIX_PATH, APP_PREFIX_PATH, BLOODBANK_ROLE, ValidateUser } from 'configs/AppConfig'
 const { Title } = Typography
 const { Option } = Select;
+
+ValidateUser(BLOODBANK_ROLE);
 
 function toTimestamp(strDate) {
   var datum = Date.parse(strDate);
