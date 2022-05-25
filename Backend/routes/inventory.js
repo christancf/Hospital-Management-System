@@ -5,7 +5,7 @@ var router = express.Router();
 const auth = require("../middleware/auth");
 
 //create item in the item list
-router.post("/item", function (req, res, next) {
+router.post("/item",auth,function (req, res, next) {
   const item = new itemModel({
     id: req.body.id,
     item_name: req.body.item_name,
@@ -29,7 +29,7 @@ router.post("/item", function (req, res, next) {
 });
 
 //create inventoryitem in the inventorylist
-router.post("/inventoryItem", function (req, res, next) {
+router.post("/inventoryItem", auth, function (req, res, next) {
   const inventoryItem = new inventoryItemModel({
     item_id: req.body.item_id,
     item_name: req.body.item_name,
@@ -92,7 +92,7 @@ router.post("/inventoryItem", function (req, res, next) {
 });
 
 // REtrive data from itemlist
-router.get("/itemlist", async function (req, res, next) {
+router.get("/itemlist", auth,async function (req, res, next) {
   const categoryType = req.query.category;
 
   try {
@@ -116,7 +116,7 @@ router.get("/itemlist", async function (req, res, next) {
 });
 
 // REtrive data from inverntorylist
-router.get("/inventorylist", async function (req, res, next) {
+router.get("/inventorylist",auth,async function (req, res, next) {
   
 
   try {
@@ -138,7 +138,7 @@ router.get("/inventorylist", async function (req, res, next) {
 
 
 // REtrive data from 
-router.get("/getallitems", async function (req, res, next) {
+router.get("/getallitems",auth, async function (req, res, next) {
 
 
   try {
@@ -159,7 +159,7 @@ router.get("/getallitems", async function (req, res, next) {
 });
 
 //update item details
-router.post("/update-details", (req, res, next) => {
+router.post("/update-details", auth,(req, res, next) => {
   itemModel
     .findOneAndUpdate(
       {
@@ -187,7 +187,7 @@ router.post("/update-details", (req, res, next) => {
     });
 });
 
-router.get("/read", function (req, res, next) {
+router.get("/read",auth, function (req, res, next) {
   itemModel
     .find({ id: req.query.id })
     .then((itemDetails) => {
@@ -205,7 +205,7 @@ router.get("/read", function (req, res, next) {
 });
 
 //incrementing item id
-router.get("/id", function (req, res, next) {
+router.get("/id",auth, function (req, res, next) {
   itemModel
     .find()
     .sort({ id: -1 })
@@ -222,7 +222,7 @@ router.get("/id", function (req, res, next) {
     });
 });
 
-router.delete("/itemlist/delete", (req, res, next) => {
+router.delete("/itemlist/delete", auth,(req, res, next) => {
   itemModel
     .updateOne({ id: req.query.id }, { $set: { status: false } })
     .then((result) => {
@@ -235,6 +235,43 @@ router.delete("/itemlist/delete", (req, res, next) => {
     .catch((e) => {
       res.status(400).json({ success: false, message: e.message, payload: {} });
     });
+});
+
+router.post("/stat", auth, async function (req, res, next) {
+
+  try {
+
+    let inventoryDetails = await itemModel.find({},
+
+      { item_name: 1, total_quantity: 1, _id: 0 },
+
+    );
+    
+
+    console.log(inventoryDetails);
+
+    res.status(200).json({
+
+      success: true,
+
+      message: "Successful Retrieval",
+
+      payload: inventoryDetails,
+
+    });
+
+  } catch (error) {
+
+    res.status(400).json({
+
+      success: false,
+
+      message: error.message,
+
+    });
+
+  }
+
 });
 
 module.exports = router;

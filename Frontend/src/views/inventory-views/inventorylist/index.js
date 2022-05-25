@@ -2,7 +2,11 @@ import React from "react";
 import { Table, Divider, Tag, Spin, notification, Modal, Button } from "antd";
 import { useState, useEffect } from "react";
 import inventoryService from "services/inventoryService";
+import { INVENTORY_PREFIX_PATH, APP_PREFIX_PATH, INVENTORY_ROLE, ValidateUser } from 'configs/AppConfig';
 const { confirm } = Modal;
+
+ValidateUser(INVENTORY_ROLE);
+
 
 const openNotification = (title, content) => {
   notification.open({
@@ -73,7 +77,18 @@ const Home = () => {
       title: "status",
       dataIndex: "status",
       key: "status",
-    }
+    },
+	// {
+	// 	title: 'Action',
+	// 	key: 'action',
+	// 	render: (text, record) => (
+	// 		<span>
+	// 		<Button type="link" href={`/inventory/itemlist/update-details?id=${record.id}`}>
+	// 		  Edit
+	// 		</Button>
+	// 	  </span>
+	// 	),
+	// },
     // {
     //   title: "Action",
     //   key: "action",
@@ -126,6 +141,11 @@ const Home = () => {
     );
   } else {
     const dataList = data.map((inventoryItem) => {
+		if(inventoryItem.quantity == 0) {
+			inventoryItem.status = "Unavailable"
+		} else {
+			inventoryItem.status = "Available"
+		}
       return {
         //itemId: inventoryItem.item_id,
         itemName: inventoryItem.item_name,
@@ -140,6 +160,9 @@ const Home = () => {
       <>
         <div>
           <h1 className="text-left">Inventory List</h1>
+		  <Button type="primary" href={`/inventory/inventorylist/add/`}>
+            Add New Item
+          </Button>
           
         </div>
 

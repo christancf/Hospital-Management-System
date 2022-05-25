@@ -13,6 +13,10 @@ import {
   import moment from "moment";
   import { useState, useEffect } from "react";
   import inventoryService from "services/inventoryService";
+  import { INVENTORY_PREFIX_PATH, APP_PREFIX_PATH, INVENTORY_ROLE, ValidateUser } from 'configs/AppConfig';
+
+  ValidateUser(INVENTORY_ROLE);
+
   
   const { Title } = Typography;
   const { Option } = Select;

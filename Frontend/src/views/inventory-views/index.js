@@ -14,6 +14,7 @@ export const InventoryViews = () => {
         <Route path={`${INVENTORY_PREFIX_PATH}/itemlist/additem/`} component={lazy(() => import(`./additem`))} />
         <Route path={`${INVENTORY_PREFIX_PATH}/itemlist/update-details`} component={lazy(() => import(`./update-item`))} />
         <Route path={`${INVENTORY_PREFIX_PATH}/inventorylist/add`} component={lazy(() => import(`./addinventoryitem`))} />
+        <Route path={`${INVENTORY_PREFIX_PATH}/stat`} component={lazy(() => import(`./stats`))} />
 
         <Redirect from={`${INVENTORY_PREFIX_PATH}`} to={`${INVENTORY_PREFIX_PATH}/home`} />
       </Switch>

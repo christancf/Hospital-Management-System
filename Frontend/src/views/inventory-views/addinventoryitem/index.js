@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import inventoryService from '../../../services/inventoryService'
 import { Form, Input, Button, Select, DatePicker, Modal,InputNumber } from 'antd';
+import { INVENTORY_PREFIX_PATH, APP_PREFIX_PATH, INVENTORY_ROLE, ValidateUser } from 'configs/AppConfig';
 import moment from 'moment';
+
+ValidateUser(INVENTORY_ROLE);
+
 
 const { Option } = Select;
 
@@ -103,8 +107,8 @@ const AddInvenotryItem = () => {
 		console.log(values);
 		const item_id = values.item_id.key;
 		const quantity = values.quantity;
-		const manufacture_date = values.manufacture_date;
-		const expire_date = values.expire_date;
+		const manufacture_date = moment(values.manufacture_date).valueOf();
+		const expire_date = moment(values.expire_date).valueOf();
 		const item_name = data.filter( (item)=> { 
 			
 			if (item.id == item_id){
@@ -119,8 +123,8 @@ const AddInvenotryItem = () => {
 				item_id:item_id,
 				item_name:item_name,
 				quantity: quantity,
-				manufacture_date: toTimestamp(manufacture_date) ,
-				expire_date: toTimestamp(expire_date),
+				manufacture_date: manufacture_date ,
+				expire_date: expire_date,
 				status: "Available",
 			}).then((value) => {
 
@@ -199,11 +203,11 @@ const AddInvenotryItem = () => {
 					</Select>
 				</Form.Item>
 				<Form.Item name="manufacture_date" label="Manufactured Date" rules={[{ required: true }]}>
-					<DatePicker disabledDate={disabledDate2}/>
+					<DatePicker format="YYYY-MM-DD" disabledDate={disabledDate2}/>
 				</Form.Item>
 
 				<Form.Item name="expire_date" label="Expired Date" rules={[{ required: true }]}>
-					<DatePicker disabledDate={disabledDate1}/>
+					<DatePicker format="YYYY-MM-DD" disabledDate={disabledDate1}/>
 				</Form.Item>
 
 				<Form.Item label="Quantity" name="quantity" rules={[{ required: true, message: 'Please input quantity' }]}>

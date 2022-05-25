@@ -1,7 +1,8 @@
 import { 
   DashboardOutlined,
   CopyOutlined,
-  ContainerOutlined
+  ContainerOutlined,
+  LineChartOutlined
 } from '@ant-design/icons';
 import { INVENTORY_PREFIX_PATH } from 'configs/AppConfig'
 
@@ -51,7 +52,16 @@ const dashBoardNavTree = [
     icon:CopyOutlined ,
     breadcrumb: false,
     submenu: []
-  }]
+  },
+  {
+    key: 'stats',
+    path: `${INVENTORY_PREFIX_PATH}/stat`,
+    title: 'Stats',
+    icon:LineChartOutlined ,
+    breadcrumb: false,
+    submenu: []
+  }
+]
 }]
 
 const inventroyNavigationConfig = [

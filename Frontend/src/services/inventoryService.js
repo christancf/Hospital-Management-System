@@ -94,7 +94,14 @@ inventoryService.getId = function () {
     }
 
   )
-
 }
+
+//stat 1
+inventoryService.stat = function () {
+  return fetch({
+    url: `/inventory/stat`,
+    method: "post",
+  });
+};
 
 export default inventoryService
