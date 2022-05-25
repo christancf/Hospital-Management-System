@@ -348,9 +348,64 @@ router.post("/stat", async function (req, res, next) {
     });
   }
 });
+//stat 1 month
+router.post("/statMonth", async function (req, res, next) {
+  try {
+    var month = req.body.month;
+    console.log(month)
+    var date = new Date(month);
+    var gt = new Date(date.getFullYear(), date.getMonth(), 1).getTime();
+    var lt = new Date(date.getFullYear(), date.getMonth() + 1, 0).getTime();
 
+    let corpseDetails = await corpseModel.aggregate([
+      { $match: {date_time_of_death: {$lt: lt, $gt: gt}}},
+      { $group: { _id: "$cause_of_death", count: { $sum: 1 } }}
+    ]);
+    console.log(corpseDetails);
+    res.status(200).json({
+      success: true,
+      message: "Successful Retrieval",
+      payload: corpseDetails,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
 
 //stat 2
+router.post("/stat2Month", async function (req, res, next) {
+  try {
+    var month = req.body.month;
+    console.log(month)
+    var date = new Date(month);
+    var gt = new Date(date.getFullYear(), date.getMonth(), 1).getTime();
+    var lt = new Date(date.getFullYear(), date.getMonth() + 1, 0).getTime();
+    let corpseDetails = await corpseModel.aggregate([
+      { $match: {date_time_of_death: {$lt: lt, $gt: gt}}},
+      { $group: { 
+        _id: {
+          "sex": "$sex",
+          "cod": "$cause_of_death"
+        },
+        count: { $sum: 1 } } },
+    ]);
+    res.status(200).json({
+      success: true,
+      message: "Successful Retrieval",
+      payload: corpseDetails,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+//stat 2 according to month
 router.post("/stat2", async function (req, res, next) {
   try {
     let corpseDetails = await corpseModel.aggregate([

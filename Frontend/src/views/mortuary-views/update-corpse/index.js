@@ -105,7 +105,7 @@ const Demo = () => {
 
         mortuaryService.updateCorpse(id, payload).then((res) => {
 
-            if (res.succuss) {
+            if (res.success) {
                 ShowModel(
                     "Successful !",
                     3,
