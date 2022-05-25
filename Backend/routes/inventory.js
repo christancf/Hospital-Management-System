@@ -115,6 +115,27 @@ router.get("/itemlist", async function (req, res, next) {
   }
 });
 
+// REtrive data from inverntorylist
+router.get("/inventorylist", async function (req, res, next) {
+  
+
+  try {
+    let inventoryItemDetails = await inventoryItemModel.find();
+
+    res.status(200).json({
+      success: true,
+      message: "Successful Retrieval",
+      payload: inventoryItemDetails,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+      payload: [],
+    });
+  }
+});
+
 
 // REtrive data from 
 router.get("/getallitems", async function (req, res, next) {

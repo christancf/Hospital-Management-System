@@ -23,7 +23,7 @@ inventoryService.addInventoryItem = function (jsonbody){
 
   })
 }
-
+//get items from the item list API call
 inventoryService.getItems = function (categoryType){
 
   return fetch({
@@ -32,6 +32,16 @@ inventoryService.getItems = function (categoryType){
 
   })
 }
+//get inventory items from the inventory list API call
+inventoryService.getInventoryItems = function ( ){
+
+  return fetch({
+    url: `/inventory/inventorylist`,
+    method: 'get',
+
+  })
+}
+
 
 inventoryService.getAllItems = function (){
 
