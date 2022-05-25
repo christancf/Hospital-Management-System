@@ -16,7 +16,7 @@ import JwtAuthService from 'services/JwtAuthService'
 import { useHistory } from "react-router-dom";
 import { motion } from "framer-motion"
 import jwt_decode from "jwt-decode";
-import { DOCTOR_CHANNELLING_PREFIX_PATH, APP_PREFIX_PATH, DOCTOR_CHANNELLING_ROLE } from 'configs/AppConfig'
+import { DOCTOR_CHANNELLING_PREFIX_PATH, APP_PREFIX_PATH, DOCTOR_CHANNELLING_ROLE, setTokenMeta } from 'configs/AppConfig'
 
 const ValidateUser = (role) => {
 
@@ -61,14 +61,22 @@ export const LoginForm = (props) => {
 
 	const onLogin = values => {
 		showLoading()
-		const fakeToken = 'fakeToken'
 		JwtAuthService.login(values).then(resp => {
-			console.log(resp.payload.token)
-			authenticated(resp.payload.token)
-			localStorage.setItem(AUTH_TOKEN, resp.payload.token);
-			window.location = DOCTOR_CHANNELLING_PREFIX_PATH;
-		}).then(e => {
-			//showAuthMessage(e)
+
+			console.log(resp)
+			if(resp.succuss){
+				authenticated(resp.payload.token)
+				localStorage.setItem(AUTH_TOKEN, resp.payload.token);
+				setTokenMeta();
+				window.location = DOCTOR_CHANNELLING_PREFIX_PATH;
+			}
+			else{
+				showAuthMessage(resp.message);
+			}
+			
+			
+		}).catch(e => {
+			showAuthMessage("Something wrong please try again !");
 		})
 	};
 

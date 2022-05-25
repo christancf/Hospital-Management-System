@@ -21,22 +21,13 @@ export const NavProfile = () => {
           <Avatar size={45} src={profileImg} />
           <div className="pl-3">
             <h4 className="mb-0">{localStorage.getItem('name')}</h4>
-            <span className="text-muted">{localStorage.getItem('role')}</span>
+            <span className="text-muted">{localStorage.getItem('role').toUpperCase()}</span>
           </div>
         </div>
       </div>
       <div className="nav-profile-body">
         <Menu>
-          {menuItem.map((el, i) => {
-            return (
-              <Menu.Item key={i}>
-                <a href={el.path}>
-                  <Icon className="mr-3" type={el.icon} />
-                  <span className="font-weight-normal">{el.title}</span>
-                </a>
-              </Menu.Item>
-            );
-          })}
+         
           <Menu.Item key={menuItem.length + 1} onClick={()=>{ localStorage.clear(); window.location.reload();}}>
             <span>
               <LogoutOutlined className="mr-3"/>
@@ -57,5 +48,4 @@ export const NavProfile = () => {
     </Dropdown>
   );
 }
-
 export default connect(null, {})(NavProfile)
