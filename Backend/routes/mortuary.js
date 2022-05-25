@@ -375,7 +375,7 @@ router.post("/statMonth", async function (req, res, next) {
   }
 });
 
-//stat 2
+//stat 2 according to month
 router.post("/stat2Month", async function (req, res, next) {
   try {
     var month = req.body.month;
@@ -405,7 +405,7 @@ router.post("/stat2Month", async function (req, res, next) {
   }
 });
 
-//stat 2 according to month
+//stat 2 
 router.post("/stat2", async function (req, res, next) {
   try {
     let corpseDetails = await corpseModel.aggregate([
