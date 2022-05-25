@@ -1,6 +1,9 @@
 import { Table, Divider, Tag ,Modal,Spin,notification} from 'antd';
 import patientManagementService from 'services/PatientManagement';
 import { useState, useEffect } from 'react';
+import { PATIENT_ROLE , ValidateUser} from 'configs/AppConfig';
+
+ValidateUser(PATIENT_ROLE);
 const { confirm } = Modal;
 
 const PatientList = () =>{
