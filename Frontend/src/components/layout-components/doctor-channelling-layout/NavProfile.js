@@ -21,7 +21,7 @@ export const NavProfile = () => {
           <Avatar size={45} src={profileImg} />
           <div className="pl-3">
             <h4 className="mb-0">{localStorage.getItem('name')}</h4>
-            <span className="text-muted">{localStorage.getItem('role')}</span>
+            <span className="text-muted">{localStorage.getItem('role').toUpperCase()}</span>
           </div>
         </div>
       </div>
