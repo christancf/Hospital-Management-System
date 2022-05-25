@@ -1,9 +1,16 @@
-import { Table, Divider, Tag, Spin, Modal, notification, Select, Row, Col } from 'antd';
+import { Table, Divider, Tag, Spin, Modal, notification, Select, Row, Col, Form ,Menu, Dropdown} from 'antd';
 import { useState, useEffect } from 'react';
 import doctorChannellingService from 'services/DoctorChannellingService';
 import jwt_decode from "jwt-decode";
 import { AUTH_TOKEN } from 'redux/constants/Auth'
+import { 
+    PlusOutlined, 
+    EllipsisOutlined, 
+    StopOutlined, 
+  } from '@ant-design/icons';
 const { confirm } = Modal;
+
+
 
 const { Option } = Select;
 
@@ -18,36 +25,75 @@ const openNotification = (title, content) => {
 };
 
 
-// const deleteAppointment = (id) => {
+const deleteAppointment = (id) => {
 
-//     confirm({
-//         title: 'Do you want to delete these items?',
-//         content: 'When clicked the OK button, Your appointment will be delete ',
-//         onOk() {
-//           return new Promise((resolve, reject) => {
+    confirm({
+        title: 'Do you want to delete this appointment ?',
+        content: 'When clicked the OK button, Your appointment will be delete ',
+        onOk() {
+          return new Promise((resolve, reject) => {
 
-//             channellingService.deleteAppointment(id).then((ress)=> {
-//                 openNotification("Successfull !", "Your appointment deleted successfully.");
-//                 setTimeout(function(){
-//                     window.location.reload(false);
-//                 }, 2000);
-
-
-//             }).catch((errors)=> {
-//                 openNotification("Unsuccessfull !", "Your appointment delete process faild !!.");
-
-//             })
-//             setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
-//           }).catch(() => console.log('Oops errors!'));
-//         },
-//         onCancel() {},
-//       });
+            doctorChannellingService.deleteAppointment(id).then((ress)=> {
+                openNotification("Successfull !", "Your appointment deleted successfully.");
+                setTimeout(function(){
+                    window.location.reload(false);
+                }, 2000);
 
 
-// }
+            }).catch((errors)=> {
+                openNotification("Unsuccessfull !", "Your appointment delete process faild !!.");
 
-const updateAppointmentStatus = () => {
-    
+            })
+            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
+          }).catch(() => console.log('Oops errors!'));
+        },
+        onCancel() {},
+      });
+
+
+}
+
+const updateAppointmentStatus = (id, status) => {
+
+    const openNotification = (isSuccess, id, status) => {
+
+        if(isSuccess){
+            notification.success({
+                message: 'Appointment Status update process success !',
+                description:
+                  `Your appointment (${id}) status successfully updated to ${status} status !`,
+                onClick: () => {
+                  console.log('Notification Clicked!');
+                },
+              });
+        }
+        else{
+            notification.error({
+                message: 'Appointment Status update process failed !',
+                description:
+                `Your appointment (${id}) status update process failed !`,
+                onClick: () => {
+                  console.log('Notification Clicked!');
+                },
+              });
+        }
+
+      };
+
+    doctorChannellingService.updateAppointmentStatus(id, {status: status}).then((res) => {
+
+        if (res.succuss) {
+            openNotification(true, id, status);
+        }
+        else {
+            openNotification(false, id, status);
+        }
+
+    }).catch((error) => {
+
+        openNotification(false, id, status);
+
+    })
 }
 
 const ViewAppointment = () => {
@@ -55,32 +101,47 @@ const ViewAppointment = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [data, setData] = useState();
+    const [form] = Form.useForm();
 
 
-    const UpdateModel = (status) => {
+    const UpdateModel = (id, defaultstatus) => {
 
-        function handleChange(value) {
-            console.log(`selected ${value}`);
+    
+        
+
+        // setStatus(defaultstatus);
+
+        const onSeletectStatus = (val) => {
+            console.log(val)
+            // setStatus(val)
         }
-
-   
+      
 
         const statusModel = Modal.confirm({
             title: 'Update status of appointment',
             content: (
                 <div style={{marginTop:20}}>
-                    Update sttaus to :  &nbsp;&nbsp;&nbsp;
-                    <Select defaultValue={status} style={{ width: 120 }} onChange={handleChange}>
-                            <Option value="Pending">Pending</Option>
-                            <Option value="Completed">Completed</Option>
-                            <Option value="Cancelled">Cancelled</Option>
+                    <Form form={form}>
+                        <Form.Item label="Update status to :" name="formstatus">
+                        <Select  defaultValue={defaultstatus} style={{ width: 120 }} onSelect={onSeletectStatus} >
+                            <Option value="pending">Pending</Option>
+                            <Option value="completed">Completed</Option>
+                            <Option value="cancelled">Cancelled</Option>
                         </Select>
+                        </Form.Item>
+                    </Form>
+                    
+                    
                 </div>
             ),
             okText: 'Confirm',
             cancelText: 'Cancel',
             onOk: ()=> {
+                updateAppointmentStatus(id, form.getFieldValue('formstatus'));
                 statusModel.destroy();
+                setTimeout(function(){
+                    window.location.reload(1);
+                 }, 2000);
             },
             onCancel: ()=>{
                 statusModel.destroy();
@@ -151,6 +212,38 @@ const ViewAppointment = () => {
 
     }, []);
 
+
+      const CardDropdown = (props) => {
+
+        const newJoinMemberOption = (
+            <Menu>
+              <Menu.Item key="0">
+                <span>
+                  <div className="d-flex align-items-center">
+                    <PlusOutlined />
+                    <span className="ml-2"><a onClick={() => { UpdateModel(props.record._id, props.record.status) }}>Update Status</a></span>
+                  </div>
+                </span>
+              </Menu.Item>
+              <Menu.Item key="1">
+                <span>
+                  <div className="d-flex align-items-center">
+                    <StopOutlined />
+                    <span className="ml-2"> <a onClick={() => { deleteAppointment(props.precord._id)}}>Delete</a></span>
+                  </div>
+                </span>
+              </Menu.Item>
+            </Menu>
+          )
+    
+        return (
+            <Dropdown overlay={newJoinMemberOption}  placement="bottomCenter">
+              <a href="/#" className="text-gray font-size-lg" onClick={e => e.preventDefault()}>
+                <EllipsisOutlined style={{ transform: 'rotate(90deg)' }}/>
+              </a>
+            </Dropdown>
+          )
+      }
     const columns = [
         {
             title: 'NIC',
@@ -214,9 +307,7 @@ const ViewAppointment = () => {
             key: 'action',
             render: (text, record) => (
                 <span>
-                    <a onClick={() => { UpdateModel("Completed") }}>Update Status</a>
-                    <Divider type="vertical" />
-                    <a onClick={() => { }}>Delete</a>
+                    <CardDropdown record={record}/>
                 </span>
             ),
         },
