@@ -71,19 +71,17 @@ staffService.addBonus = function (data) {
   })
 }
 
-staffService.readOTHours = function (data) {
+staffService.getOThours = function (data) {
   return fetch({
-    url: 'staff/salary/othours',
-    method: 'get',
-    data
+    url: 'staff/salary/othours?month='+data.month,
+    method: 'get'
   })
 }
 
-staffService.readBonusAmount = function (data) {
+staffService.getBonusAmounts = function (data) {
   return fetch({
-    url: 'staff/salary/bonus',
-    method: 'get',
-    data
+    url: 'staff/salary/bonus-calculate?month='+data.month,
+    method: 'get'
   })
 }
 export default staffService

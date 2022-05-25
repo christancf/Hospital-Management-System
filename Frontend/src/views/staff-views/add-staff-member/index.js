@@ -24,7 +24,7 @@ const layout = {
   wrapperCol: { span: 12 },
 };
 const tailLayout = {
-  wrapperCol: { offset: 18, span: 16 },
+  wrapperCol: { offset: 4, span: 16 },
 };
 
 const AddMember = () => {
@@ -62,7 +62,7 @@ const AddMember = () => {
       setTimeout(() => {
         clearInterval(timer);
         modal.destroy();
-        window.location.reload(false)
+        window.location.reload(true)
       }, delay * 1000);
     }
 
@@ -84,14 +84,31 @@ const AddMember = () => {
     }
   }
 
+  const demoDetails = () => {
+
+    form.setFieldsValue({
+      staffName: "Kasun Withana",
+      NIC: "722467676V",
+      email: "kasunwithana@gmail.com", 
+      designation: "doctor",    
+      qualification: "MBBS",
+      address: "No 57, Prestige City, Malabe",
+      dateOfBirth: moment("1972-05-09"),
+      gender: "male",
+      basicSalary: 150000,
+      mobile: "0115645387",
+      home: "0753476546"
+    })
+  }
+
   const [form] = Form.useForm()
 
   const onFinish = values => {
     values.dateOfBirth = values.dateOfBirth['_d'].getTime()
     console.log(values.staffID)
     staffService.addStaffMember(values)
-      .then(() => ShowModel("Successful!", 5, "Staff Member Added Successfully", true))
-      .catch(() => ShowModel("Failed!", 5, "Failed to add Staff Member", false))
+      .then(() => ShowModel("Successful!", 2, "Staff Member Added Successfully", true))
+      .catch(() => ShowModel("Failed!", 2, "Failed to add Staff Member", false))
 
       form.resetFields();
   };
@@ -222,7 +239,7 @@ const AddMember = () => {
               <Form.Item
                 label="Base Salary"
                 name="basicSalary"
-                rules={[{ required: true, message: 'Please input the base salary!' }, {pattern: "[0-9]+", message: 'Please input a numerical value!'}]}
+                rules={[{ required: true, message: 'Please input the base salary!' }]}
               >
                 <Input />
               </Form.Item>
@@ -247,13 +264,27 @@ const AddMember = () => {
           </Row>
 
           <Form.Item {...tailLayout}>
-            <Button htmlType="reset" style={{marginRight: 30}}>
-              Discard
-            </Button>
-  
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
+            <Row>
+              <Col span={16}>
+
+                <Button danger style={{marginRight: 30}} onClick={demoDetails}>
+                  Demo Details
+                </Button>
+
+              </Col>
+
+              <Col span={8}>
+
+                <Button htmlType="reset" style={{marginRight: 30}}>
+                  Discard
+                </Button>
+    
+                <Button type="primary" htmlType="submit">
+                  Submit
+                </Button>
+
+              </Col>
+            </Row>
           </Form.Item>
 
         </Form>
