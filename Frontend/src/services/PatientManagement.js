@@ -54,9 +54,23 @@ patientManagementService.patientDetails = function (data){
   })
 }
 
-patientManagementService.category = function(){
+patientManagementService.categoryStat = function(){
   return fetch({
     url: `/patient/stat`,
+    method: 'get',
+  })
+}
+
+patientManagementService.categoryList = function(){
+  return fetch({
+    url: `/patient/category`,
+    method: 'get',
+  })
+}
+
+patientManagementService.patientCount = function(){
+  return fetch({
+    url: `/patient/stat1`,
     method: 'get',
   })
 }
