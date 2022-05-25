@@ -44,6 +44,13 @@ wardService.getNurseDetails = (id) => {
   })
 }
 
+wardService.getAllUnassignedNurseDetails = () => {
+  return fetch({
+    url: 'ward/nurse/read/all-unassigned',
+    method: 'get'
+  })
+}
+
 wardService.assignNurse = (data) => {
   return fetch({
     url: 'ward/nurse/assign',
@@ -95,4 +102,10 @@ wardService.readAllWardCategory = () => {
   })
 }
 
+wardService.readAllWardDetails = () => {
+  return fetch({
+    url: 'ward/details/read/all',
+    method: 'get'
+  })
+}
 export default wardService
