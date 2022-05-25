@@ -2,6 +2,11 @@ import React from 'react'
 import { useState, useEffect } from 'react';
 import { Form, Button, Select, Card, Spin, Modal, Col, Table, Descriptions } from 'antd';
 import billingService from 'services/BillingService';
+import { BILLING_PREFIX_PATH, APP_PREFIX_PATH, BILLING_ROLE, ValidateUser } from 'configs/AppConfig'
+
+
+ValidateUser(BILLING_ROLE);
+
 const { Option } = Select;
 
 
