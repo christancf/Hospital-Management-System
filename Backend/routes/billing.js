@@ -538,7 +538,6 @@ router.get('/all-bills', async (req, res, next) => {
 
   try {
     const response = await billModel.find({
-      status: 'pending'
     }).then((response) => {
 
       res.status(200).json(
@@ -613,6 +612,39 @@ router.post('/transaction/add', async (req, res, next) => {
   }
 
 });
+
+
+router.get('/paid',async (req,res,next)=>{
+  billModel.findOneAndUpdate({
+  patient_id: req.query.id,
+  status:"pending"
+  },{$set:{status:"paid"}}).then((response) => {
+  
+  
+  
+  res.status(200).json(
+  {
+  succuss: true,
+  message: 'Update succussfull',
+  payload: {}
+  }
+  );
+  
+  
+  
+  }).catch((error) => {
+  res.status(400).json(
+  {
+  succuss: false,
+  message: error.message,
+  payload: {}
+  }
+  );
+  
+  
+  
+  });
+  })
 
 
 module.exports = router;

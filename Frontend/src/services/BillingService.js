@@ -60,4 +60,11 @@ billingService.getAllRooms = function (){
   })
 }
 
+billingService.paid = function (id){
+  return fetch({
+  url:`/billing/paid?id=${id}`,
+  method:'get'
+  })
+  }
+
 export default billingService
