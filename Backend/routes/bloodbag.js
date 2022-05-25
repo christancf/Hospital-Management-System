@@ -433,4 +433,28 @@ router.post("/bagCountAsMonth", async function (req, res, next) {
   }
 });
 
+
+//Expire blood count
+router.post("/expireBloodCount", async function (req, res, next) {
+
+  var today = new Date().setHours(24, 0, 0, 0)
+
+  try {
+    let bagsDetails = await bloodbagModel.aggregate([
+      { $match: { $and: [{ status: "In Stock" }, { expireDate: { $lt: today } }] } },
+      { $group: { _id: '', count: { $sum: 1 } } },]);
+    res.status(200).json({
+      success: true,
+      message: "Successful Retrieval",
+      payload: bagsDetails,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+
 module.exports = router;

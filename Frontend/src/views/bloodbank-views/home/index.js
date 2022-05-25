@@ -34,6 +34,9 @@ const App = () => {
 	);
   };
 
+  function expireNotification(){
+
+  }
 const Home = () => {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
@@ -54,6 +57,10 @@ const Home = () => {
 	const [bagMonth_error, bagMonth_setError] = useState(false);
 	const [bagMonth_key, bagMonth_setKey] = useState(null);
 	const [bagMonth_value, bagMonth_setValue] = useState(null);
+
+	const [notification_loading, notification_setLoading] = useState(true);
+	const [notification_error, notification_setError] = useState(false);
+	const [notification_value, notification_setValue] = useState();
 
 
 	useEffect(() => {
@@ -109,21 +116,10 @@ const Home = () => {
 			var bagMonthKey = [];
 			var bagMonthValue = [0,0,0,0,0];
 
-			// var bagMonth_value = [
-			// 	...new Set(
-			// 		myData.map((item) => {
-			// 			return item._id.month;
-			// 		})
-			// 	),
-			// ];
-
-
 			var month = [1,2,3,4,5,6,7,8,9,10,11,12]
 			console.log(bagCountMonth)
 			for (let i = 0; i < bagCountMonth.length; i++) {
 				bagMonthValue[month.indexOf(bagCountMonth[i]._id.month)] = bagCountMonth[i].count;
-				// bagMonthKey[i] = bagCountMonth[i]._id.month;
-				// bagMonthValue[i] = bagCountMonth[i].count;
 			}
 
 			bagMonth_setKey(bagMonthKey);
@@ -140,22 +136,6 @@ const Home = () => {
 			});
 
 	}, []);
-
-
-
-	// 	  const myData = {
-	// 		labels: ['A+', 'A-', 'B+','B-','AB+','AB-','O+','O-'],
-	//   datasets: [
-	// 	{
-	// 	  data:value,
-	// 	  backgroundColor: [COLOR_1, COLOR_4, COLOR_2,COLOR_1_LIGHT,COLOR_2_LIGHT,COLOR_4_LIGHT,COLOR_3_LIGHT,COLOR_3],
-	// 		pointBackgroundColor : [COLOR_1, COLOR_4, COLOR_2,COLOR_1_LIGHT,COLOR_2_LIGHT,COLOR_4_LIGHT,COLOR_3_LIGHT,COLOR_3]
-	// 	}
-	//   ]
-	// 	}
-
-
-
 
 	if (loading) {
 		return (
@@ -206,19 +186,20 @@ const Home = () => {
 			</>
 		);
 	}
+	// else if (notification_loading) {
+	// 	return (
+	// 		<>
+	// 			<p>Data Loading</p>
+	// 		</>
+	// 	);
+	// } else if (notification_error) {
+	// 	return (
+	// 		<>
+	// 			<p>Error:{error}</p>
+	// 		</>
+	// 	);
+	// }
 	else {
-
-		// const myData = {
-		// 	labels: [key[0]._id, key[1]._id, key[2]._id, key[3]._id, key[4]._id, key[5]._id, key[6]._id, key[7]._id],
-		// 	datasets: [
-		// 		{
-		// 			data: [value[0].count,value[1].count,value[2].count,value[3].count,value[4].count,value[5].count,value[6].count,value[7].count,],
-		// 			backgroundColor: ['#008FFB', COLOR_4, COLOR_2, COLOR_1_LIGHT, COLOR_2_LIGHT, COLOR_4_LIGHT, COLOR_3_LIGHT, COLOR_3],
-		// 			pointBackgroundColor: [COLOR_1, COLOR_4, COLOR_2, COLOR_1_LIGHT, COLOR_2_LIGHT, COLOR_4_LIGHT, COLOR_3_LIGHT, COLOR_3]
-		// 		}
-		// 	]
-		// }
-
 		const transfusion_series = [
 			{
 				name: "Number of blood bags",
@@ -265,7 +246,7 @@ const Home = () => {
 			},
 			fill: {
 				opacity: 1,
-				colors: ['#9D174D', '#EC4899', '#160C28']
+				colors: ['#9D174D']
 			},
 			tooltip: {
 				y: {
@@ -369,37 +350,19 @@ const Home = () => {
 
 		return (
 			<div>
-				{/* 
-				<div style={{ padding: '26px 800px 16px',color: 'blue' }}>
-					<p >Available blood count:{Aailable_value[0].count}</p>
-				</div>
-
-				<div style={{ padding: '26px 1020px 16px' }}  >
-					<Button type="primary" href='/bloodbank/add-details'>Add Blood Bag</Button>
-				</div>
-
-				<div style={{ padding: '26px 1020px 16px' }}>
-					<Button type="primary" href='/bloodbank/bags-informations'>Available Blood Bags</Button>
-				</div> */}
-
-				<Title style={{ padding: '36px 0px 16px' }}>Available Blood Bags</Title>
-				{/* <div >
-					<Doughnut data={myData} width='300'legend={{position:"right"}}/>
-				</div> */}
 				<div >
 					<Row gutter={16}>
 						<Col span={130} display="block">
-							<Card style={{ backgroundColor: '#efefef', width: "700px" }}>
+							<Card style={{ backgroundColor: '#efefef', width: "700px",marginLeft:"30px" }}>
 								<Chart options={options} series={series} height={300} width={600} type="donut" />
 							</Card>
 						</Col>
 
 						<Col span={100}  >
-							<Card style={{ backgroundColor: '#efefef', width: "400px", marginLeft: "10px", title: "Card title" }}>
+							<Card style={{ backgroundColor: '#efefef', width: "400px", marginLeft: "30px", title: "Card title" }}>
 								<Row>
 									<Col span={20} marginRight='100px'>
 										<h3 style={{ color: 'blue' }} >Available blood count:{Aailable_value[0].count}</h3>
-
 									</Col>
 								</Row>
 								<Row>
