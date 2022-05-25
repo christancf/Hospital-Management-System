@@ -115,7 +115,7 @@ const Demo = () => {
           label="Staff ID"
           name="staffID"
            
-          rules={[{ required: true, message: 'Please input the staff ID!' }]} 
+          rules={[{ required: true, message: 'Please input the staff ID!' }, {pattern: "[0-9]+", message: 'Please input a valid staff ID'}]} 
         >
           <Search placeholder="Enter Staff ID" onSearch={id => searchById(id)} enterButton  id='staffID' />
         </Form.Item>
@@ -131,7 +131,7 @@ const Demo = () => {
       <Form.Item
           label="NIC"
           name="NIC" 
-          rules={[{ required: true, pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$', message: 'Please input a valid NIC!' }]}
+          rules={[{ required: true, message: 'Please input the NIC!'}, {pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$', message: 'Please input a valid NIC!' }]}
         >
           <Input id="NIC" />
         </Form.Item>
