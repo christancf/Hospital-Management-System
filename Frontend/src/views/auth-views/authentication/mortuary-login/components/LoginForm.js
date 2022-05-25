@@ -16,7 +16,7 @@ import JwtAuthService from 'services/JwtAuthService'
 import { useHistory } from "react-router-dom";
 import { motion } from "framer-motion"
 import jwt_decode from "jwt-decode";
-import { MORTUARY_PREFIX_PATH, APP_PREFIX_PATH, MORTUARY_ROLE } from 'configs/AppConfig'
+import { MORTUARY_PREFIX_PATH, APP_PREFIX_PATH, MORTUARY_ROLE, setTokenMeta } from 'configs/AppConfig'
 
 const ValidateUser = (role) => {
 
@@ -67,6 +67,7 @@ export const LoginForm = (props) => {
 			if(resp.succuss){
 				authenticated(resp.payload.token)
 				localStorage.setItem(AUTH_TOKEN, resp.payload.token);
+				setTokenMeta();
 				window.location = MORTUARY_PREFIX_PATH;
 			}
 			else{

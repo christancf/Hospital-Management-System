@@ -61,3 +61,13 @@ export const THEME_CONFIG = {
     }
 
 }
+
+export const setTokenMeta = () => {
+
+	var mytoken = localStorage.getItem(AUTH_TOKEN);
+	if(mytoken){
+		var decoded = jwt_decode(mytoken)
+		localStorage.setItem('name', decoded.name);
+		localStorage.setItem('role', decoded.role);
+	}
+}

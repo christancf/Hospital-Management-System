@@ -27,16 +27,7 @@ export const NavProfile = () => {
       </div>
       <div className="nav-profile-body">
         <Menu>
-          {menuItem.map((el, i) => {
-            return (
-              <Menu.Item key={i}>
-                <a href={el.path}>
-                  <Icon className="mr-3" type={el.icon} />
-                  <span className="font-weight-normal">{el.title}</span>
-                </a>
-              </Menu.Item>
-            );
-          })}
+         
           <Menu.Item key={menuItem.length + 1} onClick={()=>{ localStorage.clear(); window.location.reload();}}>
             <span>
               <LogoutOutlined className="mr-3"/>
