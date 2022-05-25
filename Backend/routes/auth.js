@@ -15,6 +15,7 @@ router.post('/register',   async function (req, res, next) {
     const encryptedPassword =  await bcrypt.hash(req.body.password, 10);
     const user = new userModel({
       email: req.body.email,
+      name: req.body.name,
       role: req.body.role,
       password: encryptedPassword
     });
@@ -33,7 +34,7 @@ router.post('/register',   async function (req, res, next) {
   
       }).catch(async (error)=> {
   
-        res.status(400).json(
+        res.status(200).json(
           {
             succuss: false,
             message: error.message
@@ -45,7 +46,7 @@ router.post('/register',   async function (req, res, next) {
   
     }
     catch (error) {
-      res.status(400).json(
+      res.status(403).json(
         {
           succuss: false,
           message: error.message
@@ -65,10 +66,10 @@ router.post('/register',   async function (req, res, next) {
         if (user && (await bcrypt.compare(req.body.password, user.password)) && user.role ==  req.body.role) {
           // Create token
           const token = jwt.sign(
-            { user_id: user._id, email : user.email, role: user.role },
+            { user_id: user._id, name: user.name, email : user.email, role: user.role },
             config.TOKEN_KEY,
             {
-              expiresIn: "2h",
+              expiresIn: "24h",
             }
           );
     
@@ -87,10 +88,10 @@ router.post('/register',   async function (req, res, next) {
   
         }
         else{
-            res.status(400).send(
+            res.status(200).send(
                 {
                     succuss: false,
-                    message: "Credentials or user role invalid !",
+                    message: "User email or password invalid !",
                     payload: {}
                 }
                 );
@@ -98,7 +99,7 @@ router.post('/register',   async function (req, res, next) {
     
     }
     catch (error) {
-        res.status(400).send(
+        res.status(200).send(
             {
                 succuss: false,
                 message: error.message,

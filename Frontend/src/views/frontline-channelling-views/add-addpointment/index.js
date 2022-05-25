@@ -2,9 +2,10 @@ import { Form, Input, InputNumber, Button, Select, DatePicker, Card, Spin, Modal
 import { useState, useEffect } from 'react';
 import channellingService from 'services/FrontlineChannellingService';
 import moment from 'moment';
+import { FRONTLINE_CHANNELLING_ROLE , ValidateUser} from 'configs/AppConfig';
 const { Option } = Select;
 
-
+ValidateUser(FRONTLINE_CHANNELLING_ROLE);
 
 function toTimestamp(strDate) {
 	var datum = Date.parse(strDate);
