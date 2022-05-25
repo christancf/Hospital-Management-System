@@ -47,7 +47,7 @@ const Home = () => {
 
 	useEffect(()=>{
 		patientManagementService
-		.category()
+		.categoryStat()
 		.then((res) => {
 			console.table(res.payload)
 			const myData = res.payload;

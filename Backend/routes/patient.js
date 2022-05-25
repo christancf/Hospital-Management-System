@@ -3,6 +3,7 @@ const userModel = require('../models/user');
 var router = express.Router();
 const auth = require("../middleware/auth");
 const patientModel = require('../models/patient');
+const wardmodel = require("../models/ward-category")
 
 //patient id generate function
 
@@ -167,6 +168,31 @@ router.put('/update',auth, (req, res, next) => {
     }
   });
 
+  //list of ward categories
+  router.get("/category",auth,async function (req,res,next){
+    wardmodel.find({}).then((response) => {
+        
+      res.status(200).json(
+        {
+          succuss: true,
+          message: 'Retrival succussfull',
+          payload: [... new Set(response)]
+        }
+      );
+
+    }).catch((error) => {
+      res.status(400).json(
+        {
+          succuss: false,
+          message: error.message,
+          payload: {}
+        }
+      );
+
+    });
+
+    
+  })
 
 
 
