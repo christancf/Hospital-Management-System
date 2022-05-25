@@ -78,7 +78,7 @@ const tailLayout = {
 				if(status === 'Resigned') {
 					ShowModel("Member is Resigned!", 4, "Cannot mark attendance of a resigned member", false)
 				}
-				else if(status) {
+				else if(status === 'marked') {
 					ShowModel("Successful!", 2, "Check In Attendance marked Successfully", true)
 				}
 				else {
@@ -97,11 +97,11 @@ const tailLayout = {
 				if(status === 'Resigned') {
 					ShowModel("Member is Resigned!", 4, "Cannot mark attendance of a resigned member", false)
 				}
-				else if(status) {
+				else if(status === 'marked') {
 					ShowModel("Successful!", 2, "Check Out Attendance marked Successfully", true)
 				}
 				else {
-					ShowModel("Failed!", 4, " Previous Check In Attendance of this member is not marked", false)
+					ShowModel("Failed!", 4, "Check In Attendance of this member is not marked", false)
 				}
 			})
 			.catch(() => 
