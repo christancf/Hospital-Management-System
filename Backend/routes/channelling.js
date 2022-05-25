@@ -97,7 +97,7 @@ router.post('/appointment/edit', function (req, res, next) {
 });
 
 
-router.post('/appointment/editstatus', function (req, res, next) {
+router.post('/doctor/appointment/editstatus', function (req, res, next) {
 
   const id = req.query.id;
 
