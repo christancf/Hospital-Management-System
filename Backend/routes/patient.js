@@ -51,7 +51,7 @@ router.post('/admittance' , function(req,res,next){
         res.status(400).json({success:false,message:error.message,payload:{}})
     }
 });
-
+//read details of patient given patient id 
 router.get('/read', function(req,res,next){
     patientModel.find({patientId:req.query.id})
     .then((patientDetails) => {
@@ -64,7 +64,7 @@ router.get('/read', function(req,res,next){
         res.status(400).json({success:false,message:error.message,payload:{}})
     })
 });
-
+// change patient status to false given patient id 
 router.delete('/checkout', (req,res,next) => {
     patientModel.updateOne({patientId:req.query.id},{$set:{"status":false}})
     .then((result) => {
@@ -77,6 +77,7 @@ router.delete('/checkout', (req,res,next) => {
         res.status(400).json({success:false,message:e.message,payload:{}})
       })
 })
+// update patient details given patient id
 router.put('/update', (req, res, next) => {
 
     patientModel.updateOne({"patientId":req.body.patient.id,},
@@ -101,7 +102,7 @@ router.put('/update', (req, res, next) => {
   })
 
 
-
+  //get details of every patients with status:true
   router.get('/patientlist', async (req, res, next) => {
 
 
@@ -140,6 +141,30 @@ router.put('/update', (req, res, next) => {
       );
     }
   
+  });
+
+  //number of patients grouped by ward category male female seperate
+  router.get("/stat", async function (req, res, next) {
+    try {
+      let patientDetails = await patientModel.aggregate([
+        { $group: { 
+          _id: {
+            "sex": "$sex",
+            "category":"$category"
+          },
+          count: { $sum: 1 } } },
+      ]);
+      res.status(200).json({
+        success: true,
+        message: "Successful Retrieval",
+        payload: patientDetails,
+      });
+    } catch (error) {
+      res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
   });
 
 
