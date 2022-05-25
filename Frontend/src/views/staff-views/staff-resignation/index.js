@@ -1,10 +1,9 @@
 import React from 'react'
-import { Form, Input, Button, message, Card, Modal, Select } from 'antd';
+import { Form, Input, Button, Card, Modal, Select } from 'antd';
 import { ExclamationCircleOutlined} from '@ant-design/icons';
 import staffService from 'services/StaffService';
 
 const { Search } = Input;
-const resign = 'resign'
 const { confirm } = Modal
 const { Option } = Select
 
@@ -14,6 +13,44 @@ const StaffResignation = () => {
 			<Demo></Demo>
 		</div>
 	)
+}
+
+function ShowModel(title, delay, innercontent, isSuccess) {
+
+	if (isSuccess) {
+		const modal = Modal.success({
+			title: title,
+			content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+		});
+		const timer = setInterval(() => {
+			delay -= 1;
+			modal.update({
+				content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+			});
+		}, 1000);
+		setTimeout(() => {
+			clearInterval(timer);
+			modal.destroy();
+			window.location.href="../staff/display-staff-details";
+		}, delay * 1000);
+	}
+
+	else {
+		const modal = Modal.error({
+			title: title,
+			content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+		});
+		const timer = setInterval(() => {
+			delay -= 1;
+			modal.update({
+				content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+			});
+		}, 1000);
+		setTimeout(() => {
+			clearInterval(timer);
+			modal.destroy();
+		}, delay * 1000);
+	}
 }
 
 const showResignationConfirm = (id, name) => {
@@ -26,8 +63,15 @@ const showResignationConfirm = (id, name) => {
       cancelText: 'No',
       onOk() {
         staffService.updateStatus({'staffID': id})
- 		.then(() => message.success({content: 'Marked as Resigned!', resign, duration: 2}))
-		.catch((e) => message.error({content: 'Please try again!', resign, duration: 2}))
+ 		.then((status) => {
+			 if(status === 'Resigned') {
+				ShowModel("Member is Resigned!", 4, "Cannot resign an already resigned member", false)
+			 }
+			 else{
+				ShowModel("Successful!", 2, "Staff Member Marked as Resigned Sucessfully", true)
+			 }
+		 })
+		.catch((e) => ShowModel("Failed!", 2, "Failed to Mark as Resigned", false))
       },
       onCancel() {
         console.log('Cancel');
@@ -77,7 +121,7 @@ const tailLayout = {
 	};
   
 	return (
-		<Card style={{backgroundColor: '#efefef'}}>
+		<Card>
 			<h1 className='text-left' style={{ marginLeft: 450, marginBottom: 20 }}>Staff Resignation</h1>
 			<Form
 			{...layout}
