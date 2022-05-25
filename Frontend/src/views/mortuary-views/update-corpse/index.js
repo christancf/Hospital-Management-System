@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, DatePicker, Radio, Modal, Select } from 'antd';
 import moment from 'moment';
 import mortuaryService from 'services/MortuaryService';
+import {MORTUARY_ROLE, ValidateUser } from 'configs/AppConfig'
+
+ValidateUser(MORTUARY_ROLE);
+
 const { Option } = Select;
 
 const queryParams = new URLSearchParams(window.location.search);

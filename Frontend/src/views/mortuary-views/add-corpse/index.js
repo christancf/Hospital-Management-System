@@ -12,6 +12,10 @@ import {
 } from "antd";
 import moment from "moment";
 import mortuaryService from "services/MortuaryService";
+import {MORTUARY_ROLE, ValidateUser } from 'configs/AppConfig'
+
+ValidateUser(MORTUARY_ROLE);
+
 
 const queryParams = new URLSearchParams(window.location.search);
 const cabinetNo = queryParams.get("cabinetNo");

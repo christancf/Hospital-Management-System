@@ -4,7 +4,7 @@ var router = express.Router();
 const auth = require("../middleware/auth");
 
 //generate auto incremented id
-router.get("/id", function (req, res, next) {
+router.get("/id", auth, function (req, res, next) {
   corpseModel
     .find()
     .sort({ id: -1 })
@@ -26,7 +26,7 @@ router.get("/id", function (req, res, next) {
 });
 
 //add corpse initially
-router.post("/add", function (req, res, next) {
+router.post("/add", auth, function (req, res, next) {
   const corpse = new corpseModel({
     id: req.body.id,
     NIC: req.body.NIC,
@@ -57,7 +57,7 @@ router.post("/add", function (req, res, next) {
 });
 
 // READ to info page
-router.get("/info", async function (req, res, next) {
+router.get("/info", auth, async function (req, res, next) {
   try {
     let corpseDetails = await corpseModel.find(
       {},
@@ -90,7 +90,7 @@ router.get("/info", async function (req, res, next) {
 });
 
 //read for homepage
-router.get("/home", async function (req, res, next) {
+router.get("/home", auth, async function (req, res, next) {
   try {
     let corpseDetails = await corpseModel.find({ status: true }, { _id: 0 });
     console.log(corpseDetails);
@@ -108,7 +108,7 @@ router.get("/home", async function (req, res, next) {
 });
 
 // READ for update page
-router.post("/update/read", async function (req, res, next) {
+router.post("/update/read", auth, async function (req, res, next) {
   // console.log(req.query.id)
   try {
     let corpseDetails = await corpseModel
@@ -152,7 +152,7 @@ router.post("/update/read", async function (req, res, next) {
   }
 });
 //update corpse
-router.post("/update/corpse", function (req, res, next) {
+router.post("/update/corpse", auth, function (req, res, next) {
   const id = req.query.id;
 
   try {
@@ -196,7 +196,7 @@ router.post("/update/corpse", function (req, res, next) {
   }
 });
 // READ for occupied corpse page
-router.post("/home/read", async function (req, res, next) {
+router.post("/home/read", auth, async function (req, res, next) {
   try {
     let response = await corpseModel
       .find(
@@ -230,7 +230,7 @@ router.post("/home/read", async function (req, res, next) {
 });
 
 //Release corpse (update)
-router.post("/release", function (req, res, next) {
+router.post("/release", auth, function (req, res, next) {
   const id = req.query.id;
   try {
     corpseModel
@@ -272,7 +272,7 @@ router.post("/release", function (req, res, next) {
 });
 
 //search
-router.post("/search", async function (req, res, next) {
+router.post("/search", auth, async function (req, res, next) {
   corpseName = req.body.name;
   try {
     let corpseDetails = await corpseModel.find({
@@ -293,7 +293,7 @@ router.post("/search", async function (req, res, next) {
 });
 
 //read data according to age
-router.post("/filter", async function (req, res, next) {
+router.post("/filter", auth, async function (req, res, next) {
   const lowerYear = req.body.high;
   const upperYear = req.body.low;
   const cod = req.body.cod;
@@ -330,7 +330,7 @@ router.post("/filter", async function (req, res, next) {
 });
 
 //stat 1
-router.post("/stat", async function (req, res, next) {
+router.post("/stat", auth, async function (req, res, next) {
   try {
     let corpseDetails = await corpseModel.aggregate([
       { $group: { _id: "$cause_of_death", count: { $sum: 1 } } },
@@ -349,7 +349,7 @@ router.post("/stat", async function (req, res, next) {
   }
 });
 //stat 1 month
-router.post("/statMonth", async function (req, res, next) {
+router.post("/statMonth", auth, async function (req, res, next) {
   try {
     var month = req.body.month;
     console.log(month)
@@ -376,7 +376,7 @@ router.post("/statMonth", async function (req, res, next) {
 });
 
 //stat 2 according to month
-router.post("/stat2Month", async function (req, res, next) {
+router.post("/stat2Month", auth, async function (req, res, next) {
   try {
     var month = req.body.month;
     console.log(month)
@@ -406,7 +406,7 @@ router.post("/stat2Month", async function (req, res, next) {
 });
 
 //stat 2 
-router.post("/stat2", async function (req, res, next) {
+router.post("/stat2", auth, async function (req, res, next) {
   try {
     let corpseDetails = await corpseModel.aggregate([
       { $group: { 
