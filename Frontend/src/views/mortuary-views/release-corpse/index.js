@@ -214,6 +214,20 @@ const Demo = () => {
               Submit
             </Button>
           </Form.Item>
+          <Form.Item {...tailLayout}>
+              <Button
+                onClick={() => {
+                  form.setFieldsValue({
+                    receiverName: "Manoj Perera",
+                    receiverType: "Medical Faculty",
+                    receiverDescription: "Released to Medical Faculty of University of Colombo for educational purposes."
+                  });
+                }}
+                danger
+              >
+                Demo
+              </Button>
+            </Form.Item>
         </Form>
       </Card>
     );
