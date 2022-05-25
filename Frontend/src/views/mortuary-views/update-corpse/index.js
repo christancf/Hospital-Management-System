@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, DatePicker, Cascader, Radio, Modal, Select } from 'antd';
+import { Form, Input, Button, DatePicker, Radio, Modal, Select } from 'antd';
 import moment from 'moment';
 import mortuaryService from 'services/MortuaryService';
 const { Option } = Select;
@@ -105,7 +105,7 @@ const Demo = () => {
 
         mortuaryService.updateCorpse(id, payload).then((res) => {
 
-            if (res.succuss) {
+            if (res.success) {
                 ShowModel(
                     "Successful !",
                     3,

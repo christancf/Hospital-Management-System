@@ -1,10 +1,9 @@
 import React from 'react'
-import { Form, Input, Button, Card, Select, message } from 'antd';
+import { Form, Input, Button, Card, Select, Modal } from 'antd';
 import staffService from 'services/StaffService';
 
 const { Search } = Input;
 const { Option } = Select;
-const bonus = 'bonus'
 
 const StaffSalaryBonuses = () => {
 	return (
@@ -19,12 +18,50 @@ const layout = {
 	wrapperCol: { span: 8 },
   };
 const tailLayout = {
-	wrapperCol: { offset: 10, span: 16 },
+	wrapperCol: { offset: 9, span: 16 },
   };
 
   const Demo = () => {
 
 	const [form] = Form.useForm();
+
+	function ShowModel(title, delay, innercontent, isSuccess) {
+
+		if (isSuccess) {
+			const modal = Modal.success({
+				title: title,
+				content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+			});
+			const timer = setInterval(() => {
+				delay -= 1;
+				modal.update({
+					content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+				});
+			}, 1000);
+			setTimeout(() => {
+				clearInterval(timer);
+				modal.destroy();
+			}, delay * 1000);
+		}
+
+		else {
+			const modal = Modal.error({
+				title: title,
+				content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+			});
+			const timer = setInterval(() => {
+				delay -= 1;
+				modal.update({
+					content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+				});
+			}, 1000);
+			setTimeout(() => {
+				clearInterval(timer);
+				modal.destroy();
+			}, delay * 1000);
+		}
+	}
+
 	let staffDetails
   
 	const onFinish = values => {
@@ -34,8 +71,11 @@ const tailLayout = {
 		console.log(staffID, bonusAmount, addedDate)
 
 		staffService.addBonus({staffID, bonusAmount, addedDate})
-		.then(() => message.success({content: 'Bonus Added', bonus, duration: 2}))
-		.catch((e) => message.error({content: 'Please try again!', bonus, duration: 2}))
+		.then((value) => {
+			if(value) ShowModel("Successful!", 2, "Bonus added Sucessfully", true)
+			else ShowModel("Member is Resigned!", 4, "Cannot add bonuses to a resigned member", false)
+		})
+		.catch((e) => ShowModel("Failed!", 2, "Failed to add Bonus", false))
 		form.resetFields();
 	};
   
@@ -61,7 +101,7 @@ const tailLayout = {
 	};
   
 	return (
-		<Card style={{backgroundColor: '#efefef'}}>
+		<Card>
 			<h1 className='text-left' style={{ marginLeft: 430, marginBottom: 20 }}>Staff Salary Bonuses</h1>
 			<Form
 				{...layout}

@@ -1,15 +1,15 @@
-import React from 'react'
-import { Form, Input, Button, DatePicker, message, Card, Select } from 'antd';
+import React, { useEffect, useState } from 'react'
+import { Form, Input, Button, DatePicker, Card, Select, Spin, Row, Col, Modal } from 'antd';
 import moment from 'moment';
 import staffService from 'services/StaffService';
+import TextArea from 'antd/lib/input/TextArea';
 
-const add = 'add'
 const { Option } = Select
 
 const AddStaffMember = () => {
   return (
     <div>
-			<Demo />
+			<AddMember />
 		</div>
 	)
 }
@@ -21,20 +21,94 @@ function disabledDate(current) {
 
 const layout = {
   labelCol: { span: 8 },
-  wrapperCol: { span: 8 },
+  wrapperCol: { span: 12 },
 };
 const tailLayout = {
-  wrapperCol: { offset: 12, span: 16 },
+  wrapperCol: { offset: 4, span: 16 },
 };
 
-const Demo = () => {
-  const [form] = Form.useForm();
+const AddMember = () => {
+
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
+  const [data, setData] = useState()
+
+  useEffect( () => {
+    staffService.id()
+    .then((res) => {
+      setData(res.payload)
+      setLoading(false)
+    })
+    .catch((e) => {
+      setLoading(false)
+      setError(true)
+      setData()
+    })
+  }, [])
+
+  function ShowModel(title, delay, innercontent, isSuccess) {
+
+    if (isSuccess) {
+      const modal = Modal.success({
+        title: title,
+        content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+      });
+      const timer = setInterval(() => {
+        delay -= 1;
+        modal.update({
+          content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+        });
+      }, 1000);
+      setTimeout(() => {
+        clearInterval(timer);
+        modal.destroy();
+        window.location.reload(true)
+      }, delay * 1000);
+    }
+
+    else {
+      const modal = Modal.error({
+        title: title,
+        content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+      });
+      const timer = setInterval(() => {
+        delay -= 1;
+        modal.update({
+          content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+        });
+      }, 1000);
+      setTimeout(() => {
+        clearInterval(timer);
+        modal.destroy();
+      }, delay * 1000);
+    }
+  }
+
+  const demoDetails = () => {
+
+    form.setFieldsValue({
+      staffName: "Kasun Withana",
+      NIC: "722467676V",
+      email: "kasunwithana@gmail.com", 
+      designation: "doctor",    
+      qualification: "MBBS",
+      address: "No 57, Prestige City, Malabe",
+      dateOfBirth: moment("1972-05-09"),
+      gender: "male",
+      basicSalary: 150000,
+      mobile: "0115645387",
+      home: "0753476546"
+    })
+  }
+
+  const [form] = Form.useForm()
+
   const onFinish = values => {
     values.dateOfBirth = values.dateOfBirth['_d'].getTime()
-
+    console.log(values.staffID)
     staffService.addStaffMember(values)
-      .then(() => message.success({content: 'Successfully added new staff member', add, duration: 2}))
-      .catch(() => message.error({content: 'Please try again!', add, duration: 2}))
+      .then(() => ShowModel("Successful!", 2, "Staff Member Added Successfully", true))
+      .catch(() => ShowModel("Failed!", 2, "Failed to add Staff Member", false))
 
       form.resetFields();
   };
@@ -43,131 +117,180 @@ const Demo = () => {
     console.log('Failed:', errorInfo);
   };
 
-  return (
-    <Card style={{backgroundColor: '#efefef'}}>
-      <h1 className='text-left' style={{ marginLeft: 420, marginBottom: 20 }}>Add New Staff Member</h1>
+  if (loading) {
+		return (
+			<>
+				<center>
+					<Spin size="large" tip="Loading..." delay={500} spinning={loading} />
+				</center>
 
-      <Form
-      {...layout}
-      name="basic"
-      initialValues={{ remember: true }}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-      form={form}
-      >
-        <Form.Item
-          label="Staff ID"
-          name="staffID"
-          rules={[{ required: true, message: 'Please input the staff ID!' }, {pattern: "[0-9]+", message: 'Please input a valid staff ID'}]}
+			</>
+		)
+	}
+	else if (error) {
+
+		return (
+			<>
+				<center>
+					<Spin size="large" tip="Loading..." delay={500} spinning={loading} />
+				</center>
+
+			</>
+		)
+
+	}
+  else {
+    return (
+      <Card >
+        <h1 className='text-left' style={{ marginLeft: 420, marginBottom: 20 }}>Add New Staff Member</h1>
+  
+        <Form
+        {...layout}
+        name="basic"
+        initialValues={{ remember: true }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        form={form}
         >
-          <Input />
-        </Form.Item>
+          <Row>
+            <Col span={12}>
 
-        <Form.Item
-          label="Name"
-          name="staffName"
-          rules={[{ required: true, message: 'Please input the name!' }]}
-        >
-          <Input />
-        </Form.Item>
+              <Form.Item
+                label="Staff ID"
+                name="staffID"
+                initialValue={data}
+                style={{cursor: 'not-allowed'}}
+                rules={[{ required: true, message: 'Please input the staff ID!' }]}
+              >
+              <Input style={{pointerEvents: 'none'}} id="staffID" />
+              </Form.Item>
+      
+              <Form.Item
+                label="Name"
+                name="staffName"
+                rules={[{ required: true, message: 'Please input the name!' }]}
+              >
+                <Input />
+              </Form.Item>
+      
+              <Form.Item
+                label="NIC"
+                name="NIC"
+                rules={[{ required: true, message: 'Please input the NIC!'}, {pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$', message: 'Please input a valid NIC!' }]}
+              >
+                <Input />
+              </Form.Item>
+        
+              <Form.Item
+                label="E-mail"
+                name="email"
+                rules={[{ required: true, message: 'Please input the email!'}, {pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$", message: 'Please enter a valid email!' }]}
+              >
+                <Input />
+              </Form.Item>
+      
+              <Form.Item name="designation" label="Designation" rules={[{ required: true, message: 'Please select the designation!'}]}>
+                <Select allowClear>
+                  <Option value="doctor">Doctor</Option>
+                  <Option value="nurse">Nurse</Option>
+                  <Option value="allied health professionals">Allied Health Professionals</Option>
+                </Select>
+              </Form.Item>
+      
+              <Form.Item
+                label="Qualification"
+                name="qualification"
+                rules={[{ required: true, message: 'Please input the qualification!' }]}
+              >
+                <Input />
+              </Form.Item>
 
-      <Form.Item
-          label="NIC"
-          name="NIC"
-          rules={[{ required: true, message: 'Please input the NIC!'}, {pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$', message: 'Please input a valid NIC!' }]}
-        >
-          <Input />
-        </Form.Item>
+            </Col>
 
-      <Form.Item
-          label="E-mail"
-          name="email"
-          rules={[{ required: true, message: 'Please input the email!'}, {pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$", message: 'Please enter a valid email!' }]}
-        >
-          <Input />
-        </Form.Item>
+            <Col span={12}>
 
-        <Form.Item name="designation" label="Designation" rules={[{ required: true, message: 'Please select the designation!'}]}>
-          <Select allowClear>
-            <Option value="doctor">Doctor</Option>
-            <Option value="nurse">Nurse</Option>
-            <Option value="allied health professionals">Allied Health Professionals</Option>
-          </Select>
-        </Form.Item>
+              <Form.Item 
+                  label="Date Of Birth"
+                  name="dateOfBirth"
+                  rules={[{ required: true, message: 'Please input the date of birth!'}]}
+                >
+                  <DatePicker
+                    placeholder='Select Date'
+                    format="YYYY-MM-DD"
+                    disabledDate={disabledDate} />
+                </Form.Item>
 
-        <Form.Item
-          label="Qualification"
-          name="qualification"
-          rules={[{ required: true, message: 'Please input the qualification!' }]}
-        >
-        <Input />
-        </Form.Item>
+              <Form.Item name="gender" label="Gender" rules={[{ required: true, message: 'Please select the gender' }]}>
+                <Select allowClear>
+                  <Option value="male">Male</Option>
+                  <Option value="female">Female</Option>
+                  <Option value="other">Other</Option>
+                </Select>
+              </Form.Item>
+              
+              <Form.Item
+                label="Address"
+                name="address"
+                rules={[{ required: true, message: 'Please input the address!' }]}
+              >
+                <TextArea style={{height: 15}} />
+              </Form.Item>
+      
+              <Form.Item
+                label="Base Salary"
+                name="basicSalary"
+                rules={[{ required: true, message: 'Please input the base salary!' }]}
+              >
+                <Input />
+              </Form.Item>
+      
+              <Form.Item
+                label="Mobile"
+                name="mobile"
+                rules={[{ required: true, message: 'Please input a mobile number!'},  {pattern:'^([0-9]{10}|)$', message: 'Please input valid mobile number!' }]}
+              >
+                <Input />
+              </Form.Item>
+      
+              <Form.Item
+                label="Home"
+                name="home"
+                rules={[{ required: true, message: 'Please input a home numer!'}, {pattern:'^([0-9]{10}|)$', message: 'Please input valid home number!' }]}
+              >
+                <Input />
+              </Form.Item>
+              
+            </Col>
+          </Row>
 
-        <Form.Item 
-          label="Date Of Birth"
-          name="dateOfBirth"
-          rules={[{ required: true, message: 'Please input the date of birth!'}]}
-        >
-            <DatePicker
-              placeholder='Select Date'
-              format="YYYY-MM-DD"
-              disabledDate={disabledDate} />
-        </Form.Item>
+          <Form.Item {...tailLayout}>
+            <Row>
+              <Col span={16}>
 
-        <Form.Item name="gender" label="Gender" rules={[{ required: true, message: 'Please select the gender' }]}>
-          <Select allowClear>
-            <Option value="male">Male</Option>
-            <Option value="female">Female</Option>
-            <Option value="other">Other</Option>
-          </Select>
-        </Form.Item>
+                <Button danger style={{marginRight: 30}} onClick={demoDetails}>
+                  Demo Details
+                </Button>
 
-        <Form.Item
-          label="Address"
-          name="address"
-          rules={[{ required: true, message: 'Please input the address!' }]}
-        >
-        <Input />
-        </Form.Item>
+              </Col>
 
-        <Form.Item
-          label="Base Salary"
-          name="basicSalary"
-          rules={[{ required: true, message: 'Please input the base salary!' }, {pattern: "[0-9]+", message: 'Please input a numerical value!'}]}
-        >
-        <Input />
-        </Form.Item>
+              <Col span={8}>
 
-        <Form.Item
-          label="Mobile"
-          name="mobile"
-          rules={[{ required: true, message: 'Please input a mobile number!'},  {pattern:'^([0-9]{10}|)$', message: 'Please input valid mobile number!' }]}
-        >
-        <Input />
-        </Form.Item>
+                <Button htmlType="reset" style={{marginRight: 30}}>
+                  Discard
+                </Button>
+    
+                <Button type="primary" htmlType="submit">
+                  Submit
+                </Button>
 
-        <Form.Item
-          label="Home"
-          name="home"
-          rules={[{ required: true, message: 'Please input a home numer!'}, {pattern:'^([0-9]{10}|)$', message: 'Please input valid home number!' }]}
-        >
-        <Input />
-        </Form.Item>
+              </Col>
+            </Row>
+          </Form.Item>
 
-        <Form.Item {...tailLayout}>
-
-          <Button htmlType="reset" style={{marginRight: 30}}>
-            Discard
-          </Button>
-
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-
-        </Form.Item>
-      </Form>
-    </Card>
-  );
+        </Form>
+      </Card>
+    );
+  }
 };
 
 export default AddStaffMember
