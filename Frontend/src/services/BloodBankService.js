@@ -21,6 +21,15 @@ bloodBankService.updateBloodDetails = function(data) {
   })
 }
 
+bloodBankService.updateBloodTransfusion = function(data) {
+  return fetch({
+    url: '/bloodbag/update-transfusion',
+    method: 'put',
+    data: data
+  })
+}
+
+
 bloodBankService.readBloodDetails = async function () {
   return await fetch({
     url: '/bloodbag/details/read',
@@ -28,18 +37,27 @@ bloodBankService.readBloodDetails = async function () {
   })
 }
 
-bloodBankService.deleteBloodDetails = function(data) {
-  return fetch({
-    url: '/bloodbag/bag-delete/:id',
-    method: 'delete',
-    data: data
-  })
-}
+// bloodBankService.deleteBloodDetails = function(data) {
+//   return fetch({
+//     url: '/bloodbag/bag-delete/:id',
+//     method: 'delete',
+//     data: data
+//   })
+// }
 
 bloodBankService.bloodBagDetails = function (data){
   
   return fetch({
     url: `/bloodbag/read?id=${data}`,
+    method: 'get',
+
+  })
+}
+
+bloodBankService.bloodTransfusionDetails = function (data){
+  
+  return fetch({
+    url: `/bloodbag/readTransfusion?id=${data}`,
     method: 'get',
 
   })
@@ -78,5 +96,52 @@ bloodBankService.readTransfusionDetails = async function () {
     method: 'get'
   })
 }
+
+bloodBankService.deleteBagList = function (id){
+
+  return fetch({
+    url: `/bloodbag/deleteBagList?id=${id}`,
+    method: 'delete'
+  })
+}
+
+bloodBankService.updateStatus = function (id,data){
+
+  return fetch({
+    url: `/bloodbag/update-status?id=${id}`,
+    method: 'put',
+    data: data
+  })
+}
+
+bloodBankService.expireBagDetails = function (data){
+
+  return fetch({
+    url: `/bloodbag/details/readExpireBag`,
+    method: 'get',
+    data: data
+  })
+}
+
+bloodBankService.bloodBagsCount = function () {
+  return fetch({
+    url: `/bloodbag/bloodBagsCount`,
+    method: "post",
+  });
+};
+
+bloodBankService.transfusionCount = function () {
+  return fetch({
+    url: `/bloodbag/transfusionCount`,
+    method: "post",
+  });
+};
+
+bloodBankService.availableBagCount = function () {
+  return fetch({
+    url: `/bloodbag/availaleBloodCount`,
+    method: "post",
+  });
+};
 
 export default bloodBankService

@@ -1,4 +1,4 @@
-import { Form, Input, InputNumber, Button, Cascader, DatePicker, Select, Modal, Spin, Typography } from 'antd';
+import { Form, Input, Card, Button, Cascader, DatePicker, Select, Modal, Spin, Typography } from 'antd';
 import { json } from 'd3-fetch';
 import moment from 'moment';
 import bloodBankService from 'services/BloodBankService';
@@ -131,7 +131,7 @@ const AddBloodBag = () => {
       donorName: values.donorName,
       donorNIC: values.donorNIC,
       donationNumber: values.donationNumber,
-      donateDate: moment(values.donateDate).format("X"),
+      donateDate: moment(values.donateDate).valueOf(),
       place: values.place,
       bloodGroup: values.bloodGroup,
     }
@@ -179,9 +179,9 @@ const AddBloodBag = () => {
 			return current && current > moment().endOf('day');
 		  }
     return (
-
-      <Form {...layout} name="addBloodBag" onFinish={onFinish} form={form} >
-        <Title>Add Blood Bag</Title><br></br>
+<Card style={{backgroundColor: '#efefef'}}>
+      <Form {...layout} name="addBloodBag" onFinish={onFinish} form={form} style={{ marginLeft: 200, marginBottom: 20 }}>
+        <Title style={{ marginLeft: 270, marginBottom: 20 }}>Add Blood Bag</Title><br></br>
         <Form.Item name="bagId" label="Bag Id" initialValue={data} placeholder="Bag Id" >
           <Input disabled />
         </Form.Item>
@@ -191,7 +191,7 @@ const AddBloodBag = () => {
         <Form.Item name="donorNIC" label=" Donor's NIC" rules={[{ required: true,pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' , message: 'Enter valid NIC' }]} placeholder="Donor's NIC">
           <Input />
         </Form.Item>
-        <Form.Item label="Donation Number " name="donationNumber" rules={[{ required: true,message:'Enter the donation number' }]} placeholder="Please input Donation Number!">
+        <Form.Item label="Donation Number " name="donationNumber" rules={[{ required: true,pattern:'^[A-Z]{2}-[0-9]{4}$',message:'Enter the valid donation number' }]} placeholder="Please input Donation Number!">
           <Input />
         </Form.Item>
         <Form.Item label="Donated Date & Time" name="donateDate">
@@ -201,7 +201,7 @@ const AddBloodBag = () => {
           <Input />
         </Form.Item>
 
-        <Form.Item name="bloodGroup" label="bloodGroup" rules={[{ required: true }]}>
+        <Form.Item name="bloodGroup" label="Blood Group" rules={[{ required: true }]}>
           <Select
             labelInValue
             placeholder="Select Blood Group"
@@ -215,6 +215,10 @@ const AddBloodBag = () => {
           </Select>
         </Form.Item>
 
+        <Form.Item label="Volume" name="volume" >
+					<Input disabled={true} id="Volume" placeholder='1 pint(450ml)'/>
+				</Form.Item>
+
         <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
           <Button className="mr-2" htmlType="button" onClick={onReset}>
             Reset
@@ -225,6 +229,7 @@ const AddBloodBag = () => {
           </Button>
         </Form.Item>
       </Form>
+      </Card>
     );
   }
 };

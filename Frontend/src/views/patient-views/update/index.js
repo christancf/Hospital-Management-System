@@ -86,6 +86,21 @@ const bloodGroup = [
   },
 ];
 
+const category =[
+	{
+		label:"General",
+		value:"General"
+	},
+	{
+		label:"Accident",
+		value:"Accident"
+	},
+	{
+		label:"ICU",
+		value:"ICU"
+	},
+]
+
 const PatientAdmittance = () => {
   const [form] = Form.useForm();
 
@@ -179,6 +194,7 @@ const PatientAdmittance = () => {
       mobile: values.mobile,
       address: values.address,
       bloodGroup: values.bloodGroup,
+      category:values.category
     };
 
     const payload = { patient: patient };
@@ -367,6 +383,24 @@ const PatientAdmittance = () => {
             ))}
           </Select>
         </Form.Item>
+        <Form.Item
+          name="category"
+          initialValue={data.category}
+          label="category"
+          rules={[{ required: true }]}
+        >
+          <Select
+            placeholder="Select category"
+            filterOption={false}
+            showSearch={{ filter }}
+            style={{ width: "100%" }}
+          >
+            {category.map((d) => (
+              <Option key={d.value}>{d.label}</Option>
+            ))}
+          </Select>
+        </Form.Item>
+        
 
         <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
           <Button type="primary" htmlType="submit">

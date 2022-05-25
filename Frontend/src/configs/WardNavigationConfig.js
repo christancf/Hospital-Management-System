@@ -7,33 +7,32 @@ const dashBoardNavTree = [
   {
     key: 'dashboard',
     path: `${WARD_PREFIX_PATH}/home`,
-    title: 'dashboard',
-    icon: DashboardOutlined,
+    title: 'Ward Management',
     breadcrumb: false,
     submenu: [
       {
-        key: 'assigned-nurse-details',
-        path: `${WARD_PREFIX_PATH}/nurse/details`,
-        title: 'Assigned Nurse Details',
-        icon: DashboardOutlined,
-        breadcrumb: false,
-        submenu: []
-      },
-      {
-        key: 'assign nurse',
-        path: `${WARD_PREFIX_PATH}/nurse/assign`,
-        title: 'Assign Nurse',
-        icon: DashboardOutlined,
-        breadcrumb: false,
-        submenu: []
-      },
-      {
         key: 'ward-details',
         path: `${WARD_PREFIX_PATH}/details`,
-        title: 'ward details',
+        title: 'Ward Details',
         icon: DashboardOutlined,
         breadcrumb: false,
         submenu: [
+          {
+            key: 'home',
+            path: `${WARD_PREFIX_PATH}/home`,
+            title: 'Wards',
+            icon: '',
+            breadcrumb: false,
+            submenu: []
+          },
+          {
+            key: 'add-ward-category',
+            path: `${WARD_PREFIX_PATH}/category/add`,
+            title: 'Add Category',
+            icon: '',
+            breadcrumb: false,
+            submenu: []
+          },
           {
             key: 'add-ward-details',
             path: `${WARD_PREFIX_PATH}/details/add`,
@@ -51,6 +50,22 @@ const dashBoardNavTree = [
             submenu: []
           }
         ]
+      },
+      {
+        key: 'assigned-nurse-details',
+        path: `${WARD_PREFIX_PATH}/nurse/details`,
+        title: 'Assigned Nurse Details',
+        icon: DashboardOutlined,
+        breadcrumb: false,
+        submenu: []
+      },
+      {
+        key: 'assign nurse',
+        path: `${WARD_PREFIX_PATH}/nurse/assign`,
+        title: 'Assign Nurse',
+        icon: DashboardOutlined,
+        breadcrumb: false,
+        submenu: []
       },
       {
         key: 'stats',

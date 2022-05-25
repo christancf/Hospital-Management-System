@@ -1,6 +1,7 @@
 var express = require('express');
 const staffModel = require('../models/staff');
 const attendanceModel = require('../models/attendance');
+const bonusModel = require('../models/bonus');
 var router = express.Router();
 const auth = require("../middleware/auth");
 
@@ -42,7 +43,7 @@ router.get('/read-details?:id', (req, res, next) => {
   .catch((e) => console.log(`Error: ${ e }`))
 });
 
-//read staff details
+//read all staff details
 router.get('/read-staffs', (req, res, next) => {
   staffModel.find()
   .then((details) => res.json(details))
@@ -73,7 +74,8 @@ router.put('/update-details', (req, res, next) => {
 })
 
 //update staff member status
-router.put('/update-status', (req, res, next) => {
+router.put('/resign', (req, res, next) => {
+  console.log(req.body.staffID)
   staffModel.updateOne({staffID: req.body.staffID},
     {$set: {status: 'Resigned'}})
     .then(() => res.json("Marked as Resigned!"))
@@ -82,26 +84,59 @@ router.put('/update-status', (req, res, next) => {
 
 //insert checkIn attendance
 router.post('/attendance/checkin', function (req, res, next) {
-
-  const attendance = new attendanceModel({
-    staffID: String(req.body.staffID),
-    checkIn: req.body.checkIn
-  });
-
-  attendance.save()
-  .then(() => res.json("Check In Attendance Marked!"))
-  .catch((e) => console.log(`Error: ${ e }`))
-
+  attendanceModel.findOne({staffID: Number(req.body.staffID)}).sort({_id: -1})
+  .then((data) => {
+    if(data?.checkOut?true:false) {
+      const attendance = new attendanceModel({
+        staffID: Number(req.body.staffID),
+        checkIn: req.body.checkIn
+      });
+    
+      attendance.save()
+      .then(() => res.json(true))
+      .catch((e) => console.log(`Error: ${ e }`))
+    }
+    else {
+      res.json(false)
+    }
+  }).catch((e) => console.log(`Error: ${e}`))
 });
 
 //update checkout attendance
 router.put('/attendance/checkout', function (req, res, next) {
-  attendanceModel.find({staffID: req.body.staffID}, {_id: 1, checkIn:1}).sort({_id: -1}).limit(1)
+  attendanceModel.findOne({staffID: req.body.staffID}).sort({_id: -1})
   .then((data) => {
-    attendanceModel.updateOne({_id: data[0]._id}, {$set: {checkOut: req.body.checkOut}})
-    .then(() => res.json("Check Out Attendance Marked!")) 
-    .catch((e) => console.log(`Error ${ e }`))
+    if(data?.checkOut?false:true) {
+      attendanceModel.updateOne({_id: data._id}, {$set: {checkOut: req.body.checkOut}})
+      .then(() => res.json(true)) 
+      .catch((e) => console.log(`Error ${ e }`))
+    }
+    else {
+      res.json(false)
+    }
   }).catch((e) => console.log(`Error: ${e}`))
+});
+
+//update checkout attendance
+router.get('/attendance/test?:staffID', function (req, res, next) {
+  attendanceModel.findOne({staffID: Number(req.query.staffID)}).sort({_id: -1})
+  .then((data) => {
+    res.json(data?.checkOut?true:false)
+  }).catch((e) => console.log(`Error: ${e}`))
+});
+
+//insert bonuses
+router.post('/salary/bonus', function (req, res, next) {
+  const bonus = new bonusModel({
+    staffID: Number(req.body.staffID),
+    bonusAmount: req.body.bonusAmount,
+    addedDate: req.body.addedDate
+  });
+
+  bonus.save()
+  .then(() => res.json("Bonus Added!"))
+  .catch((e) => console.log(`Error: ${ e }`))
+
 });
 
 

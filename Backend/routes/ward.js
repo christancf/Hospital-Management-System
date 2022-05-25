@@ -3,6 +3,7 @@ const wardModel = require('../models/ward')
 const staffModel = require('../models/staff')
 const assignNurseModel = require('../models/assigned-nurses')
 const attendanceModel = require('../models/attendance')
+const wardCategoryModel = require('../models/ward-category')
 var router = express.Router();
 const auth = require("../middleware/auth");
 
@@ -11,23 +12,44 @@ router.get('/', (req, res, next) => {
   res.send("IT works")
 })
 
+const setWardId = id => {
+  const maxDigitLen = 3
+  id += 1
+  id = String(id)
+  
+  if(id.length === 1) return "00" + id
+  if(id.length === 2) return "0" + id
+  return id
+}
 //add ward details
 router.post('/details/add', (req, res, next) => {
+  //get previous ward id
+  wardModel.findOne({category: req.body.category}, {_id:0, id:1}).sort({_id: -1})
+  .then(prevId => {
+    const abbr = req.body.abbreviation
+    let wardId
+    if(prevId?.id){
+      prevId = prevId.id.substring(abbr.length)
+      wardId = abbr + setWardId(Number(prevId))
+    }else{ //first record
+      wardId = abbr + "001"
+    }
+    res.json({wardId, "num": Number(prevId)})
+    let newWard = new wardModel({
+      id: wardId,
+      category: req.body.category,
+      capacity: req.body.capacity,
+      roomCharge: req.body.roomCharge,
+      status: req.body.status
+    })
   
-  let newWard = new wardModel({
-    id: req.body.id,
-    category: req.body.category,
-    capacity: req.body.capacity,
-    status: req.body.status
+    newWard.save()
+    .then(() => {
+      res.json("Ward Added!")
+    }).catch((e) => {
+      console.log(`Error Add: ${e}`)
+    })
   })
-
-  newWard.save()
-  .then(() => {
-    res.json("Ward Added!")
-  }).catch((e) => {
-    console.log(`Error Add: ${e}`)
-  })
-
 });
 
 //read ward details
@@ -124,9 +146,10 @@ router.get('/nurse/assign/check?:id', (req, res, next) => {
 
 //check status
 router.get('/nurse/status?:id', (req, res, next) => {
-    attendanceModel.findOne({staffID: req.query.id})
-    .then(data => res.json(data))
-    .catch(e => res.json(e))
+    const data = attendanceModel.findOne({staffID: req.query.id})
+    data.sort({staffID: -1})
+    data.then(data => res.json(data.checkOut))
+        .catch(e => res.json(e))
   
 })
 
@@ -138,9 +161,28 @@ router.delete('/nurse/unassign?:id', (req, res, next) => {
 })
 
 
+//add ward category
+router.post('/category/add', (req, res, next) => {
 
+  let newCategory = new wardCategoryModel({
+    category: req.body.category,
+    abbreviation: req.body.abbreviation
+  })
 
+  newCategory.save()
+  .then(() => {
+    res.json({message:"Category Added!"})
+  }).catch((e) => {
+    console.log(`Error Add: ${e}`)
+  })
+})
 
+//read all ward category
+router.get('/category/read/all', (req, res, next) => {
+  wardCategoryModel.find()
+  .then(data => res.json(data))
+  .catch(e => console.log(`Error Add: ${e}`))
+})
 
 
 

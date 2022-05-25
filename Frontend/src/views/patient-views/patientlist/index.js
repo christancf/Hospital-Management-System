@@ -87,6 +87,11 @@ const PatientList = () =>{
 			key: 'sex',
 		},
 		{
+			title: 'Category',
+			dataIndex: 'category',
+			key: 'category',
+		},
+		{
 			title: 'Contact Number',
 			dataIndex: 'mobile',
 			key: 'mobile',

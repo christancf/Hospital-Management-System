@@ -84,4 +84,38 @@ mortuaryService.release = function (id, params) {
     data: params
   });
 };
+
+//search
+mortuaryService.search = function (params) {
+  return fetch({
+    url: `/mortuary/search`,
+    method: "post",
+    data: params
+  });
+};
+
+//filter
+mortuaryService.filter = function (params) {
+  return fetch({
+    url: `/mortuary/filter`,
+    method: "post",
+    data: params
+  });
+};
+
+//stat 1
+mortuaryService.stat = function () {
+  return fetch({
+    url: `/mortuary/stat`,
+    method: "post",
+  });
+};
+
+//stat 2
+mortuaryService.stat2 = function () {
+  return fetch({
+    url: `/mortuary/stat2`,
+    method: "post",
+  });
+};
 export default mortuaryService;
