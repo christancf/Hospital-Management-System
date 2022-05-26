@@ -92,7 +92,7 @@ export const LoginForm = (props) => {
 		}
 	});
 	
-
+	const [form] = Form.useForm();
 	return (
 		<>
 			<motion.div 
@@ -104,6 +104,7 @@ export const LoginForm = (props) => {
 				<Alert type="error" showIcon message={message}></Alert>
 			</motion.div>
 			<Form 
+			form={form}
 				layout="vertical" 
 				name="login-form"
 				onFinish={onLogin}
@@ -159,6 +160,19 @@ export const LoginForm = (props) => {
 					<Button type="primary" htmlType="submit" block loading={loading}>
 						Sign In
 					</Button>
+				</Form.Item>
+				<Form.Item style={{textAlign:'center'}}>
+					<Button type="war" danger onClick={()=> {
+
+						form.setFieldsValue({
+							email: 'susith01program@gmail.com',
+							password: 'admin123'
+						})
+
+					}}>
+						Fill for Demo
+					</Button>
+
 				</Form.Item>
 				
 				{ extra }

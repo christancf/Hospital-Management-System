@@ -84,4 +84,13 @@ staffService.getBonusAmounts = function (data) {
     method: 'get'
   })
 }
+
+staffService.getStaffDetails = function () {
+  return fetch({
+    url: 'staff/salary/staffdetails',
+    method: 'get'
+  })
+}
+
+
 export default staffService

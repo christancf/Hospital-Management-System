@@ -105,8 +105,7 @@ const AddAppointment = () => {
 			birthday: toTimestamp(values.birthday),
 			contact_no: values.contact_no,
 			doctor_id: values.doctor_id.value,
-			date: toTimestamp(values.date),
-			queue_no: 20
+			date: toTimestamp(values.date)
 		}
 
 		channellingService.addAppointment(payload).then((res) => {

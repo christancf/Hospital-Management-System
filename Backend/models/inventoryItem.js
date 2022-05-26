@@ -1,39 +1,31 @@
 const mongoose = require('mongoose');
 
 const dataSchema = new mongoose.Schema({
-    NIC: {
+    
+    item_id: {
         required: true,
-        type: String,
+        type: Number
     },
-    name: {
+    item_name: {
         required: true,
         type: String
     },
-    birthday: {
+    quantity: {
         required: true,
         type: Number
     },
-    contact_no: {
-        required: true,
-        type: String
-    },
-    doctor_id: {
+    manufacture_date: {
         required: true,
         type: Number
     },
-    date: {
+    expire_date: {
         required: true,
-        type: Number
-    },
-    queue_no: {
-        required: false,
         type: Number
     },
     status: {
         required: true,
         type: String
     }
-    
 })
 
-module.exports = mongoose.model('appointment', dataSchema)
+module.exports = mongoose.model('inventoryItems', dataSchema)

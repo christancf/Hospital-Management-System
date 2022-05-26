@@ -8,7 +8,7 @@ var router = express.Router();
 
 
 //add blood bag details
-router.post('/add-details', function (req, res, next) {
+router.post('/add-details',auth, function (req, res, next) {
 
   function getExpiretime(timestamp) {
     var mydate = new Date(timestamp)
@@ -55,7 +55,7 @@ router.post('/add-details', function (req, res, next) {
 
 
 //read blood bag details
-router.get('/details/read', async (req, res, next) => {
+router.get('/details/read', auth,async (req, res, next) => {
   var today = new Date().setHours(24, 0, 0, 0)
 
   try {
@@ -82,7 +82,7 @@ router.get('/details/read', async (req, res, next) => {
 });
 
 //read blood bag one
-router.get('/read', function (req, res, next) {
+router.get('/read',auth, function (req, res, next) {
   bloodbagModel.find({ bagId: req.query.id })
     .then((bloodBag) => {
       res.status(200).json({
@@ -96,7 +96,7 @@ router.get('/read', function (req, res, next) {
 });
 
 //read blood transfusion one
-router.get('/readTransfusion', function (req, res, next) {
+router.get('/readTransfusion',auth, function (req, res, next) {
   transfusionModel.find({ bagId: req.query.id })
     .then((bloodBag) => {
       res.status(200).json({
@@ -110,7 +110,7 @@ router.get('/readTransfusion', function (req, res, next) {
 });
 
 //update blood bank details
-router.put('/update-details', (req, res, next) => {
+router.put('/update-details',auth, (req, res, next) => {
   function getExpiretime(timestamp) {
     var mydate = new Date(timestamp)
     return mydate.setMonth(mydate.getMonth() + 1)
@@ -143,7 +143,7 @@ router.put('/update-details', (req, res, next) => {
 });
 
 //update blood transfusion details
-router.put('/update-transfusion', (req, res, next) => {
+router.put('/update-transfusion',auth, (req, res, next) => {
 
   transfusionModel.updateOne({ "bagId": req.body.bloodbag.bagId, },
     {
@@ -170,7 +170,7 @@ router.put('/update-transfusion', (req, res, next) => {
 });
 
 //delete blood bag
-router.delete('/deleteBagList', (req, res, next) => {
+router.delete('/deleteBagList',auth, (req, res, next) => {
 
   const bagId = req.query.id;
 
@@ -187,7 +187,7 @@ router.delete('/deleteBagList', (req, res, next) => {
 })
 
 //get bagID
-router.get('/bagId', function (req, res, next) {
+router.get('/bagId',auth, function (req, res, next) {
   bloodbagModel.find().sort({ bagId: -1 }).limit(1)
     .then((id) => {
       res.status(200).json({
@@ -203,7 +203,7 @@ router.get('/bagId', function (req, res, next) {
 
 
 //get patient ID
-router.get('/patient?:id', async (req, res, next) => {
+router.get('/patient?:id',auth, async (req, res, next) => {
   try {
     patientModel.findOne({ patientId: req.query.id, designation: "patient", status: 'true' }).then((data) => {
 
@@ -234,7 +234,7 @@ router.get('/patient?:id', async (req, res, next) => {
 });
 
 //add transfusion
-router.post('/add-transfusion-details', function (req, res, next) {
+router.post('/add-transfusion-details',auth, function (req, res, next) {
 
   const transfusion = new transfusionModel({
     bagId: req.body.bagId,
@@ -271,7 +271,7 @@ router.post('/add-transfusion-details', function (req, res, next) {
 });
 
 //read transfusion details
-router.get('/details/readTransfusion', async (req, res, next) => {
+router.get('/details/readTransfusion',auth, async (req, res, next) => {
   try {
     let bloodTransfusionDetail = await transfusionModel.find({}).then((response) => {
       res.status(200).json({
@@ -296,7 +296,7 @@ router.get('/details/readTransfusion', async (req, res, next) => {
 });
 
 //update status
-router.put('/update-status', (req, res, next) => {
+router.put('/update-status',auth, (req, res, next) => {
 
   const bagId = req.query.id;
 
@@ -314,7 +314,7 @@ router.put('/update-status', (req, res, next) => {
 });
 
 //Find expire bags
-router.get('/details/readExpireBag', async (req, res, next) => {
+router.get('/details/readExpireBag',auth, async (req, res, next) => {
 
   var today = new Date().setHours(24, 0, 0, 0)
 
@@ -343,11 +343,12 @@ router.get('/details/readExpireBag', async (req, res, next) => {
 });
 
 //Available blood bag count
-router.post("/bloodBagsCount", async function (req, res, next) {
+router.post("/bloodBagsCount",auth, async function (req, res, next) {
+  var today = new Date().setHours(24, 0, 0, 0)
 
   try {
     let bagsDetails = await bloodbagModel.aggregate([
-      { $match: { $and: [{ status: "In Stock" },] } },
+      { $match: { $and: [{ status: "In Stock" },{expireDate: { $gt: today }}] } },
       { $group: { _id: "$bloodGroup", count: { $sum: 1 } } },
     ]);
     res.status(200).json({
@@ -364,7 +365,7 @@ router.post("/bloodBagsCount", async function (req, res, next) {
 });
 
 //Blood transfusion
-router.post("/transfusionCount", async function (req, res, next) {
+router.post("/transfusionCount",auth, async function (req, res, next) {
 
   var today = new Date().setHours(24, 0, 0, 0)
   var januOne = new Date(1640975400000).setHours(0, 0, 0, 0)
@@ -387,7 +388,7 @@ router.post("/transfusionCount", async function (req, res, next) {
 });
 
 //Available blood count
-router.post("/availaleBloodCount", async function (req, res, next) {
+router.post("/availaleBloodCount",auth, async function (req, res, next) {
 
   var today = new Date().setHours(24, 0, 0, 0)
 
@@ -407,5 +408,54 @@ router.post("/availaleBloodCount", async function (req, res, next) {
     });
   }
 });
+
+
+//Available blood count group as month
+router.post("/bagCountAsMonth",auth, async function (req, res, next) {
+
+  var today = new Date().setHours(24, 0, 0, 0)
+  var januOne = new Date(1640975400000).setHours(0, 0, 0, 0)
+
+  try {
+    let bagsDetails = await bloodbagModel.aggregate([
+      { $match: { $and: [{ donateDate: { $gte: januOne } }, { donateDate: { $lte: today } }] } },
+      { $addFields: { convertedDate: { $toDate: "$donateDate" } } },
+      { $group: { _id: { month: { $month: "$convertedDate" } }, count: { $sum: 1 } } }]);
+    res.status(200).json({
+      success: true,
+      message: "Successful Retrieval",
+      payload: bagsDetails,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+
+//Expire blood count
+router.post("/expireBloodCount",auth, async function (req, res, next) {
+
+  var today = new Date().setHours(24, 0, 0, 0)
+
+  try {
+    let bagsDetails = await bloodbagModel.aggregate([
+      { $match: { $and: [{ status: "In Stock" }, { expireDate: { $lt: today } }] } },
+      { $group: { _id: '', count: { $sum: 1 } } },]);
+    res.status(200).json({
+      success: true,
+      message: "Successful Retrieval",
+      payload: bagsDetails,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
 
 module.exports = router;

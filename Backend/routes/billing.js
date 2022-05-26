@@ -272,7 +272,7 @@ const insertTransaction = async (req, res,next,billId) => {
 
 
 //add bill details
-router.post('/add-details', async (req, res, next) => {
+router.post('/add-details', auth, async (req, res, next) => {
 
   const currentBillId = await billModel.find({
     patient_id: req.body.patientId,
@@ -325,7 +325,7 @@ router.post('/add-details', async (req, res, next) => {
 
 });
 
-router.get('/patient', async (req, res, next) => {
+router.get('/patient',  auth,async (req, res, next) => {
   try {
     const response = await patientModel.find({status:"true"}).then((response) => {
 
@@ -362,7 +362,7 @@ router.get('/patient', async (req, res, next) => {
 
 });
 
-router.get('/transactions', async (req, res, next) => {
+router.get('/transactions',  auth,async (req, res, next) => {
 
   const currentBillId = await billModel.find({
     patient_id: req.query.patientId,
@@ -421,7 +421,7 @@ router.get('/transactions', async (req, res, next) => {
 });
 
 
-router.get('/items', async (req, res, next) => {
+router.get('/items', auth, async (req, res, next) => {
   try {
     const response = await itemModel.find({total_quantity:{$gt:0}}).then((response) => {
 
@@ -457,7 +457,7 @@ router.get('/items', async (req, res, next) => {
   }
 
 });
-router.get('/rooms', async (req, res, next) => {
+router.get('/rooms',  auth,async (req, res, next) => {
   try {
     const response = await roomModel.find({}).then((response) => {
 
@@ -494,7 +494,7 @@ router.get('/rooms', async (req, res, next) => {
 
 });
 
-router.get('/bills', async (req, res, next) => {
+router.get('/bills', auth, async (req, res, next) => {
   try {
     const response = await billModel.findOne({
       patient_id: req.query.patient,
@@ -534,7 +534,7 @@ router.get('/bills', async (req, res, next) => {
 
 });
 
-router.get('/all-bills', async (req, res, next) => {
+router.get('/all-bills',  auth,async (req, res, next) => {
 
   try {
     const response = await billModel.find({
@@ -573,7 +573,7 @@ router.get('/all-bills', async (req, res, next) => {
 
 });
 
-router.post('/transaction/add', async (req, res, next) => {
+router.post('/transaction/add', auth, async (req, res, next) => {
 
 
 
@@ -614,7 +614,7 @@ router.post('/transaction/add', async (req, res, next) => {
 });
 
 
-router.get('/paid',async (req,res,next)=>{
+router.get('/paid', auth,async (req,res,next)=>{
   billModel.findOneAndUpdate({
   patient_id: req.query.id,
   status:"pending"

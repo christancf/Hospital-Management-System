@@ -1,7 +1,8 @@
 import React from 'react'
 import { Form, Input, Button, Checkbox, Card, Select, message} from 'antd';
 import wardService from 'services/WardService'
-import { ShowModal } from '../add-ward-details';
+import { ShowModal } from '../add-ward-details'
+import { ValidateUser, WARD_ROLE } from 'configs/AppConfig';
 
 const { Option } = Select
 const key = 'add'
@@ -14,6 +15,7 @@ const tailLayout = {
   wrapperCol: { offset: 15, span: 16 },
 }
 
+ValidateUser(WARD_ROLE)
 
 const AddCategory = () => {
   return (
