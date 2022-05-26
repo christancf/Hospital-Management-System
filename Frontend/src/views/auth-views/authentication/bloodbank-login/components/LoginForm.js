@@ -167,7 +167,7 @@ export const LoginForm = (props) => {
 					<Button type="war" danger onClick={()=> {
 
 						form.setFieldsValue({
-							email: 'susith01program@gmail.com',
+							email: 'shavidilunika@gmail.com',
 							password: 'admin123'
 						})
 
