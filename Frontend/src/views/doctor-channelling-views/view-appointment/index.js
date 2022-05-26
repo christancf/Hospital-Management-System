@@ -1,4 +1,4 @@
-import { Table, Divider, Tag, Spin, Modal, notification, Select, Row, Col, Form ,Menu, Dropdown} from 'antd';
+import { Table, Divider, Tag, Spin, Modal, notification, Select, Row, Col, Form ,Menu, Dropdown, DatePicker} from 'antd';
 import { useState, useEffect } from 'react';
 import doctorChannellingService from 'services/DoctorChannellingService';
 import jwt_decode from "jwt-decode";
@@ -13,6 +13,11 @@ const { confirm } = Modal;
 const { Option } = Select;
 
 ValidateUser(DOCTOR_CHANNELLING_ROLE);
+
+function toTimestamp(strDate) {
+	var datum = Date.parse(strDate);
+	return datum / 1000;
+}
 
 const openNotification = (title, content) => {
     notification.open({
@@ -101,8 +106,8 @@ const ViewAppointment = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [data, setData] = useState();
+    const [date, setDate] = useState();
     const [form] = Form.useForm();
-
 
     const UpdateModel = (id, defaultstatus) => {
 
@@ -174,9 +179,9 @@ const ViewAppointment = () => {
             var decoded = jwt_decode(mytoken)
 
             return (
-                <h1>
+                <>
                     {decoded.name}
-                </h1>
+                </>
             );
 
         }
@@ -190,7 +195,7 @@ const ViewAppointment = () => {
     }
 
     useEffect(() => {
-        doctorChannellingService.getAppointmentList(fetUserEmail()).then((resp) => {
+        doctorChannellingService.getAppointmentList(fetUserEmail(), date).then((resp) => {
 
             if (resp.succuss == true) {
 
@@ -210,7 +215,7 @@ const ViewAppointment = () => {
         });
 
 
-    }, []);
+    }, [date]);
 
 
       const CardDropdown = (props) => {
@@ -350,9 +355,9 @@ const ViewAppointment = () => {
                 _id: appointment._id,
                 NIC: appointment.NIC,
                 name: appointment.name,
-                age: calculate_age(appointment.birthday),
+                age: calculate_age(appointment.birthday*1000),
                 contact: appointment.contact_no,
-                date: new Date(appointment.date).toDateString(),
+                date: new Date(appointment.date*1000).toDateString(),
                 status: appointment.status,
                 qnumb: appointment.queue_no
             }
@@ -361,7 +366,19 @@ const ViewAppointment = () => {
         return (
             <>
                 <>
-                    <h1 className='text-left' >View Appointments <GetUserName /></h1>
+                    <Row>
+                    <h1 className='text-left' >View Appointments  - Dr.<GetUserName /></h1>
+                    </Row>
+                    <Form>
+                        <Form.Item label=" Date filter :"  style={{margin:20}}>
+                        <DatePicker onChange={(val)=>{
+                            setDate(toTimestamp(val));
+
+                        }} />
+                        </Form.Item>
+                    </Form>
+                   
+                    
                     <Table columns={columns} dataSource={tableData} />
                 </>
 
