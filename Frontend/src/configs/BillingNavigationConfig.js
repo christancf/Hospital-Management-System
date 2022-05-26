@@ -1,6 +1,6 @@
 import { 
   DashboardOutlined,
-  CopyOutlined,ReadOutlined,FileAddOutlined
+  CopyOutlined,ReadOutlined,FileAddOutlined, LineChartOutlined
 } from '@ant-design/icons';
 import { BILLING_PREFIX_PATH } from 'configs/AppConfig'
 
@@ -26,6 +26,14 @@ const dashBoardNavTree = [
   path: `${BILLING_PREFIX_PATH}/totalbills`,
   title: 'Total Bill ',
   icon: ReadOutlined,
+  breadcrumb: false,
+  submenu: []
+},
+{
+  key: 'Stats',
+  path: `${BILLING_PREFIX_PATH}/stats`,
+  title: 'Stats',
+  icon: LineChartOutlined,
   breadcrumb: false,
   submenu: []
 }
