@@ -26,7 +26,7 @@ const dataSchema = new mongoose.Schema({
         type: Number
     },
     queue_no: {
-        required: true,
+        required: false,
         type: Number
     },
     status: {

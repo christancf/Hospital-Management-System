@@ -3,6 +3,9 @@ import { Table, Typography, Spin, Button, Divider, Tag, Modal, Row, Col, Form, D
 import bloodBankService from 'services/BloodBankService'
 import { EyeOutlined, EditOutlined, SisternodeOutlined, PlusSquareOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import { DOCTOR_CHANNELLING_PREFIX_PATH, APP_PREFIX_PATH, BLOODBANK_ROLE, ValidateUser } from 'configs/AppConfig'
+
+ValidateUser(BLOODBANK_ROLE);
 
 const { Title } = Typography
 const { Option } = Select

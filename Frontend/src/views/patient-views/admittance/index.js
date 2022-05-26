@@ -2,6 +2,10 @@ import { Form, Input, InputNumber, Button, Cascader, DatePicker,Select,Modal,Spi
 import moment from 'moment';
 import patientManagementService from 'services/PatientManagement';
 import { useState, useEffect } from 'react';
+import { PATIENT_ROLE , ValidateUser} from 'configs/AppConfig';
+import { set } from 'lodash';
+
+ValidateUser(PATIENT_ROLE);
 
 const { Option } = Select;
 
@@ -67,20 +71,7 @@ const bloodGroup =[
 	},
 ]
 
-const category =[
-	{
-		label:"General",
-		value:"General"
-	},
-	{
-		label:"Accident",
-		value:"Accident"
-	},
-	{
-		label:"ICU",
-		value:"ICU"
-	},
-]
+
 
 
 
@@ -92,6 +83,12 @@ const PatientAdmittance = () => {
 	const [error, setError] = useState(false);
 	const [data, setData] = useState();
 
+	const [categoryLoading, setCategoryLoading] = useState(true);
+	const [categoryError, setCategoryError] = useState(false);
+	const [categoryData, setCategoryData] = useState();
+
+
+
 	useEffect(() => {
 		patientManagementService.id().then((resp) => {
 			setData(resp.payload);
@@ -100,6 +97,14 @@ const PatientAdmittance = () => {
 			setLoading(false);
 			setError(true);
 			setData();
+		});
+		patientManagementService.categoryList().then((resp) => {
+			setCategoryData(resp.payload);
+			setCategoryLoading(false);
+		}).catch((err) => {
+			setCategoryLoading(false);
+			setCategoryError(true);
+			setCategoryData();
 		});
 	}, []);
 
@@ -149,9 +154,20 @@ const PatientAdmittance = () => {
 		return path.some(option => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1);
 	}
 
-
-	const onFinish = values => {
-
+	const demo = () =>{
+		form.setFieldsValue({
+			fullName:"saman Perera",
+			nic:"992281558V",
+			dateOfBirth:moment("1981-05-29"), 
+			sex:"Male",
+			mobile:"0716688822",
+			address:"12/42E,3rd Street,Nugegoda",
+			bloodGroup:"A+",
+			category:"accident"
+		})
+	};
+	const onFinish = (values) => {
+		
 		const patient =  {
 			id:values.id,
 			fullName:values.fullName,
@@ -176,7 +192,7 @@ const PatientAdmittance = () => {
 		console.log(payload)
 		
 
-		//console.log(res);
+		
 	};
 
 	function disabledDate2(current) {
@@ -184,7 +200,7 @@ const PatientAdmittance = () => {
 		return current && current > moment().endOf('day');
 	  }
 
-	if (loading) {
+	if (loading||categoryLoading) {
 		return (
 			<>
 				<center>
@@ -194,7 +210,7 @@ const PatientAdmittance = () => {
 			</>
 		)
 	}
-	else if (error) {
+	else if (error||categoryError) {
 
 		return (
 			<>
@@ -207,6 +223,12 @@ const PatientAdmittance = () => {
 
 	}
 	else{
+		const categoryList = categoryData.map((category) => {
+			return (
+			  <Option value={category.category}>{category.category}</Option>
+			)
+		  })
+
 	return (
 
 		<Form {...layout} name="Admittance" form={form} onFinish={onFinish} >
@@ -226,7 +248,6 @@ const PatientAdmittance = () => {
 			</Form.Item>
 			<Form.Item name="sex" label="Sex" rules={[{required:true}]}>
 			<Select
-				labelInValue
 				placeholder="Select users"
 				filterOption={true}
 				showSearch={{ filter }}
@@ -246,7 +267,6 @@ const PatientAdmittance = () => {
 			</Form.Item>
 			<Form.Item name="bloodGroup" label="bloodGroup" rules={[{required:true}]}>
 			<Select
-				labelInValue
 				placeholder="Select Blood Group"
 				filterOption={true}
 				showSearch={{ filter }}
@@ -259,20 +279,24 @@ const PatientAdmittance = () => {
 			</Form.Item>
 			<Form.Item name="category" label="category" rules={[{required:true}]}>
 			<Select
-				labelInValue
 				placeholder="Select Category"
 				filterOption={true}
 				style={{ width: '100%' }}
+				
 			>
-				{category.map(d => (
+				{/* {category.map(d => (
 					<Option key={d.value}>{d.label}</Option>
-				))}
+				))} */}
+				{categoryList}
 			</Select>
 			</Form.Item>
 
 			<Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
 				<Button type="primary" htmlType="submit">
 				Admit 
+				</Button>
+				<Button type="primary" onClick={demo} style={{marginLeft:30}}>
+					Demo
 				</Button>
 			</Form.Item>
 		</Form>
