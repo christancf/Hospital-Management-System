@@ -9,11 +9,21 @@ import domtoimage from "dom-to-image";
 
 ValidateUser(WARD_ROLE)
 
+
 const Stats = () => {
+	const printDocument = () => {
+    const input = document.getElementsByClassName("printing-wrapper")[0];
+    const pdf = new jsPDF();
+    if (pdf) {
+    domtoimage.toPng(input).then((imgData) => {
+      pdf.addImage(imgData, "PNG", 15, 15, 180, 160);
+      pdf.save("download.pdf");
+    });
+	}
 	return (
 		<div>
 			<div style={{ textAlign: "right", margin: 20 }}>
-        <Button type="primary" onClick={() => window.print()}>
+        <Button type="primary" onClick={printDocument}>
           Download PDF
         </Button>
       </div>
@@ -25,7 +35,7 @@ const Stats = () => {
 			</div>
 		</div>
 	)
-}
+}}
 
 const Pie = () => {
 	const [pieData, setPieData] = useState()
