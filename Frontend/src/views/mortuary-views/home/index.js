@@ -1,6 +1,9 @@
 import { Card, Popover, Button, Row, Col, Modal } from 'antd';
 import { useState, useEffect } from 'react';
 import mortuaryService from 'services/MortuaryService';
+import {MORTUARY_ROLE, ValidateUser } from 'configs/AppConfig'
+
+ValidateUser(MORTUARY_ROLE);
 
 const content = (props) => {
   const cabinet_no = props.letter + props.number

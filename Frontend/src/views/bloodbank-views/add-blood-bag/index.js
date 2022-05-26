@@ -211,7 +211,7 @@ const AddBloodBag = () => {
 
           <Form.Item name="bloodGroup" label="Blood Group" rules={[{ required: true }]}>
             <Select
-              labelInValue
+              // labelInValue
               placeholder="Select Blood Group"
               filterOption={false}
               showSearch={{ filter }}

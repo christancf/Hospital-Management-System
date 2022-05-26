@@ -272,7 +272,7 @@ const insertTransaction = async (req, res,next,billId) => {
 
 
 //add bill details
-router.post('/add-details', async (req, res, next) => {
+router.post('/add-details', auth, async (req, res, next) => {
 
   const currentBillId = await billModel.find({
     patient_id: req.body.patientId,
@@ -287,7 +287,8 @@ router.post('/add-details', async (req, res, next) => {
           patient_id: req.body.patientId,
           room_charges: 0,
           item_charges: 0,
-          status: 'pending'
+          status: 'pending',
+          payment_date: null
         }
       )
       newBill.save().then((response) => {
@@ -325,7 +326,7 @@ router.post('/add-details', async (req, res, next) => {
 
 });
 
-router.get('/patient', async (req, res, next) => {
+router.get('/patient',  auth,async (req, res, next) => {
   try {
     const response = await patientModel.find({status:"true"}).then((response) => {
 
@@ -362,7 +363,7 @@ router.get('/patient', async (req, res, next) => {
 
 });
 
-router.get('/transactions', async (req, res, next) => {
+router.get('/transactions',  auth,async (req, res, next) => {
 
   const currentBillId = await billModel.find({
     patient_id: req.query.patientId,
@@ -383,7 +384,7 @@ router.get('/transactions', async (req, res, next) => {
     else {
       transactionModel.find({
         billId : resp[0]._id
-      }).then((responseTrans)=> {
+      }, {payment_date: 0}).then((responseTrans)=> {
 
         res.status(200).json(
           {
@@ -421,7 +422,7 @@ router.get('/transactions', async (req, res, next) => {
 });
 
 
-router.get('/items', async (req, res, next) => {
+router.get('/items', auth, async (req, res, next) => {
   try {
     const response = await itemModel.find({total_quantity:{$gt:0}}).then((response) => {
 
@@ -457,7 +458,7 @@ router.get('/items', async (req, res, next) => {
   }
 
 });
-router.get('/rooms', async (req, res, next) => {
+router.get('/rooms',  auth,async (req, res, next) => {
   try {
     const response = await roomModel.find({}).then((response) => {
 
@@ -494,12 +495,12 @@ router.get('/rooms', async (req, res, next) => {
 
 });
 
-router.get('/bills', async (req, res, next) => {
+router.get('/bills', auth, async (req, res, next) => {
   try {
     const response = await billModel.findOne({
       patient_id: req.query.patient,
       status:"pending"
-    }).then((response) => {
+    }, {payment_date: 0}).then((response) => {
 
       res.status(200).json(
         {
@@ -534,7 +535,7 @@ router.get('/bills', async (req, res, next) => {
 
 });
 
-router.get('/all-bills', async (req, res, next) => {
+router.get('/all-bills',  auth,async (req, res, next) => {
 
   try {
     const response = await billModel.find({
@@ -573,7 +574,7 @@ router.get('/all-bills', async (req, res, next) => {
 
 });
 
-router.post('/transaction/add', async (req, res, next) => {
+router.post('/transaction/add', auth, async (req, res, next) => {
 
 
 
@@ -614,11 +615,12 @@ router.post('/transaction/add', async (req, res, next) => {
 });
 
 
-router.get('/paid',async (req,res,next)=>{
+router.get('/paid', auth,async (req,res,next)=>{
+  var date = new Date().getTime()
   billModel.findOneAndUpdate({
   patient_id: req.query.id,
   status:"pending"
-  },{$set:{status:"paid"}}).then((response) => {
+  },{$set:{status:"paid", payment_date: date}}).then((response) => {
   
   
   
@@ -646,5 +648,28 @@ router.get('/paid',async (req,res,next)=>{
   });
   })
 
+  router.post("/billingMonth", async function (req, res, next) {
 
+    var today = new Date().setHours(24, 0, 0, 0)
+    var januOne = new Date(1640975400000).setHours(0, 0, 0, 0)
+
+    try {
+      let billDetails = await billModel.aggregate([
+        { $match: { $and: [{ payment_date: { $gte: januOne } }, { payment_date: { $lte: today } }] } },
+        { $addFields: { convertedDate: { $toDate: "$payment_date" } } },
+        { $group: { _id:  { $month: "$convertedDate" } , totalItemCharges: { $sum: "$item_charges" }, totalRoomCharges: {$sum: "$room_charges"} } },
+        { $project: {totalIncome: {$sum: ["$totalItemCharges", "$totalRoomCharges"]} }}
+      ]);
+      res.status(200).json({
+        success: true,
+        message: "Successful Retrieval",
+        payload: billDetails,
+      });
+    } catch (error) {
+      res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  });
 module.exports = router;

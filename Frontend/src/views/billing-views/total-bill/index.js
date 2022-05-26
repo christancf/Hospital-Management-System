@@ -2,6 +2,11 @@ import React from 'react'
 import { useState, useEffect } from 'react';
 import { Form, Button, Select, Card, Spin, Modal, Col, Table, Descriptions } from 'antd';
 import billingService from 'services/BillingService';
+import { BILLING_PREFIX_PATH, APP_PREFIX_PATH, BILLING_ROLE, ValidateUser } from 'configs/AppConfig'
+
+
+ValidateUser(BILLING_ROLE);
+
 const { Option } = Select;
 
 
@@ -106,9 +111,15 @@ const Home = () => {
 	function ShowModel(title, delay, innercontent, isSuccess) {
   
 	  if (isSuccess) {
+		  
 		const modal = Modal.success({
 		  title: title,
 		  content: `${innercontent}.This popup will be destroyed after ${delay} second.`,
+		  onOk: () => {
+
+			window.location = "../billing/billlist";
+	
+		  },
 		});
 		const timer = setInterval(() => {
 		  delay -= 1;
@@ -119,6 +130,7 @@ const Home = () => {
 		setTimeout(() => {
 		  clearInterval(timer);
 		  modal.destroy();
+		  window.location = "../billing/billlist";
 		}, delay * 1000);
 	  }
   
@@ -235,22 +247,23 @@ const Home = () => {
 				  </> : <></>}
 
 				{billData!==null &&
-				
-					<Descriptions title="  ">
-						<Descriptions.Item label="Total Before Tax">{billData.item_charges + billData.room_charges}  </Descriptions.Item>
-						<Descriptions.Item label="Tax"> {(billData.item_charges + billData.room_charges)/10} </Descriptions.Item>
-						<Descriptions.Item label="Total">{(billData.item_charges + billData.room_charges) + (billData.item_charges + billData.room_charges)/10}  </Descriptions.Item>
-					</Descriptions>
+					<div>
+					<Descriptions>
+						<Descriptions.Item label="Total Before Tax">Rs. {billData.item_charges + billData.room_charges} </Descriptions.Item>
+						<Descriptions.Item label="Tax"> Rs. {(billData.item_charges + billData.room_charges)/10} </Descriptions.Item>
+						<Descriptions.Item label="Total">Rs. {(billData.item_charges + billData.room_charges) + (billData.item_charges + billData.room_charges)/10}</Descriptions.Item>
+					</Descriptions></div>
 				}
 			
-					
-				  <Button  shape="round" className="mr-2" type="primary" style={{ marginRight: 30 }}>
-                      print
+				
+				  <Button  shape="round" className="mr-2" type="primary" style={{ marginRight: 30 }} onClick= {() => {window.print()}}>
+                      Print
                     </Button>
 
 					<Button shape="round" className="mr-2" type="primary" onClick={markPaid}>
                       Paid
                     </Button>
+			
 				</Card>	
 			
 			</>
