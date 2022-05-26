@@ -4,7 +4,9 @@ import mortuaryService from "services/MortuaryService";
 import { TagsOutlined } from "@ant-design/icons";
 import Icon from "components/util-components/Icon";
 import Flex from "components/shared-components/Flex";
+import {MORTUARY_ROLE, ValidateUser } from 'configs/AppConfig'
 
+ValidateUser(MORTUARY_ROLE);
 const queryParams = new URLSearchParams(window.location.search);
 const userID = queryParams.get("id");
 
