@@ -147,7 +147,7 @@ bloodBankService.expireBloodCount = function (data){
 
   return fetch({
     url: `/bloodbag/expireBloodCount`,
-    method: 'get',
+    method: 'post',
     data: data
   })
 }
