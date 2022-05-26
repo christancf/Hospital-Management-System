@@ -348,7 +348,7 @@ const Home = () => {
 
 			labels: bagMonth_key,
 
-			colors: ["#7D02EB"],
+			colors: ["#3e82f7"],
 			xaxis: {
 				categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
 			},

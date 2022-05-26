@@ -344,10 +344,11 @@ router.get('/details/readExpireBag',auth, async (req, res, next) => {
 
 //Available blood bag count
 router.post("/bloodBagsCount",auth, async function (req, res, next) {
+  var today = new Date().setHours(24, 0, 0, 0)
 
   try {
     let bagsDetails = await bloodbagModel.aggregate([
-      { $match: { $and: [{ status: "In Stock" },] } },
+      { $match: { $and: [{ status: "In Stock" },{expireDate: { $gt: today }}] } },
       { $group: { _id: "$bloodGroup", count: { $sum: 1 } } },
     ]);
     res.status(200).json({
