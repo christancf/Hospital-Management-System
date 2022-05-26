@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Typography, Table, Select, Spin } from 'antd';
 import staffService from 'services/StaffService';
+import { STAFF_ROLE, ValidateUser } from 'configs/AppConfig';
+
+ValidateUser(STAFF_ROLE)
 
 const { Title } = Typography
 const { Option } = Select
@@ -20,6 +23,15 @@ const setDefaultMonth = () => {
 	if(new Date().getDate() > 25) return new Date().getMonth()
 	return new Date().getMonth() - 1
 }
+
+// const disableOptions = (value, option) => {
+// 	let month = setDefaultMonth()
+// 	for(let i = 0; i < 12; i++){
+// 		if(option[value={i}] <= month) value.push(option[value={i}])
+// 	}
+// 	console.log('value', value)
+// 	return value
+// }
 	
 const CalculateTotalSalary = () => {
 
@@ -34,12 +46,11 @@ const CalculateTotalSalary = () => {
 	const [bonusData, setBonusData] = useState()	
 	const [otData, setOtData] = useState()
 	const [staffData, setStaffData] = useState()
-	const [monthData, setMonthData] = useState(setDefaultMonth() + 1)
-
+	const [monthData, setMonthData] = useState(setDefaultMonth())
 
 	useEffect(() => {
 
-		staffService.readStaffs()
+		staffService.getStaffDetails()
 		.then((staff) => {
 			console.log('staff', staff)
 			setStaffData(staff)
@@ -57,7 +68,7 @@ const CalculateTotalSalary = () => {
 				setBonusData()
 			})
 
-			staffService.getOThours({'month': monthData})
+			staffService.getOThours({month: monthData})
 			.then((ot) => {
 				console.log('ot', ot)
 				setOtData(ot)
@@ -78,6 +89,21 @@ const CalculateTotalSalary = () => {
 
 	}, [monthData])
 
+	const setOnChangeMonth = e => {
+
+		// setBonusData()
+		// setOtData()
+		// setStaffData()
+
+		setBonusLoading(true)
+		setOtLoading(true)
+		setStaffLoading(true)
+
+		
+		setMonthData(e.key)
+
+	}
+
 
 	const columns = [
 		{
@@ -93,7 +119,7 @@ const CalculateTotalSalary = () => {
 		  dataIndex: 'staffName',
 		},
 		{
-		  title: 'Basic Salary',
+		  title: 'Basic Salary (Rs.)',
 		  dataIndex: 'basicSalary',
 		},
 		{
@@ -105,15 +131,15 @@ const CalculateTotalSalary = () => {
 		  dataIndex: 'otRate'
 		},
 		{
-		  title: 'OT Amount',
+		  title: 'OT Amount (Rs.)',
 		  dataIndex: 'otAmount'
 		},
 		{
-			title: 'Bonuses',
+			title: 'Bonuses (Rs.)',
 			dataIndex: 'bonuses'
 		},
 		{
-			title: 'Total Salary',
+			title: 'Total Salary (Rs.)',
 			dataIndex: 'totalSalary'
 		},
 	  ];
@@ -142,49 +168,58 @@ const CalculateTotalSalary = () => {
         )
 	  } else {
 
-		staffData.map(staff => {
-			//console.log('staff staff', staff)
-			otData.map(ot => {
-				if(staff.othrs == null) {
-					staff.othrs = 0
+		for(let i = 0; i < staffData.length; i++) {
+			if(otData.length === 0) {
+				staffData[i].othrs = 0
+			} else {
+				for(let j = 0; j < otData.length; j++) {
+					if(!staffData[i]?.othrs) {
+						(otData[j]._id === staffData[i].staffID) ? staffData[i].othrs = otData[j].othrs : staffData[i].othrs = 0
+					}
 				}
-				if(!staff?.othrs) {
-					(ot._id === staff.staffID) ? staff.othrs = ot.othrs : staff.othrs = 0
+			}
+
+			if(bonusData.length === 0) {
+				staffData[i].bonuses = 0
+			} else {
+				for(let n = 0; n < bonusData.length; n++) {
+					if(!staffData[i]?.bonuses) {
+						(bonusData[n]._id === staffData[i].staffID) ? staffData[i].bonuses = bonusData[n].count : staffData[i].bonuses = 0
+					}
 				}
-			})
-			bonusData.map(bonus => {
-				if(!staff?.bonuses) {
-					(bonus._id === staff.staffID) ? staff.bonuses = bonus.count : staff.bonuses = 0
-				}
-			})
-			return null
-		})
+			}
+		}
 
-		staffData.map(staff => {
+		for(let s = 0; s < staffData.length; s++) {
+			staffData[s].otRate = Number(((staffData[s].basicSalary / 160) * 1.5)).toFixed(2)
+			staffData[s].otAmount = Number((staffData[s].otRate * staffData[s].othrs).toFixed(2))
+			staffData[s].totalSalary = staffData[s].basicSalary + staffData[s].otAmount + staffData[s].bonuses
+			staffData[s].totalSalary = (staffData[s].totalSalary).toFixed()
+			staffData[s].otAmount = (staffData[s].otAmount).toLocaleString()
+			staffData[s].bonuses = (staffData[s].bonuses).toLocaleString()
+			staffData[s].basicSalary = (staffData[s].basicSalary).toLocaleString()
+			staffData[s].totalSalary = (staffData[s].totalSalary).toLocaleString()
+			//staffData[s].otRate = (staffData[s].otRate).toLocalString()
+		}
 
-			staff.otRate = Number(((staff.basicSalary / 160) * 1.5).toFixed(2))
-			staff.otAmount = Number((staff.otRate * staff.othrs).toFixed(2))
-			//staff.bonuses = (staff.bonuses).toFixed(2)
-			staff.totalSalary = staff.basicSalary + staff.otAmount + staff.bonuses
-			// staff.totalSalary = (staff.totalSalary).toLocaleString()
-			// staff.otAmount = (staff.otAmount).toLocaleString()
-			// staff.bonuses = (staff.bonuses).toLocaleString()
-			//staff.otRate = (staff.otRate).toLocalString()
-
-		})
 		console.log(staffData)
 		
 			const year = new Date().getFullYear()
+			// console.log('month data bbbbb', monthData)
 			return (
 				<div>
 					<Title>Staff Salary - { year }</Title>
 	
 					<Select
+						id="monthDropdown"
 						style={{ width: 300}}
 						placeholder="Select a month"
 						labelInValue
-						defaultValue={{key: setDefaultMonth()}}
-						onChange={v => setMonthData(v.key)}
+						defaultValue={{key: monthData}}
+						onChange={setOnChangeMonth}
+						//filterOption={disableOptions}
+						//onDropdownVisibleChange={disableOptions}
+						
 					>
 						<Option value={0}>December 26 - January 25</Option>
 						<Option value={1}>January 26 - February 25</Option>

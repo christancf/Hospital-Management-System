@@ -1,6 +1,9 @@
 import React from 'react'
 import { Form, Input, Button, Card, Select, Modal } from 'antd';
 import staffService from 'services/StaffService';
+import { STAFF_ROLE, ValidateUser } from 'configs/AppConfig';
+
+ValidateUser(STAFF_ROLE)
 
 const { Search } = Input;
 const { Option } = Select

@@ -2,6 +2,9 @@ import React from 'react'
 import { Form, Input, Button, Card, Modal, Select } from 'antd';
 import { ExclamationCircleOutlined} from '@ant-design/icons';
 import staffService from 'services/StaffService';
+import { STAFF_ROLE, ValidateUser } from 'configs/AppConfig';
+
+ValidateUser(STAFF_ROLE)
 
 const { Search } = Input;
 const { confirm } = Modal
