@@ -2,7 +2,7 @@ import fetch from 'auth/FetchInterceptor'
 
 const inventoryService = {}
 
-
+//add item API call
 inventoryService.additem = function (jsonbody){
 
   return fetch({
@@ -13,10 +13,40 @@ inventoryService.additem = function (jsonbody){
   })
 }
 
+//add inventory item API call
+inventoryService.addInventoryItem = function (jsonbody){
+
+  return fetch({
+    url: '/inventory/inventoryItem',
+    method: 'post',
+    data: jsonbody
+
+  })
+}
+//get items from the item list API call
 inventoryService.getItems = function (categoryType){
 
   return fetch({
     url: `/inventory/itemlist?category=${categoryType}`,
+    method: 'get',
+
+  })
+}
+//get inventory items from the inventory list API call
+inventoryService.getInventoryItems = function ( ){
+
+  return fetch({
+    url: `/inventory/inventorylist`,
+    method: 'get',
+
+  })
+}
+
+
+inventoryService.getAllItems = function (){
+
+  return fetch({
+    url: `/inventory/getallitems`,
     method: 'get',
 
   })
@@ -26,7 +56,7 @@ inventoryService.getItems = function (categoryType){
 inventoryService.updateItemDetails = function(data) {
   return fetch({
     url: '/inventory/update-details',
-    method: 'put',
+    method: 'post',
     data: data
   })
 }
@@ -64,7 +94,14 @@ inventoryService.getId = function () {
     }
 
   )
-
 }
+
+//stat 1
+inventoryService.stat = function () {
+  return fetch({
+    url: `/inventory/stat`,
+    method: "post",
+  });
+};
 
 export default inventoryService

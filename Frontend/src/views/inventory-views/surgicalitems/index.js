@@ -2,7 +2,11 @@ import React from 'react'
 import { Table, Divider, Tag, Spin,notification,Modal,Button } from 'antd';
 import { useState, useEffect } from 'react';
 import inventoryService from 'services/inventoryService';
+import { INVENTORY_PREFIX_PATH, APP_PREFIX_PATH, INVENTORY_ROLE, ValidateUser } from 'configs/AppConfig';
 const { confirm } = Modal;
+
+ValidateUser(INVENTORY_ROLE);
+
 
 const openNotification = (title, content) => {
 	notification.open({
@@ -89,10 +93,18 @@ const Home = () => {
             title: 'Action',
             key: 'action',
             render: (text, record) => (
-                <span>
-                    
-                    <a onClick={()=> { itemdelete(record.id)}}>delete</a>
-                </span>
+				<span>
+				<a
+				  onClick={() => {
+					itemdelete(record.id);
+				  }}
+				>
+				  Delete
+				</a>
+				<Button type="link" href={`/inventory/itemlist/update-details?id=${record.id}`}>
+				  Edit
+				</Button>
+			  </span>
             ),
         },
 	];
