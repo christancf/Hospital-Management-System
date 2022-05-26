@@ -345,7 +345,16 @@ router.get('/stats/attendance?:month', (req, res, next) => {
     }
   ])
   .then((r) => {
-    res.json(r)
+    let series = []
+    let category = []
+    r.forEach(d => {
+      series.push(d.count)
+      category.push(d._id)
+    })
+    res.json({
+      series,
+      category
+    })
   })
 })
 
@@ -362,59 +371,21 @@ router.get('/stats/staffcount', (req, res, next) => {
       $group : {_id:"$designation", count: {$count: {}}}
     }
   ])
-  .then((r) => {
-    res.json(r)
-  })
-})
-
-
-
-
-
-router.get('/nurse/read/all-unassigned', auth, (req, res, next) => {
-  staffModel.aggregate([
-    {
-      $lookup: {
-        from: "assignednurses",
-        localField: "staffID",
-        foreignField: "nurseID",
-        as: 'data'
-      },
-    },
-    {
-      $match: {
-        "data.user": {
-          $exists: false
-        },
-        "designation": "nurse"
-      }
-    },
-    {
-      $project: {
-        "_id": 0,
-        "NIC": 0,
-        "email": 0,
-        "dateOfBirth": 0, 
-        "gender": 0, 
-        "address": 0, 
-        "basicSalary": 0, 
-        "mobile": 0, 
-        "home": 0, 
-        "status": 0, 
-        "__v": 0
-      }
-    }
-  ])
-  .then(data => {
-    data = data.filter(v => {
-      if(v.data.length === 0){
-        delete v.data
-        return v
-      } 
+  .then(r => {
+    let series = []
+    let label = []
+    r.forEach(d => {
+      series.push(d.count)
+      //d._id = moment(d._id)
+      label.push(d._id)
     })
-    res.json(data)
+    console.log(series, label)
+    res.json({  
+      series,
+      label
+    })
   })
+  .catch(e => console.log('Error', e))
 })
-
 
 module.exports = router; 
