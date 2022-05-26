@@ -3,6 +3,7 @@ import inventoryService from '../../../services/inventoryService'
 import { Form, Input, Button, Select, DatePicker, Modal,InputNumber } from 'antd';
 import { INVENTORY_PREFIX_PATH, APP_PREFIX_PATH, INVENTORY_ROLE, ValidateUser } from 'configs/AppConfig';
 import moment from 'moment';
+import Search from 'antd/lib/transfer/search';
 
 ValidateUser(INVENTORY_ROLE);
 
@@ -80,16 +81,20 @@ function toTimestamp(strDate) {
     return datum / 1000;
 
 }
+
+
 const AddInvenotryItem = () => {
 	const [form] = Form.useForm();
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
 	const [data, setData] = useState();
+	const [fullData, setFullData] = useState()
 
 	useEffect(() => {
 		inventoryService.getAllItems().then((res) => {
 
 			setData(res.payload);
+			setFullData(res.payload)
 			setLoading(false);
 
 		}).catch((err) => {
@@ -163,8 +168,6 @@ const AddInvenotryItem = () => {
 		form.resetFields();
 	};
 
-
-
 	
 
 	
@@ -184,17 +187,34 @@ const AddInvenotryItem = () => {
 	}
 	else {
 
+		const savedData = []
+	const search = (str) => {
+        if(str === '') return setData(fullData)
+        str = str.toUpperCase()
+        fullData.map(d => {
+          let itemname = d.item_name.toUpperCase()
+          if(itemname === str || itemname.includes(str)) {
+            savedData.push(d)
+          }
+          return
+        })
+        setData(savedData)
+      }
+	
 		return (
 
 			<Form {...layout} ref={form} name="control-ref" onFinish={onFinish}>
 				<Form.Item name="item_id" label="Item Name"  rules={[{ required: true }]} >
 							
 					<Select
-
+						showSearch
 						labelInValue
 						placeholder="Select item"
 						filterOption={false}
-						showSearch={{ filter }}
+						id="searchTxt"
+						//optionFilterProp="children"
+						//showSearch={{ filter }}
+						onInput={() => search(document.getElementById("searchTxt").value)}
 						style={{ width: '100%' }}
 					>
 						{data.map(d => (
