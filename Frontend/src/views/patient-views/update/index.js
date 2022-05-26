@@ -12,6 +12,9 @@ import {
 import moment from "moment";
 import patientManagementService from "services/PatientManagement";
 import { useState, useEffect } from "react";
+import { PATIENT_ROLE , ValidateUser} from 'configs/AppConfig';
+
+ValidateUser(PATIENT_ROLE);
 
 const { Option } = Select;
 const { Search } = Input;
@@ -86,20 +89,7 @@ const bloodGroup = [
   },
 ];
 
-const category =[
-	{
-		label:"General",
-		value:"General"
-	},
-	{
-		label:"Accident",
-		value:"Accident"
-	},
-	{
-		label:"ICU",
-		value:"ICU"
-	},
-]
+
 
 const PatientAdmittance = () => {
   const [form] = Form.useForm();
@@ -111,6 +101,10 @@ const PatientAdmittance = () => {
   const [patientLoading, setPatientLoading] = useState(true);
   const [patientError, setPatientError] = useState(false);
   const [patientData, setPatientData] = useState();
+
+  const [categoryLoading, setCategoryLoading] = useState(true);
+	const [categoryError, setCategoryError] = useState(false);
+	const [categoryData, setCategoryData] = useState();
 
   useEffect(() => {
     patientManagementService
@@ -124,6 +118,16 @@ const PatientAdmittance = () => {
         setError(true);
         setData();
       });
+
+      patientManagementService.categoryList().then((resp) => {
+        setCategoryData(resp.payload);
+        setCategoryLoading(false);
+      }).catch((err) => {
+        setCategoryLoading(false);
+        setCategoryError(true);
+        setCategoryData();
+      });  
+    
   }, []);
 
   useEffect(() => {
@@ -268,7 +272,7 @@ const PatientAdmittance = () => {
         </>
       );
     }
-  } else if (loading) {
+  } else if (loading||categoryLoading) {
     return (
       <>
         <center>
@@ -276,7 +280,7 @@ const PatientAdmittance = () => {
         </center>
       </>
     );
-  } else if (error) {
+  } else if (error||categoryError) {
     return (
       <>
         <center>
@@ -285,6 +289,11 @@ const PatientAdmittance = () => {
       </>
     );
   } else {
+    const categoryList = categoryData.map((category) => {
+			return (
+			  <Option value={category.category}>{category.category}</Option>
+			)
+		  })
     return (
       <Form
         {...layout}
@@ -395,9 +404,7 @@ const PatientAdmittance = () => {
             showSearch={{ filter }}
             style={{ width: "100%" }}
           >
-            {category.map((d) => (
-              <Option key={d.value}>{d.label}</Option>
-            ))}
+            {categoryList}
           </Select>
         </Form.Item>
         

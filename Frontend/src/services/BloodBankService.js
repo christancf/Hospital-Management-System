@@ -37,14 +37,6 @@ bloodBankService.readBloodDetails = async function () {
   })
 }
 
-// bloodBankService.deleteBloodDetails = function(data) {
-//   return fetch({
-//     url: '/bloodbag/bag-delete/:id',
-//     method: 'delete',
-//     data: data
-//   })
-// }
-
 bloodBankService.bloodBagDetails = function (data){
   
   return fetch({
@@ -143,5 +135,21 @@ bloodBankService.availableBagCount = function () {
     method: "post",
   });
 };
+
+bloodBankService.bagCountAsMonth = function () {
+  return fetch({
+    url: `/bloodbag/bagCountAsMonth`,
+    method: "post",
+  });
+};
+
+bloodBankService.expireBloodCount = function (data){
+
+  return fetch({
+    url: `/bloodbag/expireBloodCount`,
+    method: 'post',
+    data: data
+  })
+}
 
 export default bloodBankService

@@ -202,10 +202,10 @@ const ViewAppointment = () => {
                     _id : appointment._id,
                     NIC: appointment.NIC,
                     name: appointment.name,
-                    age: calculate_age(appointment.birthday),
+                    age: calculate_age(appointment.birthday*1000),
                     contact: appointment.contact_no,
                     doctor: findDoctorName(appointment.doctor_id),
-                    date: new Date(appointment.date).toDateString(),
+                    date: new Date(appointment.date*1000).toDateString(),
                     status: appointment.status,
                     qnumb: appointment.queue_no
                 }

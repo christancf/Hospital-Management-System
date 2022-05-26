@@ -4,10 +4,19 @@ const doctorChannellingService = {}
 
 
 
-doctorChannellingService.getAppointmentList = function (email){
+doctorChannellingService.getAppointmentList = function (email,date){
 
     return fetch({
-      url: `/channelling/doctor/appointments?email=${email}`,
+      url: `/channelling/doctor/appointments?email=${email}&date=${date}`,
+      method: 'get'
+  
+    })
+  }
+
+  doctorChannellingService.getAppointmentsByDateRange = function (email,since, until){
+
+    return fetch({
+      url: `/channelling/doctor/range/appointments?email=${email}&since=${since}&until=${until}`,
       method: 'get'
   
     })

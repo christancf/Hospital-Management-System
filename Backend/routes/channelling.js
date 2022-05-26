@@ -9,27 +9,42 @@ const auth = require("../middleware/auth");
 
 router.post('/appointment/add', auth, function (req, res, next) {
 
-  const appointment = new appointmentModel({
-    NIC: req.body.NIC,
-    name: req.body.name,
-    birthday: req.body.birthday,
-    contact_no: req.body.contact_no,
-    doctor_id: req.body.doctor_id,
-    date: req.body.date,
-    queue_no: req.body.queue_no,
-    status: 'pending'
 
-  });
 
   try {
-
-    appointment.save();
-    res.status(200).json(
+    const lowerDate = parseInt(new Date(req.body.date*1000).setHours(0,0,0,0)/1000);
+    const upperDate = parseInt(new Date(req.body.date*1000).setHours(23,59,59,59)/1000);
+    appointmentModel.find(
       {
-        succuss: true,
-        message: 'Insertion succussfull'
+        doctor_id: req.body.doctor_id,
+        date : { $gt : lowerDate , $lt: upperDate}
       }
-    );
+    ).sort({queue_no:-1}).limit(1).exec().then((dbResp)=> {
+
+      console.log(dbResp);
+      const appointment = new appointmentModel({
+        NIC: req.body.NIC,
+        name: req.body.name,
+        birthday: req.body.birthday,
+        contact_no: req.body.contact_no,
+        doctor_id: req.body.doctor_id,
+        date: req.body.date,
+        queue_no: dbResp.length > 0 ? dbResp[0].queue_no + 1 : 1,
+        status: 'pending'
+    
+      });
+  
+      appointment.save();
+      res.status(200).json(
+        {
+          succuss: true,
+          message: 'Insertion succussfull'
+        }
+      );
+  
+
+
+    });
 
   }
   catch (error) {
@@ -308,10 +323,19 @@ router.get('/doctor/appointments', auth, async function (req, res, next) {
     });
     if(doc.length == 0 || doc != null){
       console.log(doc)
-      const response = await appointmentModel.find({
+
+      let queryOb = {
         status : {$ne : 'deleted'},
         doctor_id : doc[0].staffID
-      }).then((response) => {
+      }
+      
+    if(req.query.date != "undefined" && req.query.date != "NaN"){
+
+      const lowerDate = parseInt(new Date(parseInt(req.query.date)*1000).setHours(0,0,0,0)/1000);
+      const upperDate = parseInt(new Date(parseInt(req.query.date)*1000).setHours(23,59,59,59)/1000);
+      queryOb.date = { $gt : lowerDate , $lt: upperDate}
+    }
+      const response = await appointmentModel.find(queryOb).then((response) => {
         res.status(200).json(
           {
             succuss: true,
@@ -319,11 +343,82 @@ router.get('/doctor/appointments', auth, async function (req, res, next) {
             payload: response
           }
         );
-      }).catch(() => {
+      }).catch((er) => {
         res.status(400).json(
           {
             succuss: false,
-            message: error.message,
+            message: er.message,
+            payload: []
+          }
+        );
+  
+      })
+
+    }
+    else{
+
+      res.status(400).json(
+        {
+          succuss: false,
+          message: "Cannot find doctor !",
+          payload: []
+        }
+      );
+    }
+
+
+
+  }
+  catch (error) {
+    res.status(400).json(
+      {
+        succuss: false,
+        message: error.message,
+        payload: []
+      }
+    );
+  }
+
+
+});
+
+
+router.get('/doctor/range/appointments', auth, async function (req, res, next) {
+
+
+  try {
+
+    const doc = await staffModel.find({
+      designation: 'doctor',
+      email: req.query.email
+    });
+    if(doc.length == 0 || doc != null){
+      console.log(doc)
+
+      let queryOb = {
+        status : {$ne : 'deleted'},
+        doctor_id : doc[0].staffID
+      }
+      
+    if(req.query.since != "undefined" && req.query.since != "NaN" && req.query.until != "undefined" && req.query.until != "NaN"){
+
+      const lowerDate = parseInt(new Date(parseInt(req.query.since)*1000).setHours(0,0,0,0)/1000);
+      const upperDate = parseInt(new Date(parseInt(req.query.until)*1000).setHours(23,59,59,59)/1000);
+      queryOb.date = { $gt : lowerDate , $lt: upperDate}
+    }
+      const response = await appointmentModel.find(queryOb).then((response) => {
+        res.status(200).json(
+          {
+            succuss: true,
+            message: 'Retriaval succussfull',
+            payload: response
+          }
+        );
+      }).catch((er) => {
+        res.status(400).json(
+          {
+            succuss: false,
+            message: er.message,
             payload: []
           }
         );
