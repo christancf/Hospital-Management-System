@@ -259,5 +259,162 @@ router.get('/salary/staffdetails', auth, (req, res, next) => {
   .catch((e) => console.log(`Error: ${ e }`))
 })
 
+// //get attendance by designation
+// router.get('/stats/attendance?:month', (req, res, next) => {
+
+//   let currentYear = new Date().getFullYear()
+//   let startDate = String(currentYear) + '-' + String(req.query.month) + '-' + '26'
+//   let endDate = String(currentYear) + '-' + String(Number(req.query.month) + 1) + '-' + '25 23:59'  
+//   startDate = new Date(startDate).getTime()
+//   endDate = new Date(endDate).getTime()
+  
+//   attendanceModel.aggregate ([
+//     {
+//       $lookup: {
+//         from: "staffs",
+//         localField: "staffID",
+//         foreignField: "staffID",
+//         as: 'details'
+//       }
+//     },
+
+//     {
+//       $match : { "details.designation": { $gte: startDate, $lte: endDate } }
+//     },
+
+//     {
+//       $project: {
+//         "_id": 0,
+//         "NIC": 0,
+//         "email": 0,
+//         "dateOfBirth": 0, 
+//         "gender": 0, 
+//         "address": 0, 
+//         "basicSalary": 0, 
+//         "mobile": 0, 
+//         "home": 0, 
+//         "status": 0, 
+//         "__v": 0
+//       }
+//     },
+
+//     {
+//       $group : {_id:"$staffID", count:{$count:{}}}
+//     }
+//   ])
+//   .then((r) => {
+//     res.json(r)
+//   })
+
+
+//   // attendanceModel.aggregate([
+//   //   // First Stage
+//   //   {
+//   //     $match : { "checkIn": { $gte: startDate, $lte: endDate } }
+//   //   },
+//   //   // Second Stage
+//   //   {
+//   //     $group : {_id:"$designation" , count:{$count:{}}}
+//   //   },
+//   // ])
+//   // .then((r) => {
+//   //   res.json(r)
+//   // })
+//   // .catch((e) => {
+//   //   console.log(`Error: ${ e }`)
+//   // })
+// })
+
+//get attendance count 
+router.get('/stats/attendance?:month', (req, res, next) => {
+
+  let currentYear = new Date().getFullYear()
+  let startDate = String(currentYear) + '-' + String(req.query.month) + '-' + '26'
+  let endDate = String(currentYear) + '-' + String(Number(req.query.month) + 1) + '-' + '25 23:59'  
+  startDate = new Date(startDate).getTime()
+  endDate = new Date(endDate).getTime()
+  
+  attendanceModel.aggregate ([
+   
+    {
+      $match : { "checkIn": { $gte: startDate, $lte: endDate } }
+    },
+
+    {
+      $group : {_id:"$checkIn", count: {$count: {}}}
+    }
+  ])
+  .then((r) => {
+    res.json(r)
+  })
+})
+
+//get staff count by designation
+router.get('/stats/staffcount', (req, res, next) => {
+ 
+  staffModel.aggregate ([
+   
+    {
+      $match : { "status": 'Employed' }
+    },
+
+    {
+      $group : {_id:"$designation", count: {$count: {}}}
+    }
+  ])
+  .then((r) => {
+    res.json(r)
+  })
+})
+
+
+
+
+
+router.get('/nurse/read/all-unassigned', auth, (req, res, next) => {
+  staffModel.aggregate([
+    {
+      $lookup: {
+        from: "assignednurses",
+        localField: "staffID",
+        foreignField: "nurseID",
+        as: 'data'
+      },
+    },
+    {
+      $match: {
+        "data.user": {
+          $exists: false
+        },
+        "designation": "nurse"
+      }
+    },
+    {
+      $project: {
+        "_id": 0,
+        "NIC": 0,
+        "email": 0,
+        "dateOfBirth": 0, 
+        "gender": 0, 
+        "address": 0, 
+        "basicSalary": 0, 
+        "mobile": 0, 
+        "home": 0, 
+        "status": 0, 
+        "__v": 0
+      }
+    }
+  ])
+  .then(data => {
+    data = data.filter(v => {
+      if(v.data.length === 0){
+        delete v.data
+        return v
+      } 
+    })
+    res.json(data)
+  })
+})
+
 
 module.exports = router; 

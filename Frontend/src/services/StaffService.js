@@ -92,5 +92,12 @@ staffService.getStaffDetails = function () {
   })
 }
 
+staffService.getStaffCountByDesignation = function() {
+  return fetch({
+    url: 'staff/stats/staffcount',
+    method: 'get'
+  })
+}
+
 
 export default staffService
