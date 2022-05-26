@@ -2,7 +2,7 @@ import { Form, Input, InputNumber, Button, Select, DatePicker, Card, Spin, Modal
 import { useState, useEffect } from 'react';
 import channellingService from 'services/FrontlineChannellingService';
 import moment from 'moment';
-import { FRONTLINE_CHANNELLING_ROLE , ValidateUser} from 'configs/AppConfig';
+import { FRONTLINE_CHANNELLING_ROLE, ValidateUser } from 'configs/AppConfig';
 const { Option } = Select;
 
 ValidateUser(FRONTLINE_CHANNELLING_ROLE);
@@ -117,9 +117,9 @@ const AddAppointment = () => {
 				true
 			);
 			form.resetFields();
-			
 
-		}).catch((error)=> {
+
+		}).catch((error) => {
 
 			ShowModel(
 				"Unsccessfull !",
@@ -168,11 +168,11 @@ const AddAppointment = () => {
 		function disabledDate(current) {
 			// Can not select days before today and today
 			return current && current < moment().endOf('day');
-		  }
-		  function disabledDate2(current) {
+		}
+		function disabledDate2(current) {
 			// Can not select days before today and today
 			return current && current > moment().endOf('day');
-		  }
+		}
 		console.log(options)
 		return (
 			<>
@@ -182,23 +182,22 @@ const AddAppointment = () => {
 
 					<Form {...layout} name="Add Appointment" form={form} onFinish={onFinish} validateMessages={validateMessages}>
 
-						<Form.Item name="NIC" label="Patient NIC" rules={[{ required: true, pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$' , message: 'Enter valid NIC'}]} placeholder="Patient NIC">
+						<Form.Item name="NIC" label="Patient NIC" rules={[{ required: true, pattern: '^([0-9]{9}[x|X|v|V]|[0-9]{12})$', message: 'Enter valid NIC' }]} placeholder="Patient NIC">
 							<Input />
 						</Form.Item>
 						<Form.Item name="name" label="Patient Name" rules={[{ required: true }]} placeholder="Patient Name">
 							<Input />
 						</Form.Item>
 						<Form.Item name="birthday" label="Birthday" rules={[{ required: true }]} placeholder="Patient Birthday">
-							<DatePicker  disabledDate={disabledDate2}/>
+							<DatePicker disabledDate={disabledDate2} />
 						</Form.Item>
 						<Form.Item name="contact_no" label="Contact No" rules={[{ required: true }]} placeholder="Contact Number">
 							<Input />
 						</Form.Item>
-						<Form.Item name="doctor_id" label="Doctor"  rules={[{ required: true }]} >
+						<Form.Item name="doctor_id" label="Doctor" rules={[{ required: true }]} >
 							{/* <Cascader options={options} placeholder="Please select Doctor" showSearch={{ filter }} />, */}
 
 							<Select
-
 								labelInValue
 								placeholder="Select users"
 								filterOption={false}
@@ -211,12 +210,29 @@ const AddAppointment = () => {
 							</Select>
 						</Form.Item>
 						<Form.Item name="date" label="Appointment Date" rules={[{ required: true }]}>
-							<DatePicker  disabledDate={disabledDate}  />
+							<DatePicker disabledDate={disabledDate} />
 						</Form.Item>
 						<Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
 							<Button type="primary" htmlType="submit">
 								Add Appointment
 							</Button>
+						</Form.Item>
+						<Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+							<Button type="war" danger onClick={() => {
+
+								form.setFieldsValue({
+									NIC: '200028495068',
+									name: 'Ruwan Gamage',
+									birthday: moment('1995-05-13'),
+									contact_no: '+976852265426',
+									doctor_id : [options[0].text],
+									date: moment('2022-06-10')
+								})
+
+							}}>
+								Fill for Demo
+							</Button>
+
 						</Form.Item>
 					</Form>
 				</Card>
