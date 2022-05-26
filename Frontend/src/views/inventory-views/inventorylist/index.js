@@ -59,22 +59,22 @@ const Home = () => {
       key: "item_name",
     },
     {
-      title: "quantity",
+      title: "Quantity",
       dataIndex: "quantity",
       key: "quantity",
     },
     {
-      title: "manufacture_date",
+      title: "Manufacture Date",
       dataIndex: "manufacture_date",
       key: "manufacture_date",
     },
     {
-      title: "expire_date",
+      title: "Expire Date",
       dataIndex: "expire_date",
       key: "expire_date",
     },
     {
-      title: "status",
+      title: "Status",
       dataIndex: "status",
       key: "status",
     },
@@ -161,8 +161,7 @@ const Home = () => {
         <div>
           <h1 className="text-left">Inventory List</h1>
 		  <Button type="primary" href={`/inventory/inventorylist/add/`}>
-            Add New Item
-          </Button>
+            Add New Batch          </Button>
           
         </div>
 

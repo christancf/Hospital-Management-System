@@ -170,16 +170,16 @@ const Additem = () => {
 					{/* <Input placeholder={data} disabled /> */}
 
 				</Form.Item>
-				<Form.Item name="item_name" label="item_name" >
+				<Form.Item name="item_name" label="Item Name" >
 					<Input />
 				</Form.Item>
-				<Form.Item label="description" name="description" rules={[{ required: true, message: 'Please input Description' }]}>
+				<Form.Item label="Description" name="description" rules={[{ required: true, message: 'Please input Description' }]}>
 					<Input />
 				</Form.Item>
-				<Form.Item label="manufacturer " name="manufacturer" rules={[{ required: true, message: 'Please input manufacturer' }]}>
+				<Form.Item label="Manufacturer " name="manufacturer" rules={[{ required: true, message: 'Please input manufacturer' }]}>
 					<Input />
 				</Form.Item>
-				<Form.Item name="category" label="category" rules={[{ required: true }]}>
+				<Form.Item name="category" label="Category" rules={[{ required: true }]}>
 					<Select
 						placeholder="Select the category"
 					
