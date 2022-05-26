@@ -66,5 +66,10 @@ billingService.paid = function (id){
   method:'get'
   })
   }
-
+  billingService.stat = function (){
+    return fetch({
+    url:`/billing/billingMonth`,
+    method:'post'
+    })
+    }
 export default billingService

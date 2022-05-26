@@ -25,7 +25,7 @@ router.post('/add-details',auth, function (req, res, next) {
     place: req.body.place,
     donationNumber: req.body.donationNumber,
     donateDate: req.body.donateDate,
-    bloodGroup: req.body.bloodGroup.value,
+    bloodGroup: req.body.bloodGroup,
     expireDate: expDate,
     status: 'In Stock',
     volume: '1 pint(450ml)',

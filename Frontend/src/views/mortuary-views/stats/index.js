@@ -6,8 +6,11 @@ import { Divider, Button, DatePicker } from "antd";
 import jsPDF from "jspdf";
 import domtoimage from "dom-to-image";
 import moment from "moment";
-
+import {MORTUARY_ROLE, ValidateUser } from 'configs/AppConfig'
 const { MonthPicker } = DatePicker;
+
+ValidateUser(MORTUARY_ROLE);
+
 
 
 const App = () => {

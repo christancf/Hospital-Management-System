@@ -10,6 +10,7 @@ export const BillingViews = () => {
         <Route path={`${BILLING_PREFIX_PATH}/transactions`} component={lazy(() => import(`./addtransaction`))} />
         <Route path={`${BILLING_PREFIX_PATH}/billlist`} component={lazy(() => import(`./Bill-List`))} />
         <Route path={`${BILLING_PREFIX_PATH}/totalbills`} component={lazy(() => import(`./total-bill`))} />
+        <Route path={`${BILLING_PREFIX_PATH}/stats`} component={lazy(() => import(`./stats`))} />
         <Redirect from={`${BILLING_PREFIX_PATH}`} to={`${BILLING_PREFIX_PATH}/transactions`} />
       </Switch>
     </Suspense>

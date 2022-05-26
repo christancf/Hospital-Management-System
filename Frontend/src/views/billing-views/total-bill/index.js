@@ -255,15 +255,15 @@ const Home = () => {
 					</Descriptions></div>
 				}
 			
-			<div style={{ textAlign: "right", margin: 20 }}>
-				    <Button  shape="round" className="mr-2" type="primary" style={{ marginRight: 30 }}>
-                      print
+				
+				  <Button  shape="round" className="mr-2" type="primary" style={{ marginRight: 30 }} onClick= {() => {window.print()}}>
+                      Print
                     </Button>
 
 					<Button shape="round" className="mr-2" type="primary" onClick={markPaid}>
                       Paid
                     </Button>
-			</div>
+			
 				</Card>	
 			
 			</>
