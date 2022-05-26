@@ -383,5 +383,76 @@ router.get('/doctor/appointments', auth, async function (req, res, next) {
 });
 
 
+router.get('/doctor/range/appointments', auth, async function (req, res, next) {
+
+
+  try {
+
+    const doc = await staffModel.find({
+      designation: 'doctor',
+      email: req.query.email
+    });
+    if(doc.length == 0 || doc != null){
+      console.log(doc)
+
+      let queryOb = {
+        status : {$ne : 'deleted'},
+        doctor_id : doc[0].staffID
+      }
+      
+    if(req.query.since != "undefined" && req.query.since != "NaN" && req.query.until != "undefined" && req.query.until != "NaN"){
+
+      const lowerDate = parseInt(new Date(parseInt(req.query.since)*1000).setHours(0,0,0,0)/1000);
+      const upperDate = parseInt(new Date(parseInt(req.query.until)*1000).setHours(23,59,59,59)/1000);
+      queryOb.date = { $gt : lowerDate , $lt: upperDate}
+    }
+      const response = await appointmentModel.find(queryOb).then((response) => {
+        res.status(200).json(
+          {
+            succuss: true,
+            message: 'Retriaval succussfull',
+            payload: response
+          }
+        );
+      }).catch((er) => {
+        res.status(400).json(
+          {
+            succuss: false,
+            message: er.message,
+            payload: []
+          }
+        );
+  
+      })
+
+    }
+    else{
+
+      res.status(400).json(
+        {
+          succuss: false,
+          message: "Cannot find doctor !",
+          payload: []
+        }
+      );
+    }
+
+
+
+  }
+  catch (error) {
+    res.status(400).json(
+      {
+        succuss: false,
+        message: error.message,
+        payload: []
+      }
+    );
+  }
+
+
+});
+
+
 
 module.exports = router;

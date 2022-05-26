@@ -13,6 +13,15 @@ doctorChannellingService.getAppointmentList = function (email,date){
     })
   }
 
+  doctorChannellingService.getAppointmentsByDateRange = function (email,since, until){
+
+    return fetch({
+      url: `/channelling/doctor/range/appointments?email=${email}&since=${since}&until=${until}`,
+      method: 'get'
+  
+    })
+  }
+
   doctorChannellingService.updateAppointmentStatus = function (id, body){
 
     return fetch({
